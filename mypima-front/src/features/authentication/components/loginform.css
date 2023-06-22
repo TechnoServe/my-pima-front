@@ -1,0 +1,152 @@
+.form__text {
+  display: block;
+  padding: 25px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 500;
+}
+.heroimage {
+  display: none;
+}
+.form__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 20px;
+}
+.form__starts {
+  margin: auto;
+  width: 100%;
+}
+
+.form__login {
+  color: #2b2b2b;
+  padding-bottom: 15px;
+}
+.form__label {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.form__input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid #2b2b2b;
+  -webkit-transition: 0.5s;
+  transition: border-color 0.5s ease;
+  outline: none;
+}
+.form__input:focus {
+  border: 2px solid #00a5a3;
+}
+.form__input::placeholder{
+    font-style: italic;
+    color: #ccc;
+    font-size: 12px;
+}
+.password-input-container {
+  position: relative;
+}
+.password-icon {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+/* Checkbox */
+.form__checkbox {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 10px;
+  margin-top: 25px;
+}
+.text {
+  font-size: 14px;
+}
+.form__fp {
+  font-size: 14px;
+  color: #2b2b2b;
+}
+.form__auth {
+  margin-top: 40px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.form__btn {
+  background-color: #087c8f;
+  border: none;
+  width: 60%;
+  padding: 12px;
+  border-radius: 32px;
+  font-size: 16px;
+  color: #fff;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 26px 4px rgba(0, 0, 0, 0.2);
+}
+.google__auth {
+  display: block;
+  text-align: center;
+}
+.auth__container {
+  border: none;
+  background-color: #e9f1ff;
+  display: inline-block;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.auth__container p {
+  color: #4285f4; /* Replace with your desired text color */
+  padding: 5px;
+  font-size: 14px;
+}
+/*Tablet*/
+@media screen and (min-width: 600px) {
+  .form__container {
+    flex-direction: row;
+    margin: 0;
+    margin-left: 20px;
+  }
+  .form__text {
+    display: none;
+  }
+  .heroimage {
+    display: flex;
+    padding-bottom: 20px;
+  }
+  .heroimage svg {
+    width: 100%;
+    max-width: max-content;
+    height: auto;
+    max-height: max-content;
+  }
+  .form__starts {
+    max-height: 500px;
+    padding: 50px 50px 20px 50px;
+  }
+}
+/*Desktop*/
+
+@media screen and (min-width: 1024px) {
+  .form__container {
+    margin-top: 20px;
+    margin-left: 40px;
+  }
+  .form__starts {
+    width: 60%;
+    max-width: 636px;
+    margin: 30px;
+  }
+}
