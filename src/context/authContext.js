@@ -36,21 +36,8 @@ const AuthProvider = ({ children }) => {
             variables: { token: storedToken },
           });
 
-          if (response.data.verifySavedToken.status === 200) {
-            const user = response.data.verifySavedToken.user;
-
-            const userData = {
-              id: user.user_id,
-              role: "admin",
-              org_id: user.org_id,
-              fullName: `${user.first_name} ${user.last_name}`,
-              username: `${user.first_name} ${user.last_name}`,
-              email: user.email_address,
-            };
-            localStorage.setItem("myPimaUserData", JSON.stringify(userData));
-            setUser(userData);
-
-            navigate("/account");
+          if (response.data.verifyToken.status === 200) {
+            navigate("/");
           } else {
             navigate("/login");
           }
@@ -59,6 +46,8 @@ const AuthProvider = ({ children }) => {
 
           return error;
         }
+      } else {
+        navigate("/login");
       }
     };
     initAuth();
@@ -77,7 +66,6 @@ const AuthProvider = ({ children }) => {
       const response = await saveMailLogin({
         variables: { email, password },
       });
-      console.log(response);
 
       if (response.data.saveMailLogin.status === 200) {
         const { token } = response.data.saveMailLogin;
@@ -109,19 +97,18 @@ const AuthProvider = ({ children }) => {
         variables: { credential },
       });
 
-      if (response.data.verifyGoogleAuth.status === 200) {
+      if (response.data.saveGoogleLogin.status === 200) {
         const userData = {
           id: 1,
           role: "admin",
         };
 
-        const { token } = response.data.verifyGoogleAuth;
+        const { token } = response.data.saveGoogleLogin;
         localStorage.setItem("myPimaUserData", JSON.stringify(userData));
-        localStorage.setItem("refreshToken", token);
-        localStorage.setItem("accessToken", token);
+        localStorage.setItem("my-pima-token", token);
         setUser(userData);
 
-        navigate("/account");
+        navigate("/dashboard");
       }
 
       return response;

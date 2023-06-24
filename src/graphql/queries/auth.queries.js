@@ -12,7 +12,7 @@ const LOGIN_MUTATION = gql`
 
 const VERIFY_GOOGLE_AUTH_MUTATION = gql`
   mutation VerifyGoogleAuth($credential: String!) {
-    verifyGoogleAuth(token: $credential) {
+    saveGoogleLogin(token: $credential) {
       message
       status
       token
@@ -22,7 +22,7 @@ const VERIFY_GOOGLE_AUTH_MUTATION = gql`
 
 const VERIFY_SAVED_TOKEN_MUTATION = gql`
   mutation VerifySavedToken($token: String!) {
-    verifySavedToken(token: $token) {
+    verifyToken(token: $token) {
       message
       status
     }

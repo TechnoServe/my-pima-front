@@ -7,12 +7,12 @@ import { BeatLoader } from "react-spinners";
 import { useAuth } from "../../../context/useAuth";
 import { GoogleLogin } from "@react-oauth/google";
 import { Toaster, toast } from "react-hot-toast";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,9 +41,8 @@ const LoginForm = () => {
       .login(email, password)
       .then((res) => {
         if (res.data.saveMailLogin.status === 200) {
-          console.log(res);
           setLoading(false);
-          window.location.href = "/account";
+          navigate("/dashboard");
         } else {
           toast.error(res.data.saveMailLogin.message);
         }
@@ -54,6 +53,22 @@ const LoginForm = () => {
       });
 
     setLoading(false);
+  };
+
+  const handleGoogleAuth = async (response) => {
+    await auth
+      .googleLogin(response.credential)
+      .then((res) => {
+        if (res.data.saveGoogleLogin.status === 200) {
+          navigate("/dashboard");
+        } else {
+          toast.error(res.data.saveGoogleLogin.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Something Went Wrong!!!");
+      });
   };
 
   return (
@@ -164,9 +179,9 @@ const LoginForm = () => {
                   }}
                 >
                   <GoogleLogin
-                    onSuccess={(response) => console.log(response)}
+                    onSuccess={(response) => handleGoogleAuth(response)}
                     onError={() => {
-                      console.error("Something went wrong");
+                      toast.error("Something went wrong");
                     }}
                     useOneTap
                   />

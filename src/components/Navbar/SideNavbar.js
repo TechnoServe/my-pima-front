@@ -10,7 +10,6 @@ import { HiOutlineTruck, HiMenuAlt2 } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
 import "./navbar.css";
 import Logo from "../Logo";
-import Avatar from "@material-ui/core/Avatar";
 
 /* Component */
 const Sidebar = ({ children }) => {
@@ -56,6 +55,15 @@ const Sidebar = ({ children }) => {
       icon: <MdLogout />,
     },
   ];
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+
+    window.localStorage.removeItem("my-pima-token");
+    window.localStorage.removeItem("myPimaUserData");
+    window.location.href = "/login";
+  };
+
   return (
     <div className="nav__container">
       <div
@@ -80,7 +88,7 @@ const Sidebar = ({ children }) => {
               to={item.path}
               key={index}
               className="link"
-              activeclassName="active"
+              activeclassname="active"
             >
               <div className="icon">{item.icon}</div>
               <div
@@ -92,13 +100,11 @@ const Sidebar = ({ children }) => {
             </NavLink>
           ))}
         </div>
-        <div
-          className="bottom__section"
-        >
+        <div className="bottom__section">
           <NavLink
             to={bottomitem[0].path}
             className="link"
-            activeclassName="active"
+            activeclassname="active"
           >
             <div>{bottomitem[0].icon}</div>
             <div>
@@ -119,7 +125,8 @@ const Sidebar = ({ children }) => {
           <NavLink
             to={bottomitem[1].path}
             className="link"
-            activeclassName="active"
+            activeclassname="active"
+            onClick={handleLogout}
           >
             <div className="icon">{bottomitem[1].icon}</div>
             <div
@@ -129,7 +136,6 @@ const Sidebar = ({ children }) => {
               {bottomitem[1].name}
             </div>
           </NavLink>
-          
         </div>
       </div>
       <main>{children}</main>
