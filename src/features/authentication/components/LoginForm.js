@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { ReactComponent as HeroImgH } from "../assets/heroimg.svg";
+import {useNavigate} from "react-router-dom";
 
 const LoginForm = () => {
+  const history = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (
@@ -68,7 +70,7 @@ const LoginForm = () => {
               </a>
             </div>
             <div className="form__auth">
-              <button type="submit" className="form__btn">
+              <button type="submit" className="form__btn" >
                 Login
               </button>
             </div>

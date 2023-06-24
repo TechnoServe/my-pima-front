@@ -1,13 +1,13 @@
 import React from "react";
 import authentication from "../features/authentication";
 
-const Login = () => {
+const Login = ({onLogin}) => {
   const { components } = authentication;
   const { LoginForm } = components;
 
   return (
     <div>
-      <LoginForm />
+      <LoginForm onLogin={onLogin} />
     </div>
   );
 };

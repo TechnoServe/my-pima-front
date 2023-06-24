@@ -69,6 +69,7 @@
   align-items: center;
   margin-right: 10px;
   margin-top: 25px;
+  cursor: pointer;
 }
 .text {
   font-size: 14px;
@@ -85,6 +86,7 @@
   align-items: center;
 }
 .form__btn {
+  cursor: pointer;
   background-color: #087c8f;
   border: none;
   width: 60%;

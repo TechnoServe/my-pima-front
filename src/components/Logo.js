@@ -8,7 +8,7 @@ const Logo = () => {
 const logoStyle = {
     fontFamily: 'Raleway, sans-serif',
     color : "#F46700",
-    fontSize: "24px",
+    fontSize: "20px",
     fontWeight: "900",
     margin: "20px",
     marginBottom: "0",
