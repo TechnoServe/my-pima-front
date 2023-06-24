@@ -7,10 +7,13 @@ import { BeatLoader } from "react-spinners";
 import { useAuth } from "../../../context/useAuth";
 import { GoogleLogin } from "@react-oauth/google";
 import { Toaster, toast } from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const history = useNavigate();
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
