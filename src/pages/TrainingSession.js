@@ -1,16 +1,11 @@
-import React from 'react'
-import ProjectListDropdown from '../components/ProjectDrop/ProjectListDropdown'
-
+import React from "react";
 
 const TrainingSession = () => {
   return (
-    <div className='page__container'>
-    <ProjectListDropdown/>
     <div>
       <h1>Hi this is the Training Session page</h1>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default TrainingSession
+export default TrainingSession;

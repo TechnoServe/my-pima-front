@@ -92,7 +92,7 @@ const ProjectListDropdown = () => {
               label="Select Projects"
               onChange={handleProjectSelect}
             >
-              <MenuItem value="">
+              <MenuItem value="" disabled>
                 <p>None</p>
               </MenuItem>
               {projectOptions.map((project) => (

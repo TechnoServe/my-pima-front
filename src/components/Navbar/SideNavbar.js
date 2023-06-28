@@ -86,7 +86,7 @@ const Sidebar = ({ children }) => {
               to={item.path}
               key={index}
               className="link"
-              activeclassName="active"
+              activeclassname="active"
             >
               <div className="icon">{item.icon}</div>
               <div
@@ -102,7 +102,7 @@ const Sidebar = ({ children }) => {
           <NavLink
             to={bottomitem[0].path}
             className="link"
-            activeclassName="active"
+            activeclassname="active"
           >
             <div>{bottomitem[0].icon}</div>
             <div>
@@ -123,7 +123,7 @@ const Sidebar = ({ children }) => {
           <NavLink
             to={bottomitem[1].path}
             className="link"
-            activeclassName="active"
+            activeclassname="active"
           >
             <div className="icon">{bottomitem[1].icon}</div>
             <div
