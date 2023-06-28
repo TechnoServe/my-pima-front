@@ -23,7 +23,7 @@ const Navbar = () => {
     if (data) {
       setProjects(data.getProjects.projects);
     }
-  }, []);
+  }, [data]);
 
   return (
     <nav>
@@ -32,7 +32,7 @@ const Navbar = () => {
       <Sidebar>
         {location.pathname !== "/profile" ? (
           <div className="page__container">
-            <ProjectListDropdown projects={projects} />
+            {!loading && <ProjectListDropdown projects={projects} />}
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />

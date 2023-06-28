@@ -78,7 +78,7 @@ const ProjectListDropdown = ({ projects }) => {
               sx={{
                 borderRadius: "10px",
                 marginLeft: "10px",
-                maxWidth: "25ch",
+                maxWidth: "55ch",
                 maxHeight: "50px",
                 boxShadow: "0 4px 14px 0px rgba(0, 0, 0, 0.2)",
               }}

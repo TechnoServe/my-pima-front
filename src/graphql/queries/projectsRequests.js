@@ -1,4 +1,4 @@
-export { gql } from "@apollo/client";
+import { gql } from "@apollo/client";
 
 const GET_ALL_PROJECTS = gql`
   query {
