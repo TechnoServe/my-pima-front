@@ -60,8 +60,8 @@ const Sidebar = ({ children }) => {
     <div className="nav__container">
       <div
         style={{
-          width: isOpen ? "auto" : "60px",
           alignItems: isOpen ? "unset" : "center",
+          transition: "max-width 0.3s ease",
         }}
         className="sidebar"
       >
@@ -70,7 +70,15 @@ const Sidebar = ({ children }) => {
             {" "}
             <Logo />{" "}
           </div>
-          <div style={{ marginLeft: isOpen ? "70px" : "0px" }} className="bars">
+          <div
+            style={{
+              marginLeft: isOpen ? "70px" : "0px",
+              paddingTop: isOpen ? "" : "15px",
+              transition: "margin 0.3s ease",
+
+            }}
+            className="bars"
+          >
             <HiMenuAlt2 onClick={toggle} />
           </div>
         </div>
@@ -92,9 +100,7 @@ const Sidebar = ({ children }) => {
             </NavLink>
           ))}
         </div>
-        <div
-          className="bottom__section"
-        >
+        <div className="bottom__section">
           <NavLink
             to={bottomitem[0].path}
             className="link"
@@ -124,12 +130,11 @@ const Sidebar = ({ children }) => {
             <div className="icon">{bottomitem[1].icon}</div>
             <div
               style={{ display: isOpen ? "block" : "none" }}
-              className="_text"
+              className="link_text"
             >
               {bottomitem[1].name}
             </div>
           </NavLink>
-          
         </div>
       </div>
       <main>{children}</main>
