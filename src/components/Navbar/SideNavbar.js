@@ -55,6 +55,15 @@ const Sidebar = ({ children }) => {
       icon: <MdLogout />,
     },
   ];
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+
+    window.localStorage.removeItem("my-pima-token");
+    window.localStorage.removeItem("myPimaUserData");
+    window.location.href = "/login";
+  };
+
   return (
     <div className="nav__container">
       <div
@@ -124,6 +133,7 @@ const Sidebar = ({ children }) => {
             to={bottomitem[1].path}
             className="link"
             activeclassname="active"
+            onClick={handleLogout}
           >
             <div className="icon">{bottomitem[1].icon}</div>
             <div

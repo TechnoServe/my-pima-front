@@ -41,10 +41,10 @@
 .form__input:focus {
   border: 2px solid #00a5a3;
 }
-.form__input::placeholder{
-    font-style: italic;
-    color: #ccc;
-    font-size: 12px;
+.form__input::placeholder {
+  font-style: italic;
+  color: #ccc;
+  font-size: 12px;
 }
 .password-input-container {
   position: relative;
@@ -96,6 +96,12 @@
   color: #fff;
   letter-spacing: 1px;
   box-shadow: 0 4px 26px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+.form__error-text {
+  color: red;
+  font-size: 12px;
+  margin-bottom: 15px;
 }
 .google__auth {
   display: block;

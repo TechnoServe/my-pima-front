@@ -1,16 +1,16 @@
 import Login from "./pages/Login";
+import { Routes, Route } from "react-router-dom";
+import React from "react";
 import Navbar from "./components/Navbar/navbar";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import ProjectListDropdown from "./components/ProjectDrop/ProjectListDropdown";
 
 function App() {
-
-  
   return (
-    <Router>
-    {/* <Login/> */}
-      <Navbar />
-    </Router>
+    <div className="App">
+      <Routes>
+        <Route exact path="/*" element={<Navbar />} />
+        <Route exact path="/login" element={<Login />} />
+      </Routes>
+    </div>
   );
 }
 

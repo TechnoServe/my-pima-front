@@ -1,10 +1,8 @@
-import React from 'react'
+import React from "react";
 
 const Logo = () => {
-  return (
-  <h1 style={logoStyle}>MYPIMA</h1>
-  )
-}
+  return <h1 style={logoStyle}>MYPIMA</h1>;
+};
 const logoStyle = {
     fontFamily: 'Raleway, sans-serif',
     color : "#F46700",

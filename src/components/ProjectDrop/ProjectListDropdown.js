@@ -43,13 +43,8 @@ const theme = createTheme({
   },
 });
 
-const ProjectListDropdown = () => {
+const ProjectListDropdown = ({ projects }) => {
   const [selectedProject, setSelectedProject] = useState("");
-  const [projectOptions, setProjectOptions] = useState([
-    { id: 1, name: "Project A" },
-    { id: 2, name: "Project B" },
-    { id: 3, name: "Project C" },
-  ]);
 
   const handleProjectSelect = (event) => {
     setSelectedProject(event.target.value);
@@ -95,9 +90,9 @@ const ProjectListDropdown = () => {
               <MenuItem value="" disabled>
                 <p>None</p>
               </MenuItem>
-              {projectOptions.map((project) => (
-                <MenuItem key={project.id} value={project.name}>
-                  {project.name}
+              {projects.map((project, index) => (
+                <MenuItem value={project.sf_project_id} key={index}>
+                  <p>{project.project_name}</p>
                 </MenuItem>
               ))}
             </Select>
