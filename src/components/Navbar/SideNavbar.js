@@ -10,7 +10,6 @@ import { HiOutlineTruck, HiMenuAlt2 } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
 import "./navbar.css";
 import Logo from "../Logo";
-import Avatar from "@material-ui/core/Avatar";
 
 /* Component */
 const Sidebar = ({ children }) => {
@@ -75,7 +74,6 @@ const Sidebar = ({ children }) => {
               marginLeft: isOpen ? "70px" : "0px",
               paddingTop: isOpen ? "" : "15px",
               transition: "margin 0.3s ease",
-
             }}
             className="bars"
           >

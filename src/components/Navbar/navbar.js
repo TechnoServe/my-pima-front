@@ -13,7 +13,7 @@ const Navbar = () => {
 
   return (
     <nav>
-    {/* {
+      {/* {
       isMobile ? <BottomNavbar /> : */}
       <Sidebar>
         <Routes>

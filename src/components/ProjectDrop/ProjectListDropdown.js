@@ -55,7 +55,6 @@ const ProjectListDropdown = () => {
     setSelectedProject(event.target.value);
   };
 
-
   return (
     <div
       style={{
@@ -70,9 +69,7 @@ const ProjectListDropdown = () => {
           Project List
         </InputLabel>
       </div>
-      <div
-     
-      >
+      <div>
         <ThemeProvider theme={theme}>
           <FormControl fullWidth className="dropdown__select">
             {" "}
@@ -94,7 +91,6 @@ const ProjectListDropdown = () => {
               value={selectedProject}
               label="Select Projects"
               onChange={handleProjectSelect}
-      
             >
               <MenuItem value="">
                 <p>None</p>
