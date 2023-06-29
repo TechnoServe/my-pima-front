@@ -47,8 +47,8 @@ const Sidebar = ({ children }) => {
   const bottomitem = [
     {
       path: "/profile",
-      name: userDetails.username || "N/A",
-      email: userDetails.email || "N/A",
+      name: userDetails && (userDetails.username || "N/A"),
+      email: userDetails && (userDetails.email || "N/A"),
       icon: <MdOutlinePersonSearch />,
     },
     {
