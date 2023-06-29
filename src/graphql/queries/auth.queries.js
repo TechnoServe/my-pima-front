@@ -5,6 +5,11 @@ const LOGIN_MUTATION = gql`
     saveMailLogin(email: $email, password: $password) {
       message
       status
+      user {
+        user_id
+        user_name
+        user_email
+      }
       token
     }
   }
@@ -15,6 +20,11 @@ const VERIFY_GOOGLE_AUTH_MUTATION = gql`
     saveGoogleLogin(token: $credential) {
       message
       status
+      user {
+        user_id
+        user_name
+        user_email
+      }
       token
     }
   }

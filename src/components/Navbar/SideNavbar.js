@@ -15,6 +15,8 @@ import Logo from "../Logo";
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
+  const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
+
   const menuItem = [
     {
       path: "/dashboard",
@@ -45,8 +47,8 @@ const Sidebar = ({ children }) => {
   const bottomitem = [
     {
       path: "/profile",
-      name: "Michael Smith",
-      email: "michaelsmith@email.com",
+      name: userDetails.username || "N/A",
+      email: userDetails.email || "N/A",
       icon: <MdOutlinePersonSearch />,
     },
     {

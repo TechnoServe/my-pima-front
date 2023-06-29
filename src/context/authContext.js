@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 
 import { useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   LOGIN_MUTATION,
   VERIFY_GOOGLE_AUTH_MUTATION,
@@ -26,6 +26,7 @@ const AuthProvider = ({ children }) => {
 
   // ** States
   const [user, setUser] = useState(defaultProvider.user);
+  const location = useLocation();
 
   useEffect(() => {
     const initAuth = async () => {
@@ -37,7 +38,9 @@ const AuthProvider = ({ children }) => {
           });
 
           if (response.data.verifyToken.status === 200) {
-            navigate("/");
+            navigate(
+              location.pathname === "/login" ? "/dashboard" : location.pathname
+            );
           } else {
             navigate("/login");
           }
@@ -71,11 +74,10 @@ const AuthProvider = ({ children }) => {
         const { token } = response.data.saveMailLogin;
 
         const userData = {
-          id: 1,
+          id: response.data.saveMailLogin.user.user_id,
           role: "admin",
-          fullName: email.split("@")[0],
-          username: email.split("@")[0],
-          email,
+          username: response.data.saveMailLogin.user.user_name,
+          email: response.data.saveMailLogin.user.user_email,
         };
 
         localStorage.setItem("myPimaUserData", JSON.stringify(userData));
@@ -99,8 +101,10 @@ const AuthProvider = ({ children }) => {
 
       if (response.data.saveGoogleLogin.status === 200) {
         const userData = {
-          id: 1,
+          id: response.data.saveGoogleLogin.user.user_id,
           role: "admin",
+          username: response.data.saveGoogleLogin.user.user_name,
+          email: response.data.saveGoogleLogin.user.user_email,
         };
 
         const { token } = response.data.saveGoogleLogin;
