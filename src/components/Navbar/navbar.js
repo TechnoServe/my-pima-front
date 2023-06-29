@@ -11,6 +11,7 @@ import BottomNavbar from "./BottomNavbar";
 import ProjectListDropdown from "../ProjectDrop/ProjectListDropdown";
 import { GET_ALL_PROJECTS } from "../../graphql/queries/projectsRequests";
 import { useQuery } from "@apollo/client";
+import { toast } from "react-hot-toast";
 
 const Navbar = () => {
   const isMobile = window.innerWidth <= 600; // Adjust the breakpoint as per your needs
@@ -18,12 +19,24 @@ const Navbar = () => {
   const location = useLocation();
   const [projects, setProjects] = useState([]); // eslint-disable-line no-unused-vars
   const { data, error, loading } = useQuery(GET_ALL_PROJECTS);
+  const [selectedProject, setSelectedProject] = useState("");
+  const favProject = localStorage.getItem("fav_project");
 
   useEffect(() => {
     if (data) {
       setProjects(data.getProjects.projects);
     }
-  }, [data]);
+
+    if (error) {
+      toast.error(error.message);
+    }
+  }, [data, error]);
+
+  useEffect(() => {
+    if (favProject) {
+      setSelectedProject(favProject);
+    }
+  }, [favProject]);
 
   return (
     <nav>
@@ -32,7 +45,13 @@ const Navbar = () => {
       <Sidebar>
         {location.pathname !== "/profile" ? (
           <div className="page__container">
-            {!loading && <ProjectListDropdown projects={projects} />}
+            {!loading && (
+              <ProjectListDropdown
+                projects={projects}
+                selectedProject={selectedProject}
+                setSelectedProject={setSelectedProject}
+              />
+            )}
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />

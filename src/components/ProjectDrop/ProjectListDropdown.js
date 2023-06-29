@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
@@ -43,11 +43,15 @@ const theme = createTheme({
   },
 });
 
-const ProjectListDropdown = ({ projects }) => {
-  const [selectedProject, setSelectedProject] = useState("");
-
+const ProjectListDropdown = ({
+  projects,
+  selectedProject,
+  setSelectedProject,
+}) => {
   const handleProjectSelect = (event) => {
     setSelectedProject(event.target.value);
+
+    localStorage.setItem("fav_project", event.target.value);
   };
 
   return (
