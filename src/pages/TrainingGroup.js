@@ -1,11 +1,9 @@
 import React from "react";
-import ProjectListDropdown from "../components/ProjectDrop/ProjectListDropdown";
 import DataTable from "../components/Table/DataTable";
 
 const TrainingGroup = ({ trainingGroups }) => {
-  console.log(trainingGroups);
-
   const columns = [
+    "Training Group ID",
     "Training Group Name",
     "TNS ID",
     "No of Participants",
@@ -16,22 +14,26 @@ const TrainingGroup = ({ trainingGroups }) => {
     return rowData;
   }
 
-  const rows = [
-    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
-    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
-    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
-    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
-    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
-    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
-    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
-    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
-    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
-    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
-  ];
+  const rows = trainingGroups.map((trainingGroup) =>
+    createData(
+      trainingGroup.tg_id,
+      trainingGroup.tg_name,
+      trainingGroup.tns_id,
+      trainingGroup.total_participants,
+      trainingGroup.business_advisor.join(", "),
+      trainingGroup.farmer_trainer
+    )
+  );
 
   return (
     <div className="page__content">
-      <DataTable columns={columns} rows={rows} />
+      {trainingGroups.length > 0 ? (
+        <DataTable columns={columns} rows={rows} />
+      ) : (
+        <div className="no__data">
+          <h1>No Data Found</h1>
+        </div>
+      )}
     </div>
   );
 };

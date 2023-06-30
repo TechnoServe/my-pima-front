@@ -11,9 +11,9 @@ import {
 import "./datatable.css";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-function createData(...rowData) {
-  return rowData;
-}
+import { useState } from "react";
+import { useEffect } from "react";
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:hover": {
     boxShadow: "0px 2px 8px 3px rgba(0, 0, 0, 0.2)", // Customize the box shadow effect
@@ -35,8 +35,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const DataTable = ({ columns, rows }) => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -46,14 +46,22 @@ const DataTable = ({ columns, rows }) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  useEffect(() => {
+    if (rows.length > 0) {
+      setPage(0);
+    }
+  }, [rows]);
+
   return (
     <Paper sx={{ width: "auto", height: "100%", overflow: "auto" }}>
-      
-        <div style={{ position: "sticky", top: "0" }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
+      <div style={{ position: "sticky", top: "0" }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {columns
+                .filter((column, columnIndex) => columnIndex !== 0)
+                .map((column) => (
                   <TableCell
                     key={column}
                     sx={{
@@ -66,32 +74,34 @@ const DataTable = ({ columns, rows }) => {
                     {column}
                   </TableCell>
                 ))}
-              </TableRow>
-            </TableHead>
-          </Table>
-        </div>
-        <div style={{ height: "300px", overflow: "auto" }}>
-          <TableContainer>
-            <Table style={{ tableLayout: "fixed" }}>
-              <TableBody>
-                {rows
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    return (
-                      <StyledTableRow keyr={index}>
-                        {row.map((cell, cellIndex) => (
+            </TableRow>
+          </TableHead>
+        </Table>
+      </div>
+      <div style={{ height: "300px", overflow: "auto" }}>
+        <TableContainer>
+          <Table style={{ tableLayout: "fixed" }}>
+            <TableBody>
+              {rows
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  return (
+                    <StyledTableRow key={index}>
+                      {row
+                        .filter((cell, cellIndex) => cellIndex !== 0)
+                        .map((cell, cellIndex) => (
                           <StyledTableCell key={cellIndex} align="center">
                             {cell}
                           </StyledTableCell>
                         ))}
-                      </StyledTableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
-        <TablePagination
+                    </StyledTableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={rows.length}
