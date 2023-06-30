@@ -26,7 +26,8 @@ const TrainingGroup = ({ trainingGroups }) => {
   );
 
   return (
-    <div className="page__content">
+        <div className="page__content">
+        <h1>Project Name</h1>
       {trainingGroups.length > 0 ? (
         <DataTable columns={columns} rows={rows} />
       ) : (

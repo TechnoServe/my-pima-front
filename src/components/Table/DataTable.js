@@ -8,7 +8,6 @@ import {
   TableBody,
   TablePagination,
 } from "@mui/material";
-import "./datatable.css";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useState } from "react";

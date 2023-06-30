@@ -57,7 +57,9 @@ const ProjectListDropdown = ({
   return (
     <div
       style={{
-        marginBottom: "10px",
+        width: "100%",
+        maxWidth: "35ch",
+        alignSelf: "flex-end"
       }}
     >
       <div>
@@ -82,7 +84,7 @@ const ProjectListDropdown = ({
               sx={{
                 borderRadius: "10px",
                 marginLeft: "10px",
-                maxWidth: "55ch",
+
                 maxHeight: "50px",
                 boxShadow: "0 4px 14px 0px rgba(0, 0, 0, 0.2)",
               }}
