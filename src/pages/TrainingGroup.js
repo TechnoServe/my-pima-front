@@ -1,11 +1,37 @@
 import React from "react";
+import ProjectListDropdown from "../components/ProjectDrop/ProjectListDropdown";
+import DataTable from "../components/Table/DataTable";
 
 const TrainingGroup = ({ trainingGroups }) => {
   console.log(trainingGroups);
 
+  const columns = [
+    "Training Group Name",
+    "TNS ID",
+    "No of Participants",
+    "Buisness Advisor",
+    "Farmer Trainer",
+  ];
+  function createData(...rowData) {
+    return rowData;
+  }
+
+  const rows = [
+    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
+    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
+    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
+    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
+    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
+    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
+    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
+    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
+    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
+    createData("TNS Bumbogo", "TNS234111", 10, "John Smith", "John Doe"),
+  ];
+
   return (
     <div className="page__content">
-      <h1>Hi this is the Training Group page</h1>
+      <DataTable columns={columns} rows={rows} />
     </div>
   );
 };
