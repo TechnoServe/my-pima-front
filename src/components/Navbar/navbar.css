@@ -8,13 +8,12 @@
   flex-direction: column;
   background-color: #087c8f;
   height: 100vh;
-  width: auto; 
+  width: auto;
 }
 
 .top_section {
   display: flex;
   align-items: center;
-
 }
 
 .bars {
@@ -22,12 +21,10 @@
   font-size: 20px;
   cursor: pointer;
   /* transition: margin 0.5s ease; */
-
 }
 .mid__section {
   margin-top: 40px;
   display: block;
-
 }
 .link {
   display: flex;
@@ -50,7 +47,9 @@
   color: red; /* Set your desired active icon color */
 }
 
-.icon{ font-size: 16px;}
+.icon {
+  font-size: 16px;
+}
 .link_text {
   font-size: 14px;
 }
@@ -70,11 +69,11 @@
     background-color: #fff;
     margin: 0;
     display: flex;
-    flex-direction: row; 
-    justify-content: space-between; 
-    height: 70px; 
-    width: 100%; 
-    position: fixed; 
+    flex-direction: row;
+    justify-content: space-between;
+    height: 70px;
+    width: 100%;
+    position: fixed;
     bottom: 0;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
   }
@@ -89,24 +88,24 @@
   }
   .link {
     background-color: transparent;
-    border:  none;
+    border: none;
     flex-direction: column;
 
     align-items: center;
     margin: 10px 10px;
     padding: 0;
     gap: 0;
-    color : #71839B;
+    color: #71839b;
   }
   .link:hover {
     background-color: transparent;
-    color: #00A5A3;
+    color: #00a5a3;
   }
-  .active{
+  .active {
     background-color: transparent;
-    color: #25245D;
+    color: #25245d;
   }
-  .icon{
+  .icon {
     font-size: 18px;
   }
   .link_text {
