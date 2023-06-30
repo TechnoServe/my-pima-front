@@ -3,7 +3,7 @@ import React from "react";
 const TrainingSession = () => {
   return (
     <div>
-      <h1>Hi this is the Training Session page</h1>
+      <h1>Project Name</h1>
     </div>
   );
 };

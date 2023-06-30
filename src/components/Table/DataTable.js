@@ -24,13 +24,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:last-child td, &:last-child th": {
     border: 0,
   },
-  transition: "box-shadow 0.3s ease-in-out", // Add a transition effect
+  transition: "box-shadow 0.3s ease-in-out",
 }));
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   "&:hover": {
     fontWeight: 600,
   },
-  transition: "font-weight 0.3s ease-in-out", // Add a transition effect
+  padding: "10px",
+    transition: "font-weight 0.3s ease-in-out",
 }));
 
 const DataTable = ({ columns, rows }) => {
@@ -77,7 +78,7 @@ const DataTable = ({ columns, rows }) => {
           </TableHead>
         </Table>
       </div>
-      <div style={{ height: "300px", overflow: "auto" }}>
+      <div style={{ height: "340px", overflow: "auto" }}>
         <TableContainer>
           <Table style={{ tableLayout: "fixed" }}>
             <TableBody>
@@ -89,7 +90,10 @@ const DataTable = ({ columns, rows }) => {
                       {row
                         .filter((cell, cellIndex) => cellIndex !== 0)
                         .map((cell, cellIndex) => (
-                          <StyledTableCell key={cellIndex} align="center">
+                          <StyledTableCell
+                            key={cellIndex}
+                            align="center"
+                          >
                             {cell}
                           </StyledTableCell>
                         ))}
@@ -108,6 +112,7 @@ const DataTable = ({ columns, rows }) => {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{ borderTop: "1px solid #ccc" }}
       />
     </Paper>
   );
