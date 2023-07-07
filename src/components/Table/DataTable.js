@@ -78,7 +78,7 @@ const DataTable = ({ columns, rows }) => {
           </TableHead>
         </Table>
       </div>
-      <div style={{ height: "340px", overflow: "auto" }}>
+      <div style={{ height:  "185px", overflow: "auto" }}>
         <TableContainer>
           <Table style={{ tableLayout: "fixed" }}>
             <TableBody>

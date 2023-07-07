@@ -22,9 +22,12 @@ body {
   line-height: 1.7;
 }
 .page__container{
+  width: auto;
+  height: 100vh;
   display: flex;
   flex-direction:column;
-  margin: 20px;
+  margin: 0 20px;
+  
 }
 .no__data{
   font-size: 16px;

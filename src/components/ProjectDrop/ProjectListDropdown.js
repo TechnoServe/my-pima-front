@@ -57,6 +57,7 @@ const ProjectListDropdown = ({
   return (
     <div
       style={{
+        marginTop: "20px",
         width: "100%",
         maxWidth: "35ch",
         alignSelf: "flex-end"
