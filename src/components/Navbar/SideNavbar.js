@@ -84,7 +84,7 @@ const Sidebar = ({ children }) => {
             style={{
               marginLeft: isOpen ? "70px" : "0px",
               paddingTop: isOpen ? "" : "15px",
-              marginRight: isOpen? "10px": "0",
+              marginRight: isOpen ? "10px" : "0",
               transition: "margin 0.3s ease",
             }}
             className="bars"
