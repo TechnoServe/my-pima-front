@@ -69,7 +69,12 @@ const Navbar = () => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route
                 path="/traingroup"
-                element={<TrainingGroup trainingGroups={trainingGroups} />}
+                element={
+                  <TrainingGroup
+                    trainingGroups={trainingGroups}
+                    selectedProject={selectedProject}
+                  />
+                }
               />
               <Route path="/trainsession" element={<TrainingSession />} />
               <Route path="/participant" element={<Participants />} />

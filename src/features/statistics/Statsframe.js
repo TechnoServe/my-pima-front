@@ -1,26 +1,27 @@
 import React from "react";
 import Statscard from "./Statscard";
-import { MdGroups, MdBarChart} from "react-icons/md";
-import {BsPersonBoundingBox} from "react-icons/bs"
-const Statsframe = () => {
+import { MdGroups, MdBarChart } from "react-icons/md";
+import { BsPersonBoundingBox } from "react-icons/bs";
+
+const Statsframe = ({ statistics, totalParticipants }) => {
   const statsData = [
     {
       heading: "Total Training Groups",
-      figures: "2345",
+      figures: statistics.total_groups,
       icon: <MdGroups />,
-      color: "#25245D"
+      color: "#25245D",
     },
     {
       heading: "Total Participants",
-      figures: "5000",
+      figures: totalParticipants,
       icon: <BsPersonBoundingBox />,
-      color: "#087C8F"
+      color: "#087C8F",
     },
     {
       heading: "Active BA's",
-      figures: "134",
-      icon: <MdBarChart/>,
-      color: "#F46700"
+      figures: statistics.total_bas || "N/A",
+      icon: <MdBarChart />,
+      color: "#F46700",
     },
   ];
 
