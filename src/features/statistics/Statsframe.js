@@ -19,7 +19,7 @@ const Statsframe = ({ statistics, totalParticipants }) => {
     },
     {
       heading: "Active BA's",
-      figures: statistics.total_bas || "N/A",
+      figures: statistics.total_bas,
       icon: <MdBarChart />,
       color: "#F46700",
     },
