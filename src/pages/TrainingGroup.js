@@ -70,7 +70,7 @@ const TrainingGroup = ({ trainingGroups, selectedProject }) => {
             <Table columns={columns} data={rows} />
           ) : (
             <div className="no__data">
-              <h1>No Data Found</h1>
+              <em>No Active Group Found</em>
             </div>
           )}
         </div>

@@ -7,7 +7,7 @@ import TrainingGroup from "../../pages/TrainingGroup";
 import TrainingSession from "../../pages/TrainingSession";
 import Participants from "../../pages/Participants";
 import FarmVisit from "../../pages/FarmVisit";
-import BottomNavbar from "./BottomNavbar";
+import { BeatLoader } from "react-spinners";
 import ProjectListDropdown from "../ProjectDrop/ProjectListDropdown";
 import { GET_ALL_PROJECTS } from "../../graphql/queries/projectsRequests";
 import { useQuery } from "@apollo/client";
@@ -70,10 +70,21 @@ const Navbar = () => {
               <Route
                 path="/traingroup"
                 element={
-                  <TrainingGroup
-                    trainingGroups={trainingGroups}
-                    selectedProject={selectedProject}
-                  />
+                  !trainingGroupsPerProject.loading ? (
+                    <TrainingGroup
+                      trainingGroups={trainingGroups}
+                      selectedProject={selectedProject}
+                    />
+                  ) : (
+                    <BeatLoader
+                      color="#0D3C61"
+                      size={15}
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    />
+                  )
                 }
               />
               <Route path="/trainsession" element={<TrainingSession />} />
