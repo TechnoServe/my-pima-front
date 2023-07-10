@@ -28,7 +28,7 @@ const TrainingGroup = ({ trainingGroups, selectedProject }) => {
         tg_name: trainingGroup.tg_name,
         tns_id: trainingGroup.tns_id,
         total_participants: trainingGroup.total_participants,
-        business_advisor: trainingGroup.business_advisor.join(", "),
+        business_advisor: trainingGroup.business_advisor,
         farmer_trainer: trainingGroup.farmer_trainer,
       }))
     : [];
