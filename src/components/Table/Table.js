@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useTable } from "react-table";
 import { TablePagination } from "@mui/material";
 import "./table.css";
+import Exportbutton from "../Export/Export";
 
 const Table = ({ columns, data }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -30,6 +31,8 @@ const Table = ({ columns, data }) => {
   /* */
   return (
     <div>
+        <Exportbutton/>
+
       <div className="table__container">
         <table {...getTableProps()} className="table__head">
           <thead className="table__header">

@@ -57,7 +57,7 @@ const ProjectListDropdown = ({
   return (
     <div
       style={{
-        marginTop: "20px",
+        marginTop: "10px",
         width: "100%",
         maxWidth: "35ch",
         alignSelf: "flex-end"
@@ -66,7 +66,7 @@ const ProjectListDropdown = ({
       <div>
         <InputLabel
           htmlFor="project-dropdown"
-          sx={{ color: "#2B2B2B", marginBottom: "10px" }}
+          sx={{ color: "#2B2B2B", marginBottom: "10px", fontSize: "14px"}}
         >
           Project List
         </InputLabel>

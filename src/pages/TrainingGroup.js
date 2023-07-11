@@ -45,7 +45,7 @@ const TrainingGroup = ({ trainingGroups, selectedProject }) => {
 
   return (
     <div>
-      <h1>Training Groups</h1>
+      <h1 style={{fontSize: "20px"}}>Training Groups</h1>
       {!trainingGroups ? (
         <BeatLoader color="#0D3C61" size={20} />
       ) : (
@@ -63,7 +63,7 @@ const TrainingGroup = ({ trainingGroups, selectedProject }) => {
             />
           ) : (
             <div className="no__data">
-              <h1>No Statistics Yet</h1>
+              <h1 style={{fontSize: "20px"}}>No Statistics Yet</h1>
             </div>
           )}
           {trainingGroups && trainingGroups.length > 0 ? (
