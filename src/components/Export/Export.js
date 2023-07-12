@@ -1,11 +1,8 @@
-import * as React from "react";
+import { useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Divider from "@mui/material/Divider";
+import { Button, Menu, MenuItem } from "@mui/material";
 
-import { PiCaretDownBold } from "react-icons/pi";
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
 const StyledMenu = styled((props) => <Menu elevation={0} {...props} />)(
   ({ theme }) => ({
@@ -34,45 +31,60 @@ const StyledMenu = styled((props) => <Menu elevation={0} {...props} />)(
             theme.palette.action.selectedOpacity
           ),
         },
+        "&:hover": {
+          backgroundColor: "#f1f5f9",
+        },
       },
     },
   })
 );
 
 const StyledButton = styled(Button)(({ theme }) => ({
-    marginBottom: "10px",
-    marginRight: "10px",
-    textTransform: "initial",
-    backgroundColor : "rgba(0, 165, 163, 1)",
+  marginBottom: "10px",
+  marginRight: "10px",
+  textTransform: "initial",
+  outlineColor: "rgba(0, 165, 163, 1)",
+  backgroundColor: "transparent",
+  color: "rgba(0, 165, 163, 1)",
 
-    "&:hover" : {
-        backgroundColor : "rgba(0, 165, 163, 0.1)",
-        color: "#2b2b2b",
-        transition: "background-color 0.3s ease-in-out",
-    }
+  "&:hover": {
+    backgroundColor: "rgba(0, 165, 163, 0.1)",
+    color: "rgba(0, 165, 163, 1)",
+    transition: "background-color 0.3s ease-in-out",
+    border: "1px, solid, rgba(0, 165, 163, 1)",
+},
+".MuiButton-outlined":{
+    color: " rgba(0, 165, 163, 1)",
+
+}
+
 }));
 
 export default function Exportbutton() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isIconUp, setIsIconUp] = useState(false); // New state variable
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    setIsIconUp(!isIconUp);
   };
   const handleClose = () => {
     setAnchorEl(null);
+    setIsIconUp(false);
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+    <div>
       <StyledButton
         id="demo-customized-button"
         aria-controls={open ? "demo-customized-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
-        variant="contained"
         disableElevation
-        onClick={handleClick}
-        endIcon={<PiCaretDownBold />}
+        variant= "outlined"
+                onClick={handleClick}
+        endIcon={isIconUp ? <FaCaretUp /> : <FaCaretDown />}
       >
         Export
       </StyledButton>

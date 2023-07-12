@@ -4,6 +4,7 @@ import { useTable } from "react-table";
 import { TablePagination } from "@mui/material";
 import "./table.css";
 import Exportbutton from "../Export/Export";
+import FilterContainer from "../Filter/FilterContainer";
 
 const Table = ({ columns, data }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -31,9 +32,11 @@ const Table = ({ columns, data }) => {
   /* */
   return (
     <div>
-        <Exportbutton/>
-
       <div className="table__container">
+      <div style={{display: "flex", justifyContent: "flex-end", position: "sticky"}}>
+    <FilterContainer/>
+      <Exportbutton/>
+      </div>
         <table {...getTableProps()} className="table__head">
           <thead className="table__header">
             {headerGroups.map((headerGroup) => (
@@ -72,6 +75,8 @@ const Table = ({ columns, data }) => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         sx={{
+          borderTop: "1px solid #EEEEF2",
+
           borderBottom: "1px solid #ccc",
           display: "flex",
           justifyContent: "space-around",
