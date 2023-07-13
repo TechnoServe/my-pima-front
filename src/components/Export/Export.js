@@ -3,6 +3,8 @@ import { styled, alpha } from "@mui/material/styles";
 import { Button, Menu, MenuItem } from "@mui/material";
 
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
+import { ExportToCsv } from "export-to-csv";
+import { downloadExcel } from "react-export-table-to-excel";
 
 const StyledMenu = styled((props) => <Menu elevation={0} {...props} />)(
   ({ theme }) => ({
@@ -52,24 +54,60 @@ const StyledButton = styled(Button)(({ theme }) => ({
     color: "rgba(0, 165, 163, 1)",
     transition: "background-color 0.3s ease-in-out",
     border: "1px, solid, rgba(0, 165, 163, 1)",
-},
-".MuiButton-outlined":{
+  },
+  ".MuiButton-outlined": {
     color: " rgba(0, 165, 163, 1)",
-
-}
-
+  },
 }));
 
-export default function Exportbutton() {
+export default function Exportbutton({ groups }) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isIconUp, setIsIconUp] = useState(false); // New state variable
+  const [isIconUp, setIsIconUp] = useState(false);
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setIsIconUp(!isIconUp);
   };
-  const handleClose = () => {
+  const handleClose = (format) => {
+    const headers = [
+      "Group Name",
+      "TNS ID",
+      "No of Participants",
+      "Business Advisor",
+      "Farmer Trainer",
+    ];
+
+    try {
+      const csvExporter = new ExportToCsv({
+        fieldSeparator: ",",
+        quoteStrings: '"',
+        decimalSeparator: ".",
+        showLabels: true,
+        useTextFile: false,
+        useBom: true,
+        filename: `Training Groups ${new Date().toLocaleDateString()}`,
+        headers,
+      });
+
+      csvExporter.generateCsv(groups.map(({ tg_id, num, ...rest }) => rest));
+
+      if (format === "csv") {
+        csvExporter.generateCsv();
+      } else if (format === "xls") {
+        downloadExcel({
+          fileName: `Training Groups ${new Date().toLocaleDateString()}`,
+          sheet: "Training Groups",
+          tablePayload: {
+            headers,
+            body: groups.map(({ tg_id, num, ...rest }) => rest),
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     setAnchorEl(null);
     setIsIconUp(false);
   };
@@ -82,8 +120,8 @@ export default function Exportbutton() {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         disableElevation
-        variant= "outlined"
-                onClick={handleClick}
+        variant="outlined"
+        onClick={handleClick}
         endIcon={isIconUp ? <FaCaretUp /> : <FaCaretDown />}
       >
         Export
@@ -97,10 +135,10 @@ export default function Exportbutton() {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={() => handleClose("csv")} disableRipple>
           Export as CSV
         </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={() => handleClose("xls")} disableRipple>
           Export as Excel
         </MenuItem>
       </StyledMenu>

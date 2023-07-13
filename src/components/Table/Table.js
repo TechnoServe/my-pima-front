@@ -45,7 +45,7 @@ const Table = ({ columns, data }) => {
           }}
         >
           <FilterContainer />
-          <Exportbutton />
+          <Exportbutton groups={data} />
         </div>
         <table {...getTableProps()} className="table__head">
           <thead className="table__header">
