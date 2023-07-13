@@ -5,7 +5,13 @@ import { useQuery } from "@apollo/client";
 import { BeatLoader } from "react-spinners";
 import { GET_PROJECT_STATISTICS } from "../graphql/queries/projectsRequests";
 
-const TrainingGroup = ({ trainingGroups, selectedProject }) => {
+const TrainingGroup = ({
+  trainingGroups,
+  selectedProject,
+  filter,
+  setFilter,
+  setFilteredGroups,
+}) => {
   const { data, loading } = useQuery(GET_PROJECT_STATISTICS, {
     variables: { sfProjectId: selectedProject },
   });
@@ -67,7 +73,13 @@ const TrainingGroup = ({ trainingGroups, selectedProject }) => {
             </div>
           )}
           {trainingGroups && trainingGroups.length > 0 ? (
-            <Table columns={columns} data={rows} />
+            <Table
+              columns={columns}
+              data={rows}
+              filter={filter}
+              setFilter={setFilter}
+              setFilteredGroups={setFilteredGroups}
+            />
           ) : (
             <div className="no__data">
               <em>No Active Group Found</em>

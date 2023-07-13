@@ -27,6 +27,12 @@ const Navbar = () => {
   const trainingGroupsPerProject = useQuery(GET_TRAINING_GROUPS_PER_PROJECT, {
     variables: { projectId: selectedProject },
   });
+  const [filter, setFilter] = useState({
+    businessAdvisor: "",
+    farmerTrainer: "",
+    trainingGroup: "",
+  });
+  const [filteredGroups, setFilteredGroups] = useState([]); // eslint-disable-line no-unused-vars
 
   useEffect(() => {
     if (data) {
@@ -47,6 +53,7 @@ const Navbar = () => {
       setTrainingGroups(
         trainingGroupsPerProject.data.trainingGroupsByProject.trainingGroups
       );
+
     }
   }, [favProject, trainingGroupsPerProject.data]);
 
@@ -62,6 +69,7 @@ const Navbar = () => {
                 projects={projects}
                 selectedProject={selectedProject}
                 setSelectedProject={setSelectedProject}
+                setFilteredGroups={setFilteredGroups}
               />
             )}
 
@@ -73,8 +81,15 @@ const Navbar = () => {
                 element={
                   !trainingGroupsPerProject.loading ? (
                     <TrainingGroup
-                      trainingGroups={trainingGroups}
+                      trainingGroups={
+                        filteredGroups.length > 0
+                          ? filteredGroups
+                          : trainingGroups
+                      }
                       selectedProject={selectedProject}
+                      filter={filter}
+                      setFilter={setFilter}
+                      setFilteredGroups={setFilteredGroups}
                     />
                   ) : (
                     <BeatLoader
