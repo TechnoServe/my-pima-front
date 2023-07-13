@@ -5,6 +5,8 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Tgtabdetail from "./Tgtabdetail";
+import Tgtabtable from "./tgtabtable";
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -63,7 +65,7 @@ export default function BasicTabs() {
         <Tgtabdetail />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <Tgtabtable />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Item Three
