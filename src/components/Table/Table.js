@@ -5,13 +5,17 @@ import { TablePagination } from "@mui/material";
 import "./table.css";
 import Exportbutton from "../Export/Export";
 import FilterContainer from "../Filter/FilterContainer";
+import { useNavigate } from "react-router-dom";
 
 const Table = ({ columns, data }) => {
+  const navigate = useNavigate();
+
+  const handleRowClick = () => {
+    navigate(`/traingroup/row:id`); // Update the URL with the appropriate row identifier
+  };
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });
-
-  /* PAGINATION*/
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -33,10 +37,16 @@ const Table = ({ columns, data }) => {
   return (
     <div>
       <div className="table__container">
-      <div style={{display: "flex", justifyContent: "flex-end", position: "sticky"}}>
-    <FilterContainer/>
-      <Exportbutton/>
-      </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            position: "sticky",
+          }}
+        >
+          <FilterContainer />
+          <Exportbutton />
+        </div>
         <table {...getTableProps()} className="table__head">
           <thead className="table__header">
             {headerGroups.map((headerGroup) => (
@@ -56,7 +66,7 @@ const Table = ({ columns, data }) => {
               .map((row) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()}>
+                  <tr {...row.getRowProps()} onClick={() => handleRowClick()}>
                     {row.cells.map((cell) => (
                       <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                     ))}

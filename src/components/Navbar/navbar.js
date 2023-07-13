@@ -13,6 +13,7 @@ import { GET_ALL_PROJECTS } from "../../graphql/queries/projectsRequests";
 import { useQuery } from "@apollo/client";
 import { toast } from "react-hot-toast";
 import { GET_TRAINING_GROUPS_PER_PROJECT } from "../../graphql/queries/trainingGroupsRequests";
+import Tgdetail from "../../features/tgdetail.js/Tgdetail";
 
 const Navbar = () => {
   const isMobile = window.innerWidth <= 600; // Adjust the breakpoint as per your needs
@@ -87,6 +88,8 @@ const Navbar = () => {
                   )
                 }
               />
+                <Route path="/traingroup/row:id" element={ <Tgdetail/> } />
+
               <Route path="/trainsession" element={<TrainingSession />} />
               <Route path="/participant" element={<Participants />} />
               <Route path="/farmvisit" element={<FarmVisit />} />

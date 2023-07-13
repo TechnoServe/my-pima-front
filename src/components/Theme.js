@@ -15,6 +15,7 @@ const theme = createTheme({
         },
       },
     },
+
     MuiSelect: {
       styleOverrides: {
         root: {
