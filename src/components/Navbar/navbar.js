@@ -88,7 +88,10 @@ const Navbar = () => {
                   )
                 }
               />
-                <Route path="/traingroup/row:id" element={ <Tgdetail/> } />
+              <Route
+                path="/traingroup/:id"
+                element={<Tgdetail trainingGroups={trainingGroups} />}
+              />
 
               <Route path="/trainsession" element={<TrainingSession />} />
               <Route path="/participant" element={<Participants />} />

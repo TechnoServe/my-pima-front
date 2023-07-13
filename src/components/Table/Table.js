@@ -10,8 +10,8 @@ import { useNavigate } from "react-router-dom";
 const Table = ({ columns, data }) => {
   const navigate = useNavigate();
 
-  const handleRowClick = () => {
-    navigate(`/traingroup/row:id`); // Update the URL with the appropriate row identifier
+  const handleRowClick = (row) => {
+    navigate(`/traingroup/${row.original.tg_id}`);
   };
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -66,7 +66,10 @@ const Table = ({ columns, data }) => {
               .map((row) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()} onClick={() => handleRowClick()}>
+                  <tr
+                    {...row.getRowProps()}
+                    onClick={() => handleRowClick(row)}
+                  >
                     {row.cells.map((cell) => (
                       <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                     ))}
