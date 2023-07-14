@@ -43,9 +43,6 @@ const ProjectListDropdown = ({
             value={selectedProject}
             onChange={handleProjectSelect}
           >
-            <MenuItem value="" disabled>
-              <p>None</p>
-            </MenuItem>
             {projects.map((project, index) => (
               <MenuItem value={project.sf_project_id} key={index}>
                 <p>{project.project_name}</p>
