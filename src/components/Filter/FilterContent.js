@@ -21,8 +21,7 @@ import DateFilter from "./Filteroptions/DateFilter";
 import StatusFilter from "./Filteroptions/StatusFilter";
 import "./Filter.css";
 import { useState } from "react";
-import { styled} from "@mui/material/styles";
-
+import { styled } from "@mui/material/styles";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   "&:hover": {
@@ -31,20 +30,59 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-
-
-
-const FilterContent = ({ open, handleClose }) => {
+const FilterContent = ({
+  open,
+  handleClose,
+  filter,
+  setFilter,
+  setFilteredGroups,
+  groups,
+}) => {
   const [activeTab, setActiveTab] = useState("businessAdvisor");
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
-  const handleDelete = () => {};
-  const handleSearch = () => {};
-  const handleReset = () => {};
+  const handleSearch = () => {
+    if (filter.trainingGroup !== "") {
+      setFilteredGroups(
+        groups.filter((group) => group.tg_name.includes(filter.trainingGroup))
+      );
+      return;
+    }
 
+    if (filter.farmerTrainer !== "") {
+      setFilteredGroups(
+        groups.filter((group) =>
+          group.farmer_trainer.includes(filter.farmerTrainer)
+        )
+      );
+      return;
+    }
+
+    if (filter.businessAdvisor !== "") {
+      setFilteredGroups(
+        groups.filter((group) =>
+          group.business_advisor.includes(filter.businessAdvisor)
+        )
+      );
+      return;
+    }
+
+    setFilteredGroups([]);
+    handleClose();
+  };
+
+  const handleReset = () => {
+    setFilter({
+      businessAdvisor: "",
+      farmerTrainer: "",
+      trainingGroup: "",
+    });
+
+    setFilteredGroups([]);
+  };
 
   return (
     <div style={{ maxheight: "100%" }}>
@@ -67,13 +105,72 @@ const FilterContent = ({ open, handleClose }) => {
           >
             <MdClose />
           </IconButton>
-          <p>
-            <Chip
-              label="filter selection"
-              size="small"
-              onDelete={handleDelete}
-            />
-          </p>{" "}
+          <div>
+            <span
+              style={{ fontSize: "12px", color: "#2b2b2b", marginRight: "5px" }}
+            >
+              Selected filters :
+            </span>
+            {
+              // display selected filters here, get non-empty values from filter object
+              filter.businessAdvisor !== "" && (
+                <Chip
+                  label={filter.businessAdvisor}
+                  defaultValue={filter.businessAdvisor}
+                  size="small"
+                  onDelete={() => {
+                    setFilter({
+                      businessAdvisor: "",
+                      farmerTrainer: "",
+                      trainingGroup: "",
+                    });
+                  }}
+                />
+              )
+            }
+            {
+              // display selected filters here, get non-empty values from filter object
+              filter.farmerTrainer !== "" && (
+                <Chip
+                  label={filter.farmerTrainer}
+                  size="small"
+                  onDelete={() => {
+                    setFilter((prevState) => ({
+                      ...prevState,
+                      farmerTrainer: "",
+                      trainingGroup: "",
+                    }));
+                  }}
+                />
+              )
+            }
+            {
+              // display selected filters here, get non-empty values from filter object
+              filter.trainingGroup !== "" && (
+                <Chip
+                  label={filter.trainingGroup}
+                  size="small"
+                  onDelete={() => {
+                    setFilter((prevState) => ({
+                      ...prevState,
+                      trainingGroup: "",
+                    }));
+                  }}
+                />
+              )
+            }
+
+            {
+              // if no filter is selected, display this
+              filter.businessAdvisor === "" &&
+                filter.farmerTrainer === "" &&
+                filter.trainingGroup === "" && (
+                  <em style={{ fontSize: "11px", color: "#969696" }}>
+                    Nothing yet
+                  </em>
+                )
+            }
+          </div>{" "}
           <Divider sx={{ marginBottom: "0", marginTop: "10px" }} />
           <DialogContent sx={{ paddingLeft: "10px" }}>
             <div className="filter__content">
@@ -93,7 +190,7 @@ const FilterContent = ({ open, handleClose }) => {
               >
                 <Chip
                   variant="outlined"
-                  label="Buisness Advisor"
+                  label="Business Advisor"
                   icon={<MdClass size={15} />}
                   color={
                     activeTab === "businessAdvisor" ? "primary" : "default"
@@ -124,7 +221,13 @@ const FilterContent = ({ open, handleClose }) => {
               </div>
 
               <div className="filter__content-container">
-                {activeTab === "businessAdvisor" && <BAFilter />}
+                {activeTab === "businessAdvisor" && (
+                  <BAFilter
+                    setFilter={setFilter}
+                    setFilteredGroups={setFilteredGroups}
+                    groups={groups}
+                  />
+                )}
                 {activeTab === "moduleName" && <MDFilter />}
                 {activeTab === "date" && <DateFilter />}
                 {activeTab === "status" && <StatusFilter />}
@@ -132,7 +235,13 @@ const FilterContent = ({ open, handleClose }) => {
             </div>
           </DialogContent>
           <DialogActions>
-            <Button onclick= {handleReset} startIcon= <AiOutlineReload/> sx={{ textTransform: "initial",color:"#087C8F" }}>Reset all</Button>
+            <Button
+              onClick={handleReset}
+              startIcon={<AiOutlineReload />}
+              sx={{ textTransform: "initial", color: "#087C8F" }}
+            >
+              Reset all
+            </Button>
             <StyledButton
               autoFocus
               onClick={handleSearch}

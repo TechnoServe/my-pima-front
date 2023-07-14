@@ -7,7 +7,7 @@ import Exportbutton from "../Export/Export";
 import FilterContainer from "../Filter/FilterContainer";
 import { useNavigate } from "react-router-dom";
 
-const Table = ({ columns, data }) => {
+const Table = ({ columns, data, filter, setFilter, setFilteredGroups }) => {
   const navigate = useNavigate();
 
   const handleRowClick = (row) => {
@@ -44,7 +44,12 @@ const Table = ({ columns, data }) => {
             position: "sticky",
           }}
         >
-          <FilterContainer />
+          <FilterContainer
+            filter={filter}
+            setFilter={setFilter}
+            setFilteredGroups={setFilteredGroups}
+            groups={data}
+          />
           <Exportbutton groups={data} />
         </div>
         <table {...getTableProps()} className="table__head">

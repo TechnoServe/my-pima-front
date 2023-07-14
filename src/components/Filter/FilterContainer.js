@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { HiFilter } from "react-icons/hi";
-import { styled} from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import { Button } from "@mui/material";
 import FilterContent from "./FilterContent";
 
@@ -17,15 +17,15 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const FilterContainer = () => {
+const FilterContainer = ({ filter, setFilter, setFilteredGroups, groups }) => {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
   };
-  const handleClose = () =>{
+  const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   return (
     <>
@@ -42,7 +42,16 @@ const FilterContainer = () => {
       >
         Filter
       </StyledButton>
-      {open && <FilterContent open={open} handleClose={handleClose} />}
+      {open && (
+        <FilterContent
+          open={open}
+          handleClose={handleClose}
+          filter={filter}
+          setFilter={setFilter}
+          setFilteredGroups={setFilteredGroups}
+          groups={groups}
+        />
+      )}
     </>
   );
 };

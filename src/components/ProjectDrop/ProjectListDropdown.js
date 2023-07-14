@@ -5,12 +5,14 @@ const ProjectListDropdown = ({
   projects,
   selectedProject,
   setSelectedProject,
+  setFilteredGroups,
   dropdownlabel1,
   dropdownlabel2,
   style,
 }) => {
   const handleProjectSelect = (event) => {
     setSelectedProject(event.target.value);
+    setFilteredGroups([]);
 
     localStorage.setItem("fav_project", event.target.value);
   };
@@ -30,7 +32,6 @@ const ProjectListDropdown = ({
       </div>
       <div>
         <FormControl className="dropdown__select">
-    
           <Select
             sx={{
               borderRadius: "5px",
