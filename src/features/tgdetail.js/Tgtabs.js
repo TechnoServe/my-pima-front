@@ -41,7 +41,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs() {
+export default function BasicTabs({ details }) {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -62,13 +62,13 @@ export default function BasicTabs() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <Tgtabdetail />
+        <Tgtabdetail details={details} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <Tgtabtable />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        Farm Visit
       </CustomTabPanel>
     </Box>
   );

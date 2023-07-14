@@ -12,12 +12,6 @@ const BAFilter = ({ isSelected }) => {
   const [selectedProject, setSelectedProject] = useState(
     projects[0].sf_project_id
   );
-  const [selectedProjectFT, setSelectedProjectFT] = useState(
-    projects[1].sf_project_id
-  );
-  const [selectedProjectTG, setSelectedProjectTG] = useState(
-    projects[2].sf_project_id
-  );
 
   const [showSecondDropdown, setShowSecondDropdown] = useState(false);
   const [showThirdDropdown, setShowThirdDropdown] = useState(false);
