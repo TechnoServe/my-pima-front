@@ -22,6 +22,7 @@ import StatusFilter from "./Filteroptions/StatusFilter";
 import "./Filter.css";
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
+import { useLocation } from "react-router-dom";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   "&:hover": {
@@ -39,6 +40,9 @@ const FilterContent = ({
   groups,
 }) => {
   const [activeTab, setActiveTab] = useState("businessAdvisor");
+
+  // get url
+  const location = useLocation();
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -188,36 +192,41 @@ const FilterContent = ({
                 className="filter__options"
                 style={{ display: "flex", gap: "20px" }}
               >
-                <Chip
-                  variant="outlined"
-                  label="Business Advisor"
-                  icon={<MdClass size={15} />}
-                  color={
-                    activeTab === "businessAdvisor" ? "primary" : "default"
-                  }
-                  onClick={() => handleTabChange("businessAdvisor")}
-                />
-                <Chip
-                  variant="outlined"
-                  label="Module Name"
-                  icon={<MdLibraryBooks size={15} />}
-                  color={activeTab === "moduleName" ? "primary" : "default"}
-                  onClick={() => handleTabChange("moduleName")}
-                />
-                <Chip
-                  variant="outlined"
-                  label="Status"
-                  icon={<MdPending size={15} />}
-                  color={activeTab === "status" ? "primary" : "default"}
-                  onClick={() => handleTabChange("status")}
-                />
-                <Chip
-                  variant="outlined"
-                  label="Date"
-                  icon={<MdCalendarToday size={15} />}
-                  color={activeTab === "date" ? "primary" : "default"}
-                  onClick={() => handleTabChange("date")}
-                />
+                {location.pathname === "/traingroup" ? (
+                  <Chip
+                    variant="outlined"
+                    label="Business Advisor"
+                    icon={<MdClass size={15} />}
+                    color={
+                      activeTab === "businessAdvisor" ? "primary" : "default"
+                    }
+                    onClick={() => handleTabChange("businessAdvisor")}
+                  />
+                ) : (
+                  <>
+                    <Chip
+                      variant="outlined"
+                      label="Module Name"
+                      icon={<MdLibraryBooks size={15} />}
+                      color={activeTab === "moduleName" ? "primary" : "default"}
+                      onClick={() => handleTabChange("moduleName")}
+                    />
+                    <Chip
+                      variant="outlined"
+                      label="Status"
+                      icon={<MdPending size={15} />}
+                      color={activeTab === "status" ? "primary" : "default"}
+                      onClick={() => handleTabChange("status")}
+                    />
+                    <Chip
+                      variant="outlined"
+                      label="Date"
+                      icon={<MdCalendarToday size={15} />}
+                      color={activeTab === "date" ? "primary" : "default"}
+                      onClick={() => handleTabChange("date")}
+                    />
+                  </>
+                )}
               </div>
 
               <div className="filter__content-container">
