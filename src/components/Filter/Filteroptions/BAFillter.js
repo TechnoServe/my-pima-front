@@ -7,8 +7,8 @@ const BAFilter = ({ setFilter, groups }) => {
   const [selectedTrainingGroup, setSelectedTrainingGroup] = useState("");
 
   return (
-    <div style={{ display: "flex", justifyContent:'space-between', marginTop: "20px" }}>
-      <div>
+    <div style={{ display: "flex", gap:"20px",  flexDirection: "column", justifyContent:'space-between', marginTop: "20px" }}>
+      <div > 
         <h5>Business Advisor</h5>
         <Select
           value={selectedBusinessAdvisor}
