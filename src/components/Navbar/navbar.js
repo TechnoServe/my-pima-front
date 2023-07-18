@@ -17,6 +17,10 @@ import Tgdetail from "../../features/tgdetail.js/Tgdetail";
 import { Grid } from "@mui/material";
 
 const Navbar = () => {
+  if (localStorage.getItem("myPimaUserData") === null) {
+    window.location.href = "/login";
+  }
+
   // get current path
   const location = useLocation();
   const [projects, setProjects] = useState([]); // eslint-disable-line no-unused-vars
