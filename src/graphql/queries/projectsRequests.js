@@ -30,4 +30,19 @@ const GET_PROJECT_STATISTICS = gql`
   }
 `;
 
-export { GET_ALL_PROJECTS, GET_PROJECT_STATISTICS };
+const GET_ASSIGNED_PROJECTS = gql`
+  query GetProjectsAssigned($userId: ID!) {
+    getProjectsAssigned(user_id: $userId) {
+      message
+      status
+      projects {
+        project_id
+        sf_project_id
+        project_name
+        project_status
+      }
+    }
+  }
+`;
+
+export { GET_ALL_PROJECTS, GET_PROJECT_STATISTICS, GET_ASSIGNED_PROJECTS };
