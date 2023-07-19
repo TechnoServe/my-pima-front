@@ -29,7 +29,9 @@ body {
   margin: 0 20px;
   
 }
-
+.module__heading{
+  font-size: 20px;
+}
 .no__data {
   font-size: 16px;
   display: flex;

@@ -1,0 +1,35 @@
+.cardts__container {
+  background-color: #ffffff;
+  width: auto;
+  margin: 10px;
+  margin-bottom: 0;
+  margin-top: 10px;
+  max-width: 40ch;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 2px 8px 13px 1px rgba(17, 38, 146, 0.15);
+}
+.cardts__content {
+  display: flex;
+}
+.mafa__attendance {
+  display: flex;
+  gap: 10px;
+}
+.attend__text {
+  font-size: 14px;
+}
+.attend__figure {
+  font-size: 12px;
+  font-weight: 600;
+  color: #a5aab5;
+
+}
+.cardts__icon {
+  color: #fff;
+  border-radius: 10px;
+  text-align: center;
+  padding: 0 8px;
+  padding-top: 10px;
+  background-color: #0d7b8b;
+}

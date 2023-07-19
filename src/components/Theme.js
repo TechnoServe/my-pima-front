@@ -6,7 +6,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           "&.MuiChip-colorPrimary": {
-            backgroundColor: "#00A5A3",
+            backgroundColor: "rgba(8, 124, 143, 1)",
             color: "#FFF",
             border: "none",
             boxShadow: "2px 8px 13px 1px rgba(17, 38, 146, 0.15)",

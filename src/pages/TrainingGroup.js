@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Table from "../components/Table/Table";
-import Statsframe from "../features/statistics/Statsframe";
+import Statsframe from "../features/statstg/Statsframe";
 import { useQuery } from "@apollo/client";
 import { BeatLoader } from "react-spinners";
 import { GET_PROJECT_STATISTICS } from "../graphql/queries/projectsRequests";
@@ -51,7 +51,7 @@ const TrainingGroup = ({
 
   return (
     <div>
-      <h1 style={{ fontSize: "20px" }}>Training Groups</h1>
+      <h1 className="module__heading">Training Groups</h1>
       {!trainingGroups ? (
         <BeatLoader color="#0D3C61" size={20} />
       ) : (
