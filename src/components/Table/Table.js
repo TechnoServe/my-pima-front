@@ -36,7 +36,7 @@ const Table = ({ columns, data, filter, setFilter, setFilteredGroups }) => {
   /* */
   return (
     <div>
-      <div className="table__container" >
+      <div className="table__container">
         <div
           style={{
             overflow: "auto",
@@ -54,7 +54,6 @@ const Table = ({ columns, data, filter, setFilter, setFilteredGroups }) => {
           <Exportbutton groups={data} />
         </div>
         <table {...getTableProps()} className="table__head">
-         
           <thead className="table__header">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>

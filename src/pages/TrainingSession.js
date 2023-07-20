@@ -1,8 +1,6 @@
 import React from "react";
 import Table from "../components/Table/Table";
-import Statsframe from "../features/statstg/Statsframe";
 import Statstscard from "../features/statsts/Statstscard";
-
 
 const TrainingSession = () => {
   const columns = [
@@ -14,7 +12,7 @@ const TrainingSession = () => {
     { Header: "Status", accessor: "status" },
     { Header: "MA", accessor: "ma_name" },
     { Header: "FA", accessor: "fa_name" },
-    { Header: "Buisness Advisor", accessor: "ba_name" },
+    { Header: "Business Advisor", accessor: "ba_name" },
     { Header: "Farmer Trainer", accessor: "ft_name" },
   ];
   const rows = [
@@ -34,7 +32,7 @@ const TrainingSession = () => {
   return (
     <div>
       <h1 className="module__heading">Training Sessions</h1>
-      <Statstscard/>
+      <Statstscard />
 
       <Table columns={columns} data={rows} />
     </div>

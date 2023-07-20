@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Tgtabdetail from "./Tgtabdetail";
-import Tgtabtable from "./tgtabtable";
-
+import Tstabtable from "./tstabtable";
+import { useQuery } from "@apollo/client";
+import { GET_TRAINING_SESSIONS_PER_GROUP } from "../../graphql/queries/trainingSessionsRequests";
+import { BeatLoader } from "react-spinners";
+import { toast } from "react-hot-toast";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -43,10 +46,26 @@ function a11yProps(index) {
 
 export default function BasicTabs({ details }) {
   const [value, setValue] = useState(0);
+  const [trainingSessions, setTrainingSessions] = useState([]); // eslint-disable-line no-unused-vars
+
+  const { data, loading, error } = useQuery(GET_TRAINING_SESSIONS_PER_GROUP, {
+    variables: { tgId: details.tg_id },
+  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    if (data && data.trainingSessionsByGroup.status === 200) {
+      setTrainingSessions(data.trainingSessionsByGroup.trainingSessions);
+    }
+    if (error) {
+      console.log(error);
+
+      toast.error("Error fetching training sessions");
+    }
+  }, [data, error]);
 
   return (
     <Box sx={{ width: "100%", marginTop: "20px" }}>
@@ -65,7 +84,11 @@ export default function BasicTabs({ details }) {
         <Tgtabdetail details={details} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <Tgtabtable />
+        {loading ? (
+          <BeatLoader color="#0D3C61" size={10} />
+        ) : (
+          <Tstabtable trainingSessions={trainingSessions} />
+        )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Farm Visit
