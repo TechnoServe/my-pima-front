@@ -6,8 +6,24 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 
-const Statstscard = () => {
+const Statstscard = ({ stats }) => {
   const percentage = 66;
+
+  // get percentage of total_males from stats
+  let totalMales = 0;
+  let totalFemales = 0;
+
+  stats.forEach((item) => {
+    totalMales += isNaN(item.total_males) ? 0 : Number(item.total_males);
+    totalFemales += isNaN(item.total_females) ? 0 : Number(item.total_females);
+  });
+
+  const totalAttendance = totalMales + totalFemales;
+
+  const maleAttendancePercentage =
+    totalAttendance > 0 ? (totalMales / totalAttendance) * 100 : 0;
+  const femaleAttendancePercentage =
+    totalAttendance > 0 ? (totalFemales / totalAttendance) * 100 : 0;
 
   return (
     <div>
@@ -25,7 +41,9 @@ const Statstscard = () => {
               </div>
               <div>
                 <p className="attend__text">Male Attendance</p>
-                <p className="attend__figure">75%</p>
+                <p className="attend__figure">
+                  {maleAttendancePercentage.toFixed(2)}%
+                </p>
               </div>
             </div>
             <div className="mafa__attendance">
@@ -34,11 +52,13 @@ const Statstscard = () => {
               </div>
               <div>
                 <p className="attend__text">Female Attendance</p>
-                <p className="attend__figure">75%</p>
+                <p className="attend__figure">
+                  {femaleAttendancePercentage.toFixed(2)}%
+                </p>
               </div>
             </div>
           </div>
-          <div style={{ width: "100px" ,height:"50%" }}>
+          <div style={{ width: "100px", height: "50%" }}>
             <CircularProgressbarWithChildren
               value={percentage}
               styles={buildStyles({
@@ -51,10 +71,21 @@ const Statstscard = () => {
                 trailColor: "#ECF3FE",
               })}
             >
-            <div style={{position: "absolute", top: "15px"}}>
-              <p style={{fontSize: "20px", textAlign:"center", color: "#F46700", fontWeight: "600"}}>{percentage} %</p>
-              <p style={{fontSize: "10px", fontWeight: "500", color: "" }}>Attendance</p>
-           </div>
+              <div style={{ position: "absolute", top: "15px" }}>
+                <p
+                  style={{
+                    fontSize: "20px",
+                    textAlign: "center",
+                    color: "#F46700",
+                    fontWeight: "600",
+                  }}
+                >
+                  {percentage} %
+                </p>
+                <p style={{ fontSize: "10px", fontWeight: "500", color: "" }}>
+                  Attendance
+                </p>
+              </div>
             </CircularProgressbarWithChildren>
           </div>
         </div>

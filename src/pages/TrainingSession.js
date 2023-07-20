@@ -2,39 +2,23 @@ import React from "react";
 import Table from "../components/Table/Table";
 import Statstscard from "../features/statsts/Statstscard";
 
-const TrainingSession = () => {
+const TrainingSession = ({ trainingSessions }) => {
   const columns = [
-    { Header: "No.", accessor: "num" },
-    { Header: "Session Name", accessor: "sess_name" },
-    { Header: "Module Name", accessor: "mod_name" },
-    { Header: "Training Group", accessor: "tg_name" },
-    { Header: "TNS ID", accessor: "tns_id" },
-    { Header: "Status", accessor: "status" },
-    { Header: "MA", accessor: "ma_name" },
-    { Header: "FA", accessor: "fa_name" },
-    { Header: "Business Advisor", accessor: "ba_name" },
-    { Header: "Farmer Trainer", accessor: "ft_name" },
+    { Header: "Session Name", accessor: "ts_name" },
+    { Header: "Module Name", accessor: "ts_module" },
+    { Header: "Training Group", accessor: "ts_group" },
+    { Header: "TNS Id", accessor: "tns_id" },
+    { Header: "Status", accessor: "ts_status" },
+    { Header: "MA", accessor: "total_males" },
+    { Header: "FA", accessor: "total_females" },
   ];
-  const rows = [
-    {
-      num: "1",
-      sess_name: "Session Name",
-      mod_name: "Module Name",
-      tg_name: "Training Group",
-      tns_id: "TNS2345",
-      status: "Pending",
-      ma_name: "Male Attendance",
-      fa_name: "Female Attendance",
-      ba_name: "Business Advisor",
-      ft_name: "Farmer Trainer",
-    },
-  ];
+
   return (
     <div>
       <h1 className="module__heading">Training Sessions</h1>
-      <Statstscard />
+      <Statstscard stats={trainingSessions} />
 
-      <Table columns={columns} data={rows} />
+      <Table columns={columns} data={trainingSessions} />
     </div>
   );
 };

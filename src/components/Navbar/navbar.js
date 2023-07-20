@@ -15,6 +15,7 @@ import { toast } from "react-hot-toast";
 import { GET_TRAINING_GROUPS_PER_PROJECT } from "../../graphql/queries/trainingGroupsRequests";
 import Tgdetail from "../../features/tgdetail.js/Tgdetail";
 import { Grid } from "@mui/material";
+import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../../graphql/queries/trainingSessionsRequests";
 
 const Navbar = () => {
   if (localStorage.getItem("myPimaUserData") === null) {
@@ -25,6 +26,7 @@ const Navbar = () => {
   const location = useLocation();
   const [projects, setProjects] = useState([]); // eslint-disable-line no-unused-vars
   const [trainingGroups, setTrainingGroups] = useState([]); // eslint-disable-line no-unused-vars
+  const [trainingSessions, setTrainingSessions] = useState([]); // eslint-disable-line no-unused-vars
   const { data, error, loading } = useQuery(GET_ASSIGNED_PROJECTS, {
     variables: {
       userId: JSON.parse(localStorage.getItem("myPimaUserData")).id,
@@ -32,9 +34,18 @@ const Navbar = () => {
   });
   const [selectedProject, setSelectedProject] = useState("");
   const favProject = localStorage.getItem("fav_project");
+
   const trainingGroupsPerProject = useQuery(GET_TRAINING_GROUPS_PER_PROJECT, {
     variables: { projectId: selectedProject },
   });
+
+  const trainingSessionsPerProject = useQuery(
+    GET_TRAINING_SESSIONS_PER_PROJECT,
+    {
+      variables: { sfProjectId: selectedProject },
+    }
+  );
+
   const [filter, setFilter] = useState({
     businessAdvisor: "",
     farmerTrainer: "",
@@ -64,7 +75,18 @@ const Navbar = () => {
         trainingGroupsPerProject.data.trainingGroupsByProject.trainingGroups
       );
     }
-  }, [favProject, trainingGroupsPerProject.data]);
+
+    if (trainingSessionsPerProject.data) {
+      setTrainingSessions(
+        trainingSessionsPerProject.data.trainingSessionsByProject
+          .trainingSessions
+      );
+    }
+  }, [
+    favProject,
+    trainingGroupsPerProject.data,
+    trainingSessionsPerProject.data,
+  ]);
 
   return (
     <nav>
@@ -117,7 +139,26 @@ const Navbar = () => {
                     element={<Tgdetail trainingGroups={trainingGroups} />}
                   />
 
-                  <Route path="/trainsession" element={<TrainingSession />} />
+                  <Route
+                    path="/trainsession"
+                    element={
+                      !trainingSessionsPerProject.loading ? (
+                        <TrainingSession
+                          trainingSessions={trainingSessions}
+                          selectedProject={selectedProject}
+                        />
+                      ) : (
+                        <BeatLoader
+                          color="#0D3C61"
+                          size={15}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        />
+                      )
+                    }
+                  />
                   <Route path="/participant" element={<Participants />} />
                   <Route path="/farmvisit" element={<FarmVisit />} />
                 </Routes>
