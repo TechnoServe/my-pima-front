@@ -8,9 +8,11 @@ const TrainingSession = ({ trainingSessions }) => {
     { Header: "Module Name", accessor: "ts_module" },
     { Header: "Training Group", accessor: "ts_group" },
     { Header: "TNS Id", accessor: "tns_id" },
+    { Header: "Farmer Trainer", accessor: "farmer_trainer" },
     { Header: "Status", accessor: "ts_status" },
     { Header: "MA", accessor: "total_males" },
     { Header: "FA", accessor: "total_females" },
+    { Header: "Session Date", accessor: "session_date" },
   ];
 
   return (
