@@ -7,7 +7,7 @@ import Exportbutton from "../Export/Export";
 import FilterContainer from "../Filter/FilterContainer";
 import { useNavigate } from "react-router-dom";
 
-const Table = ({ columns, data, filter, setFilter, setFilteredGroups, tableRowItem }) => {
+const Table = ({ columns, data, filter, setFilter, setFilteredGroups, setFilteredSessions, tableRowItem }) => {
   const navigate = useNavigate();
 
   const handleRowClick = (row) => {

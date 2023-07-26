@@ -12,6 +12,7 @@ const Styles = {
 };
 const Tsdetail = ({ trainingSessions }) => {
   const breadCrumbs = "Training session";
+  const breadCrumbsLinkTo = "trainsession";
 
   // get params from url
   const params = useParams();
@@ -19,7 +20,7 @@ const Tsdetail = ({ trainingSessions }) => {
   return (
     <div>
       <>
-        <Breadcrumb name="First Item" firstItem={breadCrumbs} />
+        <Breadcrumb name="First Item" firstItem={breadCrumbs} linkTo={breadCrumbsLinkTo} />
         <div style={{ marginTop: "10px" }}>
           <h1>Project Name</h1>
           <p style={Styles}>

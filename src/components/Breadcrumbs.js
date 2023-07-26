@@ -13,14 +13,14 @@ const CustomLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const Breadcrumb = ({ name, firstItem }) => {
+const Breadcrumb = ({ name, firstItem, linkTo }) => {
   return (
     <div role="presentation">
       <Breadcrumbs
         aria-label="breadcrumb"
         sx={{ fontSize: "12px", cursor: "pointer" }}
       >
-        <CustomLink to="/traingroup">{firstItem}</CustomLink>
+        <CustomLink to={`/${linkTo}`}>{firstItem}</CustomLink>
         <CustomLink href="" aria-current="page">
           {name
             .split(" ")

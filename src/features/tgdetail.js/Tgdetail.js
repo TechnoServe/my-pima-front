@@ -12,8 +12,7 @@ const Styles = {
 };
 
 const Tgdetail = ({ trainingGroups }) => {
-
-  const breadCrumbs = "Training group"
+  const breadCrumbs = "Training group";
   // get params from url
   const params = useParams();
   const { id } = params;
@@ -21,12 +20,17 @@ const Tgdetail = ({ trainingGroups }) => {
   const selectedTrainingGroup = trainingGroups.find(
     (group) => group.tg_id === id
   );
+  const breadCrumbsLinkTo = "traingroup";
 
   return (
     <div>
       {selectedTrainingGroup && (
         <>
-          <Breadcrumb name={selectedTrainingGroup.tg_name} firstItem={breadCrumbs} />
+          <Breadcrumb
+            name={selectedTrainingGroup.tg_name}
+            firstItem={breadCrumbs}
+            linkTo={breadCrumbsLinkTo}
+          />
           <div style={{ marginTop: "10px" }}>
             <h1>{selectedTrainingGroup.tg_name}</h1>
             <p style={Styles}>
