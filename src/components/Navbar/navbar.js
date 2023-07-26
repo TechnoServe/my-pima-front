@@ -50,8 +50,11 @@ const Navbar = () => {
     businessAdvisor: "",
     farmerTrainer: "",
     trainingGroup: "",
+    moduleName: "",
+    sessionDate: "",
   });
-  const [filteredGroups, setFilteredGroups] = useState([]); // eslint-disable-line no-unused-vars
+  const [filteredGroups, setFilteredGroups] = useState([]);
+  const [filteredSessions, setFilteredSessions] = useState([]);
 
   useEffect(() => {
     if (data) {
@@ -144,8 +147,15 @@ const Navbar = () => {
                     element={
                       !trainingSessionsPerProject.loading ? (
                         <TrainingSession
-                          trainingSessions={trainingSessions}
+                          trainingSessions={
+                            filteredSessions.length > 0
+                              ? filteredSessions
+                              : trainingSessions
+                          }
                           selectedProject={selectedProject}
+                          filter={filter}
+                          setFilter={setFilter}
+                          setFilteredSessions={setFilteredSessions}
                         />
                       ) : (
                         <BeatLoader
@@ -179,7 +189,18 @@ const Navbar = () => {
             style={{ height: "100vh" }}
           >
             <Grid item>
-              <em style={{ color: "#0D3C61" }}>No Projects Assigned</em>
+              {loading ? (
+                <BeatLoader
+                  color="#0D3C61"
+                  size={15}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                />
+              ) : (
+                <em style={{ color: "#0D3C61" }}>No Projects Assigned</em>
+              )}
             </Grid>
           </Grid>
         )}

@@ -17,7 +17,13 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const FilterContainer = ({ filter, setFilter, setFilteredGroups, groups }) => {
+const FilterContainer = ({
+  filter,
+  setFilter,
+  setFilteredGroups,
+  setFilteredSessions,
+  data,
+}) => {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -49,7 +55,8 @@ const FilterContainer = ({ filter, setFilter, setFilteredGroups, groups }) => {
           filter={filter}
           setFilter={setFilter}
           setFilteredGroups={setFilteredGroups}
-          groups={groups}
+          setFilteredSessions={setFilteredSessions}
+          data={data}
         />
       )}
     </>
