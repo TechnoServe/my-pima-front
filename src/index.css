@@ -10,10 +10,12 @@
 
 html {
   scroll-behavior: smooth;
+
+
 }
 
 ::-webkit-scrollbar {
-  display: none;
+  display:none;
 }
 
 body {
@@ -23,7 +25,7 @@ body {
 }
 .page__container{
   width: auto;
-  height: 100vh;
+  height: auto;
   display: flex;
   flex-direction:column;
   margin: 0 20px;

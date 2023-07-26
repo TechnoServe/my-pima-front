@@ -48,7 +48,7 @@ const TrainingGroup = ({
       setTotalParticipants(total);
     }
   }, [trainingGroups]);
-
+  const tableRowItem = "traingroup";
   return (
     <div>
       <h1 className="module__heading">Training Groups</h1>
@@ -79,6 +79,7 @@ const TrainingGroup = ({
               filter={filter}
               setFilter={setFilter}
               setFilteredGroups={setFilteredGroups}
+              tableRowItem={tableRowItem}
             />
           ) : (
             <div className="no__data">

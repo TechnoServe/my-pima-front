@@ -44,7 +44,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs({ details }) {
+export default function Tgtabs({ details }) {
   const [value, setValue] = useState(0);
   const [trainingSessions, setTrainingSessions] = useState([]); // eslint-disable-line no-unused-vars
 

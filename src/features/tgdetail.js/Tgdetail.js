@@ -12,6 +12,8 @@ const Styles = {
 };
 
 const Tgdetail = ({ trainingGroups }) => {
+
+  const breadCrumbs = "Training group"
   // get params from url
   const params = useParams();
   const { id } = params;
@@ -24,7 +26,7 @@ const Tgdetail = ({ trainingGroups }) => {
     <div>
       {selectedTrainingGroup && (
         <>
-          <Breadcrumb name={selectedTrainingGroup.tg_name} />
+          <Breadcrumb name={selectedTrainingGroup.tg_name} firstItem={breadCrumbs} />
           <div style={{ marginTop: "10px" }}>
             <h1>{selectedTrainingGroup.tg_name}</h1>
             <p style={Styles}>

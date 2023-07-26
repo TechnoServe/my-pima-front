@@ -58,7 +58,7 @@ const Statstscard = ({ stats }) => {
               </div>
             </div>
           </div>
-          <div style={{ width: "100px", height: "50%" }}>
+          <div style={{ width: "100px" }}>
             <CircularProgressbarWithChildren
               value={percentage}
               styles={buildStyles({

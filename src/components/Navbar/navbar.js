@@ -16,6 +16,7 @@ import { GET_TRAINING_GROUPS_PER_PROJECT } from "../../graphql/queries/trainingG
 import Tgdetail from "../../features/tgdetail.js/Tgdetail";
 import { Grid } from "@mui/material";
 import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../../graphql/queries/trainingSessionsRequests";
+import Tsdetail from "../../features/tsdetail/Tsdetail";
 
 const Navbar = () => {
   if (localStorage.getItem("myPimaUserData") === null) {
@@ -158,6 +159,10 @@ const Navbar = () => {
                         />
                       )
                     }
+                  />
+                    <Route
+                    path="/trainsession/:id"
+                    element={<Tsdetail trainingSessions={trainingSessions} />}
                   />
                   <Route path="/participant" element={<Participants />} />
                   <Route path="/farmvisit" element={<FarmVisit />} />

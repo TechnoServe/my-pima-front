@@ -7,11 +7,11 @@ import Exportbutton from "../Export/Export";
 import FilterContainer from "../Filter/FilterContainer";
 import { useNavigate } from "react-router-dom";
 
-const Table = ({ columns, data, filter, setFilter, setFilteredGroups }) => {
+const Table = ({ columns, data, filter, setFilter, setFilteredGroups, tableRowItem }) => {
   const navigate = useNavigate();
 
   const handleRowClick = (row) => {
-    navigate(`/traingroup/${row.original.tg_id}`);
+    navigate(`/${tableRowItem}/${row.original.tg_id}`);
   };
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -42,7 +42,6 @@ const Table = ({ columns, data, filter, setFilter, setFilteredGroups }) => {
             overflow: "auto",
             display: "flex",
             justifyContent: "flex-end",
-            position: "sticky",
           }}
         >
           <FilterContainer
@@ -88,7 +87,7 @@ const Table = ({ columns, data, filter, setFilter, setFilteredGroups }) => {
       <TablePagination
         rowsPerPageOptions={[10, 25, 50, 100]}
         component="div"
-        count={rows.length}
+        count={rows.length}//
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -100,7 +99,6 @@ const Table = ({ columns, data, filter, setFilter, setFilteredGroups }) => {
           display: "flex",
           justifyContent: "space-around",
           alignItems: "center",
-          padding: "10px",
           fontSize: "14px",
         }}
       />

@@ -4,15 +4,10 @@
     width: 100%;
     max-height: 290px;
     overflow-y: scroll;
-    border-radius: 3px;
   }
-  
-  .table__content {
-    position: relative;
-  }
+
   
   table {
-    position: relative;
     width: 100%;
     border-collapse: collapse;
   }

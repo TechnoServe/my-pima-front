@@ -14,13 +14,18 @@ const TrainingSession = ({ trainingSessions }) => {
     { Header: "FA", accessor: "total_females" },
     { Header: "Session Date", accessor: "session_date" },
   ];
+  const tableRowItem = "trainsession";
 
   return (
     <div>
       <h1 className="module__heading">Training Sessions</h1>
       <Statstscard stats={trainingSessions} />
 
-      <Table columns={columns} data={trainingSessions} />
+      <Table
+        columns={columns}
+        data={trainingSessions}
+        tableRowItem={tableRowItem}
+      />
     </div>
   );
 };
