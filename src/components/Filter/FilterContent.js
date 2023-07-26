@@ -31,16 +31,16 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-
 const FilterContent = ({
   open,
   handleClose,
   filter,
   setFilter,
   setFilteredGroups,
-  groups,
+  setFilteredSessions,
+  data,
 }) => {
-  const [activeTab, setActiveTab] = useState("businessAdvisor");
+  const [activeTab, setActiveTab] = useState("");
 
   // get url
   const location = useLocation();
@@ -50,32 +50,47 @@ const FilterContent = ({
   };
 
   const handleSearch = () => {
-    if (filter.trainingGroup !== "") {
+    if (filter.trainingGroup) {
       setFilteredGroups(
-        groups.filter((group) => group.tg_name.includes(filter.trainingGroup))
+        data.filter((group) => group.tg_name.includes(filter.trainingGroup))
       );
       return;
     }
 
-    if (filter.farmerTrainer !== "") {
+    if (filter.farmerTrainer) {
       setFilteredGroups(
-        groups.filter((group) =>
+        data.filter((group) =>
           group.farmer_trainer.includes(filter.farmerTrainer)
         )
       );
       return;
     }
 
-    if (filter.businessAdvisor !== "") {
+    if (filter.businessAdvisor) {
       setFilteredGroups(
-        groups.filter((group) =>
+        data.filter((group) =>
           group.business_advisor.includes(filter.businessAdvisor)
         )
       );
       return;
     }
 
-    setFilteredGroups([]);
+    if (filter.moduleName) {
+      setFilteredSessions(
+        data.filter((session) => session.ts_module === filter.moduleName)
+      );
+      return;
+    }
+
+    if (filter.sessionDate) {
+      setFilteredSessions(
+        data.filter((session) => session.session_date === filter.sessionDate)
+      );
+      return;
+    }
+
+    setFilteredGroups && setFilteredGroups([]);
+    setFilteredSessions && setFilteredSessions([]);
     handleClose();
   };
 
@@ -84,9 +99,12 @@ const FilterContent = ({
       businessAdvisor: "",
       farmerTrainer: "",
       trainingGroup: "",
+      moduleName: "",
+      sessionDate: "",
     });
 
-    setFilteredGroups([]);
+    setFilteredGroups && setFilteredGroups([]);
+    setFilteredSessions && setFilteredSessions([]);
   };
 
   return (
@@ -118,7 +136,7 @@ const FilterContent = ({
             </span>
             {
               // display selected filters here, get non-empty values from filter object
-              filter.businessAdvisor !== "" && (
+              filter && filter.businessAdvisor && (
                 <Chip
                   label={filter.businessAdvisor}
                   defaultValue={filter.businessAdvisor}
@@ -135,7 +153,7 @@ const FilterContent = ({
             }
             {
               // display selected filters here, get non-empty values from filter object
-              filter.farmerTrainer !== "" && (
+              filter && filter.farmerTrainer && (
                 <Chip
                   label={filter.farmerTrainer}
                   size="small"
@@ -151,7 +169,7 @@ const FilterContent = ({
             }
             {
               // display selected filters here, get non-empty values from filter object
-              filter.trainingGroup !== "" && (
+              filter && filter.trainingGroup && (
                 <Chip
                   label={filter.trainingGroup}
                   size="small"
@@ -165,10 +183,39 @@ const FilterContent = ({
               )
             }
 
+            {filter && filter.moduleName && (
+              <Chip
+                label={filter.moduleName}
+                size="small"
+                onDelete={() => {
+                  setFilter((prevState) => ({
+                    ...prevState,
+                    moduleName: "",
+                  }));
+                }}
+              />
+            )}
+
+            {filter && filter.sessionDate && (
+              <Chip
+                label={filter.sessionDate}
+                size="small"
+                onDelete={() => {
+                  setFilter((prevState) => ({
+                    ...prevState,
+                    sessionDate: "",
+                  }));
+                }}
+              />
+            )}
+
             {
               // if no filter is selected, display this
-              filter.businessAdvisor === "" &&
+              filter &&
+                filter.businessAdvisor === "" &&
                 filter.farmerTrainer === "" &&
+                filter.moduleName === "" &&
+                filter.sessionDate === "" &&
                 filter.trainingGroup === "" && (
                   <em style={{ fontSize: "11px", color: "#969696" }}>
                     Nothing yet
@@ -221,10 +268,12 @@ const FilterContent = ({
                     />
                     <Chip
                       variant="outlined"
-                      label="Date"
+                      label="Session Date"
                       icon={<MdCalendarToday size={15} />}
-                      color={activeTab === "date" ? "primary" : "default"}
-                      onClick={() => handleTabChange("date")}
+                      color={
+                        activeTab === "sessionDate" ? "primary" : "default"
+                      }
+                      onClick={() => handleTabChange("sessionDate")}
                     />
                   </>
                 )}
@@ -235,11 +284,23 @@ const FilterContent = ({
                   <BAFilter
                     setFilter={setFilter}
                     setFilteredGroups={setFilteredGroups}
-                    groups={groups}
+                    groups={data}
                   />
                 )}
-                {activeTab === "moduleName" && <MDFilter />}
-                {activeTab === "date" && <DateFilter />}
+                {activeTab === "moduleName" && (
+                  <MDFilter
+                    setFilter={setFilter}
+                    setFilteredSessions={setFilteredSessions}
+                    data={data}
+                  />
+                )}
+                {activeTab === "sessionDate" && (
+                  <DateFilter
+                    setFilter={setFilter}
+                    setFilteredSessions={setFilteredSessions}
+                    data={data}
+                  />
+                )}
                 {activeTab === "status" && <StatusFilter />}
               </div>
             </div>

@@ -33,7 +33,7 @@ const Table = ({ columns, data, filter, setFilter, setFilteredGroups, tableRowIt
       setPage(0);
     }
   }, [rows]);
-  /* */
+
   return (
     <div>
       <div className="table__container">
@@ -48,9 +48,10 @@ const Table = ({ columns, data, filter, setFilter, setFilteredGroups, tableRowIt
             filter={filter}
             setFilter={setFilter}
             setFilteredGroups={setFilteredGroups}
-            groups={data}
+            setFilteredSessions={setFilteredSessions}
+            data={data}
           />
-          <Exportbutton groups={data} />
+          <Exportbutton columns={columns} data={data} />
         </div>
         <table {...getTableProps()} className="table__head">
           <thead className="table__header">

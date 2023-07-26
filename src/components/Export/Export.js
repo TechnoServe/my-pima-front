@@ -5,6 +5,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { ExportToCsv } from "export-to-csv";
 import { downloadExcel } from "react-export-table-to-excel";
+import { useLocation } from "react-router-dom";
 
 const StyledMenu = styled((props) => <Menu elevation={0} {...props} />)(
   ({ theme }) => ({
@@ -49,7 +50,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
   color: "rgba(0, 165, 163, 1)",
   borderColor: "rgba(0, 165, 163, 1)", // Change the outline color here
 
-
   "&:hover": {
     backgroundColor: "rgba(0, 165, 163, 0.1)",
     color: "rgba(0, 165, 163, 1)",
@@ -61,9 +61,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export default function Exportbutton({ groups }) {
+export default function Exportbutton({ columns, data }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isIconUp, setIsIconUp] = useState(false);
+  const location = useLocation();
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -71,13 +72,7 @@ export default function Exportbutton({ groups }) {
     setIsIconUp(!isIconUp);
   };
   const handleClose = (format) => {
-    const headers = [
-      "Group Name",
-      "TNS ID",
-      "No of Participants",
-      "Business Advisor",
-      "Farmer Trainer",
-    ];
+    const headers = columns.map(({ Header }) => Header);
 
     try {
       const csvExporter = new ExportToCsv({
@@ -87,21 +82,35 @@ export default function Exportbutton({ groups }) {
         showLabels: true,
         useTextFile: false,
         useBom: true,
-        filename: `Training Groups ${new Date().toLocaleDateString()}`,
+        filename: `${
+          location.pathname === "traingroup"
+            ? "mypima_training_group"
+            : "mypima_training_session"
+        } ${new Date().toLocaleDateString()}`,
         headers,
       });
 
-      csvExporter.generateCsv(groups.map(({ tg_id, num, ...rest }) => rest));
+      csvExporter.generateCsv(
+        data.map(({ tg_id, ts_id, __typename, ...rest }) => rest)
+      );
 
       if (format === "csv") {
         csvExporter.generateCsv();
       } else if (format === "xls") {
         downloadExcel({
-          fileName: `Training Groups ${new Date().toLocaleDateString()}`,
-          sheet: "Training Groups",
+          fileName: `${
+            location.pathname === "traingroup"
+              ? "mypima_training_group"
+              : "mypima_training_session"
+          } ${new Date().toLocaleDateString()}`,
+          sheet: `${
+            location.pathname === "traingroup"
+              ? "mypima_training_group"
+              : "mypima_training_session"
+          }`,
           tablePayload: {
             headers,
-            body: groups.map(({ tg_id, num, ...rest }) => rest),
+            body: data.map(({ tg_id, ts_id, __typename, ...rest }) => rest),
           },
         });
       }
