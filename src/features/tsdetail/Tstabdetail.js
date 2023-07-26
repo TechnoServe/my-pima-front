@@ -1,13 +1,14 @@
-import React from "react";
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
-
+import { useState } from "react";
 import "../tgdetail.js/tgdetail.css";
 import Detailscontent from "../tgdetail.js/Detailscontent";
 import {
   CircularProgressbarWithChildren,
   buildStyles,
 } from "react-circular-progressbar";
+import Imagecontainer from "./sessionimage/Imagecontainer";
+import sessionImageUrl from "./assests/session-image1.jpg";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   marginBottom: "10px",
@@ -24,7 +25,17 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 const Tstabdetail = () => {
-  const handleClick = () => {};
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+
   return (
     <div>
       <div>
@@ -103,9 +114,16 @@ const Tstabdetail = () => {
             </div>
           </div>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <StyledButton onClick={handleClick}>
+            <StyledButton
+              onClick={handleClick}
+              id="demo-customized-button"
+              aria-controls={open ? "demo-customized-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
               View Session Image
             </StyledButton>
+            {open && <Imagecontainer open={open} handleClose={handleClose} sessionImageUrl={sessionImageUrl} />}
           </div>
         </Paper>
       </div>

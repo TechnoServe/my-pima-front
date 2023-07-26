@@ -57,7 +57,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     borderColor: "rgba(0, 165, 163, 1)", // Change the outline color on hover
   },
   ".MuiButton-outlined": {
-    color: " rgba(0, 165, 163, 1)",
+    color: "rgba(0, 165, 163, 1)",
   },
 }));
 

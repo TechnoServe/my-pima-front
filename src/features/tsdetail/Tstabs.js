@@ -5,10 +5,6 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useQuery } from "@apollo/client";
-import { GET_TRAINING_SESSIONS_PER_GROUP } from "../../graphql/queries/trainingSessionsRequests";
-import { BeatLoader } from "react-spinners";
-import { toast } from "react-hot-toast";
 import Tstabdetail from "./Tstabdetail";
 
 function CustomTabPanel(props) {
