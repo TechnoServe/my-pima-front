@@ -13,10 +13,8 @@ const Statstscard = ({ stats }) => {
   let totalMales = 0;
   let totalFemales = 0;
 
-  stats.forEach((item) => {
-    totalMales += isNaN(item.total_males) ? 0 : Number(item.total_males);
-    totalFemales += isNaN(item.total_females) ? 0 : Number(item.total_females);
-  });
+  totalMales += isNaN(stats.total_males) ? 0 : Number(stats.total_males);
+  totalFemales += isNaN(stats.total_females) ? 0 : Number(stats.total_females);
 
   const totalAttendance = totalMales + totalFemales;
 

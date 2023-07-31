@@ -1,6 +1,5 @@
 import React from "react";
 import Table from "../components/Table/Table";
-import Statstscard from "../features/statsts/Statstscard";
 
 const TrainingSession = ({
   trainingSessions,
@@ -18,7 +17,6 @@ const TrainingSession = ({
     { Header: "Status", accessor: "ts_status" },
     { Header: "MA", accessor: "total_males" },
     { Header: "FA", accessor: "total_females" },
-    // { Header: "Session Images", accessor: "session_images" },
     { Header: "Session Date", accessor: "session_date" },
   ];
   const tableRowItem = "trainsession";
@@ -35,7 +33,6 @@ const TrainingSession = ({
         ts_status: trainingSession.ts_status,
         total_males: trainingSession.total_males,
         total_females: trainingSession.total_females,
-        // session_images: trainingSession.session_images,
         session_date: trainingSession.session_date,
       }))
     : [];
@@ -43,13 +40,9 @@ const TrainingSession = ({
   return (
     <div>
       <h1 className="module__heading">Training Sessions</h1>
-      {trainingSessions && trainingSessions.length > 0 && (
-        <Statstscard stats={trainingSessions} />
-      )}
-
       <Table
         columns={columns}
-        data={trainingSessions}
+        data={rows}
         tableRowItem={tableRowItem}
         filter={filter}
         setFilter={setFilter}

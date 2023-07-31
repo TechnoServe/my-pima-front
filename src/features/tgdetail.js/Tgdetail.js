@@ -28,7 +28,8 @@ const Tgdetail = ({ trainingGroups }) => {
         <>
           <Breadcrumb
             name={selectedTrainingGroup.tg_name}
-     q       firstItem={breadCrumbs}
+            q
+            firstItem={breadCrumbs}
             linkTo={breadCrumbsLinkTo}
           />
           <div style={{ marginTop: "10px" }}>

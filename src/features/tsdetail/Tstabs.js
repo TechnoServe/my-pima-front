@@ -1,5 +1,4 @@
 import React from "react";
-import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -40,20 +39,18 @@ function a11yProps(index) {
   };
 }
 
-const Tstabs = () => {
-  const [value, setValue] = useState(0);
-
+const Tstabs = ({ details }) => {
   return (
     <div>
       <Box sx={{ width: "100%", marginTop: "20px" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={value} aria-label="basic tabs example">
+          <Tabs value={0} aria-label="basic tabs example">
             <Tab label="Details" {...a11yProps(0)} />{" "}
           </Tabs>
         </Box>
 
-        <CustomTabPanel value={value} index={0}>
-        <Tstabdetail/>
+        <CustomTabPanel value={0} index={0}>
+          <Tstabdetail details={details} />
         </CustomTabPanel>
       </Box>
     </div>

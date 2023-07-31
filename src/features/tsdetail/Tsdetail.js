@@ -12,25 +12,37 @@ const Styles = {
 };
 const Tsdetail = ({ trainingSessions }) => {
   const breadCrumbs = "Training session";
-  const breadCrumbsLinkTo = "trainsession";
 
   // get params from url
   const params = useParams();
   const { id } = params;
+
+  const selectedTrainingSession =
+    trainingSessions && trainingSessions.find((group) => group.ts_id === id);
+  const breadCrumbsLinkTo = "trainsession";
+
   return (
     <div>
-      <>
-        <Breadcrumb name="First Item" firstItem={breadCrumbs} linkTo={breadCrumbsLinkTo} />
-        <div style={{ marginTop: "10px" }}>
-          <h1>Project Name</h1>
-          <p style={Styles}>
-            In the training session details you can access detailed information
-            for a specific training session, training session image and other
-            information
-          </p>
-        </div>
-        <Tstabs />
-      </>
+      {selectedTrainingSession && (
+        <>
+          <Breadcrumb
+            name={selectedTrainingSession.ts_name}
+            firstItem={breadCrumbs}
+            linkTo={breadCrumbsLinkTo}
+          />
+
+          <div style={{ marginTop: "10px" }}>
+            <h1>{selectedTrainingSession.ts_name}</h1>
+            <p style={Styles}>
+              In the training session details you can access detailed
+              information for a specific training session, training session
+              image and other information
+            </p>
+          </div>
+
+          <Tstabs details={selectedTrainingSession} />
+        </>
+      )}
     </div>
   );
 };

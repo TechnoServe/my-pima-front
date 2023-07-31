@@ -5,13 +5,24 @@ import { TablePagination } from "@mui/material";
 import "./table.css";
 import Exportbutton from "../Export/Export";
 import FilterContainer from "../Filter/FilterContainer";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const Table = ({ columns, data, filter, setFilter, setFilteredGroups, setFilteredSessions, tableRowItem }) => {
+const Table = ({
+  columns,
+  data,
+  filter,
+  setFilter,
+  setFilteredGroups,
+  setFilteredSessions,
+  tableRowItem,
+}) => {
   const navigate = useNavigate();
 
   const handleRowClick = (row) => {
-    navigate(`/${tableRowItem}/${row.original.tg_id}`);
+    const id =
+      tableRowItem === "trainsession" ? row.original.ts_id : row.original.tg_id;
+
+    navigate(`/${tableRowItem}/${id}`);
   };
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -88,7 +99,7 @@ const Table = ({ columns, data, filter, setFilter, setFilteredGroups, setFiltere
       <TablePagination
         rowsPerPageOptions={[10, 25, 50, 100]}
         component="div"
-        count={rows.length}//
+        count={rows.length} //
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

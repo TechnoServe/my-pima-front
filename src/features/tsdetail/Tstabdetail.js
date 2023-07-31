@@ -1,6 +1,6 @@
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../tgdetail.js/tgdetail.css";
 import Detailscontent from "../tgdetail.js/Detailscontent";
 import {
@@ -8,7 +8,6 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import Imagecontainer from "./sessionimage/Imagecontainer";
-import sessionImageUrl from "./assests/session-image1.jpg";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   marginBottom: "10px",
@@ -24,8 +23,9 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const Tstabdetail = () => {
+const Tstabdetail = ({ details }) => {
   const [open, setOpen] = useState(false);
+  const [session_images, setSession_images] = useState([null, null]);
 
   const handleClick = () => {
     setOpen(true);
@@ -34,14 +34,38 @@ const Tstabdetail = () => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    const session_images = [
+      "https://www.commcarehq.org/a/tns-proof-of-concept/api/form/attachment/27ef9e11-e300-420b-875c-fead57a59957/1670917593082.jpg",
+      null,
+    ];
+    try {
+      if (session_images[0] || session_images[1]) {
+        const real_image = session_images[0] || session_images[1];
 
+        fetch(real_image, {
+          headers: {
+            Authorization: `ApiKey ${process.env.REACT_APP_COMMCARE_API_KEY}`,
+          },
+        })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [session_images]);
 
   return (
     <div>
       <div>
         <Paper elevation={2}>
           <div>
-            <div className="details__title">Project Name</div>
+            <div className="details__title">{details.ts_name}</div>
             <div style={{ padding: "10px", paddingLeft: "20px" }}></div>
             <div
               className="ts__details-container"
@@ -83,33 +107,39 @@ const Tstabdetail = () => {
               <div className="ts__details-container1">
                 <Detailscontent
                   heading={"Module Name"}
-                  paragraph={"Teach out 2 Module"}
+                  paragraph={details.ts_module}
                 />
                 <div style={{ paddingBottom: "20px" }}></div>
-                <Detailscontent heading={"Male Attendance"} paragraph={"23"} />
+                <Detailscontent
+                  heading={"Male Attendance"}
+                  paragraph={details.total_males || "N/A"}
+                />
               </div>
               <div className="ts__details-container1">
                 <Detailscontent
                   heading={"Training Group"}
-                  paragraph={"TNS Bumbogo"}
+                  paragraph={details.ts_group}
                 />{" "}
                 <div style={{ paddingBottom: "20px" }}></div>
                 <Detailscontent
                   heading={"Female Attendance"}
-                  paragraph={"50"}
+                  paragraph={details.total_females || "N/A"}
                 />
               </div>{" "}
               <div className="ts__details-container1">
                 <Detailscontent
-                  heading={"Buisness Advisor"}
+                  heading={"Business Advisor"}
                   paragraph={"Peace Ishimwe"}
                 />{" "}
                 <div style={{ paddingBottom: "20px" }}></div>
-                <Detailscontent heading={"TNS ID"} paragraph={"TNS2345"} />
+                <Detailscontent
+                  heading={"TNS ID"}
+                  paragraph={details.tns_id || "N/A"}
+                />
               </div>
               <Detailscontent
                 heading={"Farmer Trainer"}
-                paragraph={"Peace Ishimwe"}
+                paragraph={details.farmer_trainer || "N/A"}
               />
             </div>
           </div>
@@ -120,10 +150,30 @@ const Tstabdetail = () => {
               aria-controls={open ? "demo-customized-menu" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
+              disabled={session_images[0] || session_images[1] ? false : true}
+              style={{
+                backgroundColor: `${
+                  session_images[0] || session_images[1]
+                    ? "rgba(244, 103, 0, 1)"
+                    : "rgba(244, 103, 0, 0.5)"
+                }`,
+                color: "#fff",
+                cursor: `${
+                  session_images[0] || session_images[1]
+                    ? "pointer"
+                    : "not-allowed"
+                }`,
+              }}
             >
               View Session Image
             </StyledButton>
-            {open && <Imagecontainer open={open} handleClose={handleClose} sessionImageUrl={sessionImageUrl} />}
+            {open && (
+              <Imagecontainer
+                open={open}
+                handleClose={handleClose}
+                sessionImageUrl={session_images[0] || session_images[1]}
+              />
+            )}
           </div>
         </Paper>
       </div>
