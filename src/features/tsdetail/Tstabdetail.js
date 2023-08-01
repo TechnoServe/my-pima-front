@@ -8,6 +8,9 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import Imagecontainer from "./sessionimage/Imagecontainer";
+import { useQuery } from "@apollo/client";
+import { GET_TRAINING_SESSION_IMAGE } from "../../graphql/queries/trainingSessionsRequests";
+import { BeatLoader } from "react-spinners";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   marginBottom: "10px",
@@ -25,7 +28,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const Tstabdetail = ({ details }) => {
   const [open, setOpen] = useState(false);
-  const [session_images, setSession_images] = useState([null, null]);
+  const [session_image, setSession_image] = useState(null);
+  const { data, loading } = useQuery(GET_TRAINING_SESSION_IMAGE, {
+    variables: { tsId: details.ts_id },
+  });
 
   const handleClick = () => {
     setOpen(true);
@@ -35,30 +41,10 @@ const Tstabdetail = ({ details }) => {
   };
 
   useEffect(() => {
-    const session_images = [
-      "https://www.commcarehq.org/a/tns-proof-of-concept/api/form/attachment/27ef9e11-e300-420b-875c-fead57a59957/1670917593082.jpg",
-      null,
-    ];
-    try {
-      if (session_images[0] || session_images[1]) {
-        const real_image = session_images[0] || session_images[1];
-
-        fetch(real_image, {
-          headers: {
-            Authorization: `ApiKey ${process.env.REACT_APP_COMMCARE_API_KEY}`,
-          },
-        })
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    } catch (error) {
-      console.log(error);
+    if (!loading && data.trainingSessionImage.status === 200) {
+      setSession_image(data.trainingSessionImage.trainingSessionImage);
     }
-  }, [session_images]);
+  }, [data, loading]);
 
   return (
     <div>
@@ -150,28 +136,32 @@ const Tstabdetail = ({ details }) => {
               aria-controls={open ? "demo-customized-menu" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
-              disabled={session_images[0] || session_images[1] ? false : true}
+              disabled={session_image ? false : true}
               style={{
                 backgroundColor: `${
-                  session_images[0] || session_images[1]
+                  session_image
                     ? "rgba(244, 103, 0, 1)"
                     : "rgba(244, 103, 0, 0.5)"
                 }`,
                 color: "#fff",
-                cursor: `${
-                  session_images[0] || session_images[1]
-                    ? "pointer"
-                    : "not-allowed"
-                }`,
+                cursor: `${session_image ? "pointer" : "not-allowed"}`,
               }}
             >
-              View Session Image
+              {loading ? (
+                <BeatLoader
+                  color={"rgba(244, 103, 0, 1)"}
+                  loading={loading}
+                  size={10}
+                />
+              ) : (
+                "View Session Image"
+              )}
             </StyledButton>
             {open && (
               <Imagecontainer
                 open={open}
                 handleClose={handleClose}
-                sessionImageUrl={session_images[0] || session_images[1]}
+                sessionImageUrl={session_image}
               />
             )}
           </div>

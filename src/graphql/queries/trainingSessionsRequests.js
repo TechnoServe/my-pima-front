@@ -15,7 +15,6 @@ const GET_TRAINING_SESSIONS_PER_PROJECT = gql`
         ts_status
         total_males
         total_females
-        session_images
         session_date
       }
     }
@@ -35,11 +34,24 @@ const GET_TRAINING_SESSIONS_PER_GROUP = gql`
         ts_status
         total_males
         total_females
-        session_images
         session_date
       }
     }
   }
 `;
 
-export { GET_TRAINING_SESSIONS_PER_PROJECT, GET_TRAINING_SESSIONS_PER_GROUP };
+const GET_TRAINING_SESSION_IMAGE = gql`
+  query TrainingSessionImage($tsId: ID!) {
+    trainingSessionImage(ts_id: $tsId) {
+      message
+      status
+      trainingSessionImage
+    }
+  }
+`;
+
+export {
+  GET_TRAINING_SESSIONS_PER_PROJECT,
+  GET_TRAINING_SESSIONS_PER_GROUP,
+  GET_TRAINING_SESSION_IMAGE,
+};

@@ -7,7 +7,13 @@ import {
   IconButton,
   Chip,
 } from "@mui/material";
-import { MdClose,MdCancel, MdCheck, MdFullscreen, MdFullscreenExit } from "react-icons/md";
+import {
+  MdClose,
+  MdCancel,
+  MdCheck,
+  MdFullscreen,
+  MdFullscreenExit,
+} from "react-icons/md";
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
 
@@ -83,14 +89,14 @@ const Imagecontainer = ({ open, handleClose, sessionImageUrl }) => {
           >
             <MdClose />
           </IconButton>
-          <p>PROJECT NAME SESSION IMAGE</p>
+          <p>SESSION IMAGE</p>
         </div>
 
         <DialogContent>
           <div style={{ position: "relative" }}>
             <img
-              src={sessionImageUrl}
-              alt="Your Image"
+              src={`data:image/jpeg;base64,${sessionImageUrl}`}
+              alt="session_pic"
               style={{
                 width: "100%",
                 height: "auto",
@@ -129,9 +135,27 @@ const Imagecontainer = ({ open, handleClose, sessionImageUrl }) => {
 
         <DialogActions>
           {isApproved ? (
-            <Chip label="Approved" sx={{fontSize: "12px", marginBottom: "10px", backgroundColor: "#ECFAF2", color: "#41C980"}} icon={<MdCheck color="41C980"/>} />
+            <Chip
+              label="Approved"
+              sx={{
+                fontSize: "12px",
+                marginBottom: "10px",
+                backgroundColor: "#ECFAF2",
+                color: "#41C980",
+              }}
+              icon={<MdCheck color="41C980" />}
+            />
           ) : isRejected ? (
-            <Chip label="Rejected" sx={{fontSize: "12px", marginBottom: "10px", backgroundColor: "#FFF5F5", color: "#C81B1B"}} icon={<MdCancel color="C81B1B"/>} />
+            <Chip
+              label="Rejected"
+              sx={{
+                fontSize: "12px",
+                marginBottom: "10px",
+                backgroundColor: "#FFF5F5",
+                color: "#C81B1B",
+              }}
+              icon={<MdCancel color="C81B1B" />}
+            />
           ) : (
             <>
               <StyledButton onClick={handleApprove}>Approve</StyledButton>
