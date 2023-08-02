@@ -1,0 +1,14 @@
+.parts__container{
+    display: flex;
+    gap: 20px;
+    padding-top: 30px;
+}
+.partscontent__container{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    background-color:rgba(0, 165, 163, 0.1);
+    border-radius: 10px;
+}
+
