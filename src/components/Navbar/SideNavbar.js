@@ -77,8 +77,7 @@ const Sidebar = ({ children }) => {
       >
         <div className="top_section">
           <div style={{ display: isOpen ? "block" : "none" }} className="logo">
-            {" "}
-            <Logo />{" "}
+            <Logo />
           </div>
           <div
             style={{
@@ -148,7 +147,10 @@ const Sidebar = ({ children }) => {
           </NavLink>
         </div>
       </div>
-      <main style={{width: "100%"}}>{children}</main>
+      <main style={{width: "100%" ,
+                    marginLeft: isOpen ? "220px" : "60px",
+
+      }}>{children}</main>
     </div>
   );
 };

@@ -16,6 +16,16 @@ const theme = createTheme({
       },
     },
 
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          ".MuiTab-textColorPrimary": {
+            color: "#25245D",
+          },
+        },
+      },
+    },
+
     MuiSelect: {
       styleOverrides: {
         root: {
@@ -56,6 +66,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: "3px",
+          fontSize: "12px",
         },
       },
     },

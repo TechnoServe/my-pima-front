@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import {Typography , Tabs, Tab, Box} from "@mui/material";
 import Tgtabdetail from "./Tgtabdetail";
 import Tstabtable from "./tstabtable";
 import { useQuery } from "@apollo/client";
@@ -11,7 +8,7 @@ import { GET_TRAINING_SESSIONS_PER_GROUP } from "../../graphql/queries/trainingS
 import { BeatLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
 
-function CustomTabPanel(props) {
+export  function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -37,7 +34,7 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function a11yProps(index) {
+export  function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,

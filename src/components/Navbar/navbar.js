@@ -94,7 +94,7 @@ const Navbar = () => {
   ]);
 
   return (
-    <nav>
+    <>
       <Sidebar>
         {!loading && projects.length > 0 ? (
           <>
@@ -215,7 +215,7 @@ const Navbar = () => {
           </Grid>
         )}
       </Sidebar>
-    </nav>
+    </>
   );
 };
 

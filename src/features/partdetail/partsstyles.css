@@ -7,8 +7,13 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
     background-color:rgba(0, 165, 163, 0.1);
-    border-radius: 10px;
+    border-radius: 3px;
+}
+.parts__detailcontent{
+    width:25%;
+}
+.parts__tablecontent{
+    width: 100%;
 }
 
