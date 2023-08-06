@@ -170,7 +170,7 @@ const Navbar = () => {
                       )
                     }
                   />
-                    <Route
+                  <Route
                     path="/trainsession/:id"
                     element={<Tsdetail trainingSessions={trainingSessions} />}
                   />

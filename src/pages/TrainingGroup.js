@@ -52,40 +52,36 @@ const TrainingGroup = ({
   return (
     <div>
       <h1 className="module__heading">Training Groups</h1>
-      {!trainingGroups ? (
-        <BeatLoader color="#0D3C61" size={20} />
-      ) : (
+      {trainingGroups.length > 0 ? (
         <div>
-          {data && data.getProjectStatistics.status === 200 ? (
-            <Statsframe
-              statistics={data.getProjectStatistics.statistics}
-              totalParticipants={totalParticipants}
-            />
-          ) : loading ? (
+          {loading ? (
             <BeatLoader
               color="#0D3C61"
               size={15}
               style={{ display: "flex", justifyContent: "center" }}
+            />
+          ) : data && data.getProjectStatistics.status === 200 ? (
+            <Statsframe
+              statistics={data.getProjectStatistics.statistics}
+              totalParticipants={totalParticipants}
             />
           ) : (
             <div className="no__data">
               <h1 style={{ fontSize: "20px" }}>No Statistics Yet</h1>
             </div>
           )}
-          {trainingGroups && trainingGroups.length > 0 ? (
-            <Table
-              columns={columns}
-              data={rows}
-              filter={filter}
-              setFilter={setFilter}
-              setFilteredGroups={setFilteredGroups}
-              tableRowItem={tableRowItem}
-            />
-          ) : (
-            <div className="no__data">
-              <em>No Active Group Found</em>
-            </div>
-          )}
+          <Table
+            columns={columns}
+            data={rows}
+            filter={filter}
+            setFilter={setFilter}
+            setFilteredGroups={setFilteredGroups}
+            tableRowItem={tableRowItem}
+          />
+        </div>
+      ) : (
+        <div className="no__data">
+          <em>No Active Group Found</em>
         </div>
       )}
     </div>
