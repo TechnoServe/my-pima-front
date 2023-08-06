@@ -3,7 +3,7 @@ import Detailscontent from "../tgdetail.js/Detailscontent";
 import farmerimage from "./assets/userimage.jpg";
 import { Avatar, Divider } from "@mui/material";
 
-const Partscontentview = () => {
+const Partscontentview = ({ participant }) => {
   return (
     <>
       <div className="partscontent__container">
@@ -26,21 +26,30 @@ const Partscontentview = () => {
             textAlign: "center",
           }}
         >
-          Peace Ishimwe
+          {participant.full_name}
         </p>
 
         <Divider light />
 
         <div className="parts__details" style={{ marginTop: " 40px" }}>
           <div>
-            <Detailscontent heading={"Location"} paragraph={"Remera"} />
             <Detailscontent
-              heading={"Buisness Advisor"}
+              heading={"Location"}
+              paragraph={participant.location}
+            />
+            <Detailscontent
+              heading={"Business Advisor"}
               paragraph={"John Doe"}
             />
-            <Detailscontent heading={"Farmer Trainer"} paragraph={"John Doe"} />
-            <Detailscontent heading={"Gender"} paragraph={"Female"} />
-            <Detailscontent heading={"TNS ID"} paragraph={"THNS234"} />
+            <Detailscontent
+              heading={"Farmer Trainer"}
+              paragraph={participant.farmer_trainer}
+            />
+            <Detailscontent
+              heading={"Gender"}
+              paragraph={participant.gender === "m" ? "Male" : "Female"}
+            />
+            <Detailscontent heading={"TNS ID"} paragraph={participant.tns_id} />
           </div>
 
           <div>

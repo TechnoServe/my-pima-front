@@ -20,7 +20,11 @@ const Table = ({
 
   const handleRowClick = (row) => {
     const id =
-      tableRowItem === "trainsession" ? row.original.ts_id : row.original.tg_id;
+      tableRowItem === "trainsession"
+        ? row.original.ts_id
+        : tableRowItem === "traingroup"
+        ? row.original.tg_id
+        : row.original.p_id;
 
     navigate(`/${tableRowItem}/${id}`);
   };
@@ -47,24 +51,23 @@ const Table = ({
 
   return (
     <div>
-     <div
-          style={{
-            overflow: "auto",
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <FilterContainer
-            filter={filter}
-            setFilter={setFilter}
-            setFilteredGroups={setFilteredGroups}
-            setFilteredSessions={setFilteredSessions}
-            data={data}
-          />
-          <Exportbutton columns={columns} data={data} />
-        </div>
+      <div
+        style={{
+          overflow: "auto",
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        <FilterContainer
+          filter={filter}
+          setFilter={setFilter}
+          setFilteredGroups={setFilteredGroups}
+          setFilteredSessions={setFilteredSessions}
+          data={data}
+        />
+        <Exportbutton columns={columns} data={data} />
+      </div>
       <div className="table__container">
-       
         <table {...getTableProps()} className="table__head">
           <thead className="table__header">
             {headerGroups.map((headerGroup) => (

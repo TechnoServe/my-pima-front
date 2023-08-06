@@ -1,45 +1,69 @@
 import React from "react";
 import Table from "../../../components/Table/Table";
+import { useQuery } from "@apollo/client";
+import { GET_ATTENDANCE_PER_PARTICIPANT } from "../../../graphql/queries/participantsRequests";
+import { useEffect } from "react";
+import { useState } from "react";
 
-const Attendtable = () => {
+const Attendtable = ({ trainingSessions, participant }) => {
+  const [rows, setRows] = useState([]); // eslint-disable-line no-unused-vars
+
   const columns = [
     { Header: "No.", accessor: "num" },
-    { Header: "Session Name", accessor: "ah_name" },
-    { Header: "Module Name", accessor: "ah_module" },
-    { Header: "Training Group", accessor: "ah_group" },
-    { Header: "Status", accessor: "ah_status" },
-    { Header: "Farmer Trainer", accessor: "farmer_trainer" },
-    { Header: "Buisness Advisor", accessor: "buisness_advisor" },
-    { Header: "Date", accessor: "date" },
+    { Header: "Session Name", accessor: "session_name" },
+    { Header: "Attendance Name", accessor: "attendance_name" },
+    { Header: "Status", accessor: "attendance_status" },
+    { Header: "Date", accessor: "attendance_date" },
   ];
-  const tableRowItem = "participant";
+  const tableRowItem = "attendance";
 
-  const rows = [
-    {
-      num: "1",
-      ah_name: "Green Group Cocoa",
-      ah_module: "TNS Bumbogo",
-      ah_group: "MAY 2O",
-      ah_status: "Attended Session",
-      farmer_trainer: "Farmer Trainer",
-      business_advisor: "Business Advisor",
-      date: "8/3/2021",
-    },
-    {
-      num: "1",
-      ah_name: "Blue Farme Cocoa",
-      ah_module: "TNS Bumbogo",
-      ah_group: "TNG56",
-      ah_status: "Missed Session",
-      farmer_trainer: "Farmer Trainer",
-      business_advisor: "Business Advisor",
-      date: "8/3/2021",
-    },
-  ];
+  const getAttendancePerParticipant = useQuery(GET_ATTENDANCE_PER_PARTICIPANT, {
+    variables: { participantId: participant.p_id },
+  });
+
+  useEffect(() => {
+    if (getAttendancePerParticipant.data) {
+      const attendance =
+        getAttendancePerParticipant.data.getAttendanceByParticipant.attendance;
+      const rows = attendance.map((attend, index) => ({
+        num: index + 1,
+        attendance_id: attend.attendance_id,
+        session_name: trainingSessions
+          ? trainingSessions.find(
+              (session) => session.ts_id === attend.session_id
+            ).ts_name
+          : "N/A",
+        attendance_name: attend.attendance_name,
+        attendance_status: attend.attendance_status,
+        attendance_date: attend.attendance_date,
+      }));
+      setRows(rows);
+    }
+  }, [getAttendancePerParticipant.data, trainingSessions]);
 
   return (
     <>
-      <Table columns={columns} data={rows} />
+      {getAttendancePerParticipant.data ? (
+        <div>
+          {getAttendancePerParticipant.data.getAttendanceByParticipant
+            .attendance.length > 0 ? (
+            <Table
+              columns={columns}
+              data={rows}
+              tableRowItem={tableRowItem}
+              participant={participant}
+            />
+          ) : (
+            <div className="no__data">
+              <h1 style={{ fontSize: "20px" }}>No Attendance Yet</h1>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="no__data">
+          <h1 style={{ fontSize: "20px" }}>No Attendance Yet</h1>
+        </div>
+      )}
     </>
   );
 };

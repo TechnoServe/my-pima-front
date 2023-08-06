@@ -34,7 +34,7 @@ const Sidebar = ({ children }) => {
       icon: <MdOutlineCalendarToday />,
     },
     {
-      path: "/participant",
+      path: "/participants",
       name: "Participants",
       icon: <MdOutlinePersonSearch />,
     },

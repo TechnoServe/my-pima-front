@@ -18,6 +18,7 @@ import { Grid } from "@mui/material";
 import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../../graphql/queries/trainingSessionsRequests";
 import Tsdetail from "../../features/tsdetail/Tsdetail";
 import Partdetail from "../../features/partdetail/Partdetail";
+import { GET_PARTICIPANTS_PER_PROJECT } from "../../graphql/queries/participantsRequests";
 
 const Navbar = () => {
   if (localStorage.getItem("myPimaUserData") === null) {
@@ -26,9 +27,11 @@ const Navbar = () => {
 
   // get current path
   const location = useLocation();
-  const [projects, setProjects] = useState([]); // eslint-disable-line no-unused-vars
-  const [trainingGroups, setTrainingGroups] = useState([]); // eslint-disable-line no-unused-vars
-  const [trainingSessions, setTrainingSessions] = useState([]); // eslint-disable-line no-unused-vars
+  const [projects, setProjects] = useState([]);
+  const [trainingGroups, setTrainingGroups] = useState([]);
+  const [trainingSessions, setTrainingSessions] = useState([]);
+  const [participants, setParticipants] = useState([]);
+
   const { data, error, loading } = useQuery(GET_ASSIGNED_PROJECTS, {
     variables: {
       userId: JSON.parse(localStorage.getItem("myPimaUserData")).id,
@@ -47,6 +50,10 @@ const Navbar = () => {
       variables: { sfProjectId: selectedProject },
     }
   );
+
+  const participantsPerProject = useQuery(GET_PARTICIPANTS_PER_PROJECT, {
+    variables: { projectId: selectedProject },
+  });
 
   const [filter, setFilter] = useState({
     businessAdvisor: "",
@@ -87,10 +94,19 @@ const Navbar = () => {
           .trainingSessions
       );
     }
+
+    if (participantsPerProject.data) {
+      setParticipants(
+        participantsPerProject.data.getParticipantsByProject.status === 200
+          ? participantsPerProject.data.getParticipantsByProject.participants
+          : []
+      );
+    }
   }, [
     favProject,
     trainingGroupsPerProject.data,
     trainingSessionsPerProject.data,
+    participantsPerProject.data,
   ]);
 
   return (
@@ -175,10 +191,18 @@ const Navbar = () => {
                     path="/trainsession/:id"
                     element={<Tsdetail trainingSessions={trainingSessions} />}
                   />
-                  <Route path="/participant" element={<Participants />} />
                   <Route
-                    path="/participant/:id"
-                    element={<Partdetail/>}
+                    path="/participants"
+                    element={<Participants participants={participants} />}
+                  />
+                  <Route
+                    path="/participants/:id"
+                    element={
+                      <Partdetail
+                        participants={participants}
+                        trainingSessions={trainingSessions}
+                      />
+                    }
                   />
                   <Route path="/farmvisit" element={<FarmVisit />} />
                 </Routes>

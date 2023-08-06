@@ -30,15 +30,23 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-const Partstableview = () => {
+const Partstableview = ({ trainingSessions, participant }) => {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   return (
     <>
-      <Box sx={{width: "100%"}}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider", borderTopLeftRadius: "3px",  borderTopRightRadius: "3px", backgroundColor: "rgba(0, 165, 163, 0.1)"}}>
+      <Box sx={{ width: "100%" }}>
+        <Box
+          sx={{
+            borderBottom: 1,
+            borderColor: "divider",
+            borderTopLeftRadius: "3px",
+            borderTopRightRadius: "3px",
+            backgroundColor: "rgba(0, 165, 163, 0.1)",
+          }}
+        >
           <Tabs
             value={value}
             onChange={handleChange}
@@ -51,7 +59,10 @@ const Partstableview = () => {
         </Box>
 
         <CustomTabPanel value={value} index={0}>
-        <Attendtable/>
+          <Attendtable
+            trainingSessions={trainingSessions}
+            participant={participant}
+          />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <h1>This is the farm vist history table</h1>
