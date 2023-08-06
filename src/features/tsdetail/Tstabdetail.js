@@ -17,7 +17,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   marginRight: "10px",
   textTransform: "initial",
   backgroundColor: "rgba(244, 103, 0, 1)",
-  fontSize: "12px",
+  
   color: "#fff",
 
   "&:hover": {

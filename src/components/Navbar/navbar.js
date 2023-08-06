@@ -17,6 +17,7 @@ import Tgdetail from "../../features/tgdetail.js/Tgdetail";
 import { Grid } from "@mui/material";
 import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../../graphql/queries/trainingSessionsRequests";
 import Tsdetail from "../../features/tsdetail/Tsdetail";
+import Partdetail from "../../features/partdetail/Partdetail";
 
 const Navbar = () => {
   if (localStorage.getItem("myPimaUserData") === null) {
@@ -93,7 +94,7 @@ const Navbar = () => {
   ]);
 
   return (
-    <nav>
+    <>
       <Sidebar>
         {!loading && projects.length > 0 ? (
           <>
@@ -175,6 +176,10 @@ const Navbar = () => {
                     element={<Tsdetail trainingSessions={trainingSessions} />}
                   />
                   <Route path="/participant" element={<Participants />} />
+                  <Route
+                    path="/participant/:id"
+                    element={<Partdetail/>}
+                  />
                   <Route path="/farmvisit" element={<FarmVisit />} />
                 </Routes>
               </div>
@@ -210,7 +215,7 @@ const Navbar = () => {
           </Grid>
         )}
       </Sidebar>
-    </nav>
+    </>
   );
 };
 

@@ -9,19 +9,16 @@
 }
 
 html {
-  scroll-behavior: smooth;
-
-
-}
-
-::-webkit-scrollbar {
-  display:none;
+  scroll-behavior:smooth;
+	height: 100%;
 }
 
 body {
   font-family: "Montserrat", "SF UI Text", "Helvetica Neue", "Segoe UI",
     "Oxygen", "Ubuntu", "Cantarell", "Open Sans", sans-serif;
   line-height: 1.7;
+  height: 100%;
+
 }
 .page__container{
   width: auto;
@@ -29,6 +26,7 @@ body {
   display: flex;
   flex-direction:column;
   margin: 0 20px;
+  margin-bottom: 10px;
   
 }
 .module__heading{

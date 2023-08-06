@@ -5,7 +5,7 @@ import { TablePagination } from "@mui/material";
 import "./table.css";
 import Exportbutton from "../Export/Export";
 import FilterContainer from "../Filter/FilterContainer";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Table = ({
   columns,
@@ -47,8 +47,7 @@ const Table = ({
 
   return (
     <div>
-      <div className="table__container">
-        <div
+     <div
           style={{
             overflow: "auto",
             display: "flex",
@@ -64,6 +63,8 @@ const Table = ({
           />
           <Exportbutton columns={columns} data={data} />
         </div>
+      <div className="table__container">
+       
         <table {...getTableProps()} className="table__head">
           <thead className="table__header">
             {headerGroups.map((headerGroup) => (

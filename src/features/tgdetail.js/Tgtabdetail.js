@@ -1,7 +1,6 @@
 import React from "react";
 import { Paper } from "@mui/material";
 import "./tgdetail.css";
-import { LiaCircleSolid } from "react-icons/lia";
 import Detailscontent from "./Detailscontent";
 
 const Tgtabdetail = ({ details }) => {
