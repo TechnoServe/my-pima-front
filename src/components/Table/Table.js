@@ -24,7 +24,9 @@ const Table = ({
         ? row.original.ts_id
         : tableRowItem === "traingroup"
         ? row.original.tg_id
-        : row.original.p_id;
+        : tableRowItem === "participants"
+        ? row.original.p_id
+        : row.original.ts_id;
 
     navigate(`/${tableRowItem}/${id}`);
   };
@@ -65,7 +67,7 @@ const Table = ({
           setFilteredSessions={setFilteredSessions}
           data={data}
         />
-        <Exportbutton columns={columns} data={data} />
+        <Exportbutton columns={columns} data={data} pathName={tableRowItem} />
       </div>
       <div className="table__container">
         <table {...getTableProps()} className="table__head">

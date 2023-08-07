@@ -15,7 +15,7 @@ const Attendtable = ({ trainingSessions, participant }) => {
     { Header: "Status", accessor: "attendance_status" },
     { Header: "Date", accessor: "attendance_date" },
   ];
-  const tableRowItem = "attendance";
+  const tableRowItem = "trainsession";
 
   const getAttendancePerParticipant = useQuery(GET_ATTENDANCE_PER_PARTICIPANT, {
     variables: { participantId: participant.p_id },
@@ -28,6 +28,7 @@ const Attendtable = ({ trainingSessions, participant }) => {
       const rows = attendance.map((attend, index) => ({
         num: index + 1,
         attendance_id: attend.attendance_id,
+        ts_id: attend.session_id,
         session_name: trainingSessions
           ? trainingSessions.find(
               (session) => session.ts_id === attend.session_id

@@ -5,7 +5,6 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { ExportToCsv } from "export-to-csv";
 import { downloadExcel } from "react-export-table-to-excel";
-import { useLocation } from "react-router-dom";
 
 const StyledMenu = styled((props) => <Menu elevation={0} {...props} />)(
   ({ theme }) => ({
@@ -61,10 +60,9 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export default function Exportbutton({ columns, data }) {
+export default function Exportbutton({ columns, data, pathName }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isIconUp, setIsIconUp] = useState(false);
-  const location = useLocation();
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -83,15 +81,21 @@ export default function Exportbutton({ columns, data }) {
         useTextFile: false,
         useBom: true,
         filename: `${
-          location.pathname === "traingroup"
+          pathName === "traingroup"
             ? "mypima_training_group"
-            : "mypima_training_session"
+            : pathName === "trainsession"
+            ? "mypima_training_session"
+            : pathName === "participants"
+            ? "mypima_participants"
+            : "mypima_attendance"
         } ${new Date().toLocaleDateString()}`,
         headers,
       });
 
       csvExporter.generateCsv(
-        data.map(({ tg_id, ts_id, __typename, ...rest }) => rest)
+        data.map(
+          ({ tg_id, ts_id, p_id, attendance_id, __typename, ...rest }) => rest
+        )
       );
 
       if (format === "csv") {
@@ -99,18 +103,29 @@ export default function Exportbutton({ columns, data }) {
       } else if (format === "xls") {
         downloadExcel({
           fileName: `${
-            location.pathname === "traingroup"
+            pathName === "traingroup"
               ? "mypima_training_group"
-              : "mypima_training_session"
+              : pathName === "trainsession"
+              ? "mypima_training_session"
+              : pathName === "participants"
+              ? "mypima_participants"
+              : "mypima_attendance"
           } ${new Date().toLocaleDateString()}`,
           sheet: `${
-            location.pathname === "traingroup"
+            pathName === "traingroup"
               ? "mypima_training_group"
-              : "mypima_training_session"
+              : pathName === "trainsession"
+              ? "mypima_training_session"
+              : pathName === "participants"
+              ? "mypima_participants"
+              : "mypima_attendance"
           }`,
           tablePayload: {
             headers,
-            body: data.map(({ tg_id, ts_id, __typename, ...rest }) => rest),
+            body: data.map(
+              ({ tg_id, ts_id, p_id, attendance_id, __typename, ...rest }) =>
+                rest
+            ),
           },
         });
       }
