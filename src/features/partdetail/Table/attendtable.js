@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ATTENDANCE_PER_PARTICIPANT } from "../../../graphql/queries/participantsRequests";
 import { useEffect } from "react";
 import { useState } from "react";
+import { BeatLoader } from "react-spinners";
 
 const Attendtable = ({ trainingSessions, participant }) => {
   const [rows, setRows] = useState([]); // eslint-disable-line no-unused-vars
@@ -60,6 +61,15 @@ const Attendtable = ({ trainingSessions, participant }) => {
             </div>
           )}
         </div>
+      ) : getAttendancePerParticipant.loading ? (
+        <BeatLoader
+          color="#0D3C61"
+          size={15}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        />
       ) : (
         <div className="no__data">
           <h1 style={{ fontSize: "20px" }}>No Attendance Yet</h1>

@@ -38,12 +38,12 @@ const Partscontentview = ({ participant }) => {
               paragraph={participant.location}
             />
             <Detailscontent
-              heading={"Business Advisor"}
-              paragraph={"John Doe"}
-            />
-            <Detailscontent
               heading={"Farmer Trainer"}
               paragraph={participant.farmer_trainer}
+            />
+            <Detailscontent
+              heading={"Business Advisor"}
+              paragraph={participant.business_advisor}
             />
             <Detailscontent
               heading={"Gender"}

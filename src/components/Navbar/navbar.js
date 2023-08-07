@@ -193,7 +193,23 @@ const Navbar = () => {
                   />
                   <Route
                     path="/participants"
-                    element={<Participants participants={participants} />}
+                    element={
+                      !participantsPerProject.loading ? (
+                        <Participants
+                          participants={participants}
+                          selectedProject={selectedProject}
+                        />
+                      ) : (
+                        <BeatLoader
+                          color="#0D3C61"
+                          size={15}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        />
+                      )
+                    }
                   />
                   <Route
                     path="/participants/:id"

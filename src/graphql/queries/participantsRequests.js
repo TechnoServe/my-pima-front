@@ -13,6 +13,7 @@ const GET_PARTICIPANTS_PER_PROJECT = gql`
         tns_id
         status
         farmer_trainer
+        business_advisor
         project_name
         training_group
       }
@@ -33,6 +34,7 @@ const GET_PARTICIPANTS_PER_TG = gql`
         tns_id
         status
         farmer_trainer
+        business_advisor
         project_name
         training_group
       }

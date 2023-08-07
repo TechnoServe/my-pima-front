@@ -11,6 +11,7 @@ const Participants = ({ participants }) => {
     { Header: "Training Group", accessor: "training_group" },
     { Header: "Status", accessor: "status" },
     { Header: "Farmer Trainer", accessor: "farmer_trainer" },
+    { Header: "Business Advisor", accessor: "business_advisor" },
   ];
   const tableRowItem = "participants";
 
@@ -25,6 +26,7 @@ const Participants = ({ participants }) => {
         training_group: participant.training_group,
         status: participant.status,
         farmer_trainer: participant.farmer_trainer,
+        business_advisor: participant.business_advisor,
       }))
     : [];
 
