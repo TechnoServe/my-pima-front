@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Typography , Tabs, Tab, Box} from "@mui/material";
+import { Typography, Tabs, Tab, Box } from "@mui/material";
 import Tstabdetail from "./Tstabdetail";
 import { a11yProps } from "../tgdetail.js/Tgtabs";
 
@@ -36,7 +36,7 @@ const Tstabs = ({ details }) => {
       <Box sx={{ width: "100%", marginTop: "20px" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs value={0} aria-label="basic tabs example">
-            <Tab label="Details" {...a11yProps(0)} />{" "}
+            <Tab label="Details" {...a11yProps(0)} disabled />{" "}
           </Tabs>
         </Box>
 

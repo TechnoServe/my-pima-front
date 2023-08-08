@@ -5,6 +5,7 @@ import { GET_ATTENDANCE_PER_PARTICIPANT } from "../../../graphql/queries/partici
 import { useEffect } from "react";
 import { useState } from "react";
 import { BeatLoader } from "react-spinners";
+import { Chip } from "@mui/material";
 
 const Attendtable = ({ trainingSessions, participant }) => {
   const [rows, setRows] = useState([]); // eslint-disable-line no-unused-vars
@@ -13,7 +14,21 @@ const Attendtable = ({ trainingSessions, participant }) => {
     { Header: "No.", accessor: "num" },
     { Header: "Session Name", accessor: "session_name" },
     { Header: "Attendance Name", accessor: "attendance_name" },
-    { Header: "Status", accessor: "attendance_status" },
+    {
+      Header: "Status",
+      accessor: "attendance_status",
+      Cell: ({ value }) => {
+        return (
+          <div>
+            {value === "Present" ? (
+              <Chip label={"Attended"} color="success" variant="outlined" />
+            ) : (
+              <Chip label={"Missed"} color="error" variant="outlined" />
+            )}
+          </div>
+        );
+      },
+    },
     { Header: "Date", accessor: "attendance_date" },
   ];
   const tableRowItem = "trainsession";

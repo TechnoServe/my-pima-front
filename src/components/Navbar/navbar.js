@@ -197,6 +197,7 @@ const Navbar = () => {
                       !participantsPerProject.loading ? (
                         <Participants
                           participants={participants}
+                          trainingGroups={trainingGroups}
                           selectedProject={selectedProject}
                         />
                       ) : (

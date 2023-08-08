@@ -3,23 +3,18 @@ import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import "../tgdetail.js/tgdetail.css";
 import Detailscontent from "../tgdetail.js/Detailscontent";
-import {
-  CircularProgressbarWithChildren,
-  buildStyles,
-} from "react-circular-progressbar";
 import Imagecontainer from "./sessionimage/Imagecontainer";
 import { useQuery } from "@apollo/client";
 import { GET_TRAINING_SESSION_IMAGE } from "../../graphql/queries/trainingSessionsRequests";
 import { BeatLoader } from "react-spinners";
+import Statstscard from "../statsts/Statstscard";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   marginBottom: "10px",
   marginRight: "10px",
   textTransform: "initial",
   backgroundColor: "rgba(244, 103, 0, 1)",
-  
   color: "#fff",
-
   "&:hover": {
     backgroundColor: "rgba(244, 103, 0, 0.5)",
     transition: "background-color 0.3s ease-in-out",
@@ -41,7 +36,11 @@ const Tstabdetail = ({ details }) => {
   };
 
   useEffect(() => {
-    if (!loading && data.trainingSessionImage.status === 200) {
+    if (
+      !loading &&
+      data.trainingSessionImage &&
+      data.trainingSessionImage.status === 200
+    ) {
       setSession_image(data.trainingSessionImage.trainingSessionImage);
     }
   }, [data, loading]);
@@ -57,38 +56,8 @@ const Tstabdetail = ({ details }) => {
               className="ts__details-container"
               style={{ display: "flex", gap: "50px" }}
             >
-              <div style={{ width: "110px" }}>
-                <CircularProgressbarWithChildren
-                  value={22}
-                  styles={buildStyles({
-                    rotation: 1,
-                    strokeLinecap: "round",
-                    textSize: "20px",
-                    pathTransitionDuration: 0.5,
-                    pathColor: "rgba(244, 103, 0, 1)",
-                    textColor: "rgba(244, 103, 0, 1)",
-                    trailColor: "#ECF3FE",
-                  })}
-                >
-                  <div style={{ position: "absolute", top: "15px" }}>
-                    <p
-                      style={{
-                        fontSize: "20px",
-                        textAlign: "center",
-                        color: "#F46700",
-                        fontWeight: "700",
-                        paddingBottom: "10px",
-                      }}
-                    >
-                      22{" "}
-                    </p>
-                    <p
-                      style={{ fontSize: "10px", fontWeight: "600", color: "" }}
-                    >
-                      Total Attendance
-                    </p>
-                  </div>
-                </CircularProgressbarWithChildren>
+              <div style={{ width: "250px" }}>
+                <Statstscard stats={details} />
               </div>
               <div className="ts__details-container1">
                 <Detailscontent

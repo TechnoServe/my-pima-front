@@ -1,14 +1,23 @@
 import React from "react";
 import Table from "../components/Table/Table";
 
-const Participants = ({ participants }) => {
+const Participants = ({ participants, trainingGroups }) => {
   const columns = [
     { Header: "No.", accessor: "num" },
     { Header: "Full Name", accessor: "full_name" },
     { Header: "Gender", accessor: "gender" },
     { Header: "Location", accessor: "location" },
     { Header: "TNS Id", accessor: "tns_id" },
-    { Header: "Training Group", accessor: "training_group" },
+    {
+      Header: "Training Group",
+      accessor: "training_group",
+      Cell: ({ value }) =>
+        trainingGroups
+          ? trainingGroups.find((tg) => tg.tg_id === value)
+            ? trainingGroups.find((tg) => tg.tg_id === value).tg_name
+            : "N/A"
+          : "N/A",
+    },
     { Header: "Status", accessor: "status" },
     { Header: "Farmer Trainer", accessor: "farmer_trainer" },
     { Header: "Business Advisor", accessor: "business_advisor" },

@@ -7,7 +7,7 @@ import {
 } from "react-circular-progressbar";
 
 const Statstscard = ({ stats }) => {
-  const percentage = 66;
+  const percentage = 100;
 
   // get percentage of total_males from stats
   let totalMales = 0;
@@ -32,13 +32,13 @@ const Statstscard = ({ stats }) => {
           Total Attendance
         </p>
         <div style={{ display: "flex" }}>
-          <div style={{ marginRight: "50px" }}>
+          <div style={{ marginRight: "30px" }}>
             <div className="mafa__attendance" style={{ paddingBottom: "10px" }}>
               <div className="cardts__icon">
                 <MdMan size={22} />
               </div>
               <div>
-                <p className="attend__text">Male Attendance</p>
+                <p className="attend__text">Male</p>
                 <p className="attend__figure">
                   {maleAttendancePercentage.toFixed(2)}%
                 </p>
@@ -49,7 +49,7 @@ const Statstscard = ({ stats }) => {
                 <MdWoman size={22} />
               </div>
               <div>
-                <p className="attend__text">Female Attendance</p>
+                <p className="attend__text">Female</p>
                 <p className="attend__figure">
                   {femaleAttendancePercentage.toFixed(2)}%
                 </p>
