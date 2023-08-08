@@ -1,6 +1,5 @@
 import React from "react";
 import "./tscard.css";
-import { MdMan, MdWoman } from "react-icons/md";
 import { PieChart } from "@mui/x-charts";
 
 const Statstscard = ({ stats }) => {

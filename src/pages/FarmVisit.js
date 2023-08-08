@@ -3,7 +3,7 @@ import React from "react";
 const FarmVisit = () => {
   return (
     <div>
-      <h1>Project Name</h1>
+      <h1>Farm Visit</h1>
     </div>
   );
 };

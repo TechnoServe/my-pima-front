@@ -1,0 +1,33 @@
+.chart__content-container{
+    background-color: #F7F9FB;
+    width: 50%;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+/* Custom styling for the legend */
+.custom-legend {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .legend-icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    border-radius: 50px;
+  }
+  
+  .legend-text {
+    font-size: 14px; 
+    color: rgba(37, 36, 93, 1); 
+    font-weight: 400;
+  }
+  
