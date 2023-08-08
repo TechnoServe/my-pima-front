@@ -1,11 +1,32 @@
 import { useState } from "react";
-import { useEffect } from "react";
-import { useTable } from "react-table";
-import { TablePagination } from "@mui/material";
 import "./table.css";
 import Exportbutton from "../Export/Export";
 import FilterContainer from "../Filter/FilterContainer";
 import { useNavigate } from "react-router-dom";
+import DataTable from "react-data-table-component";
+import { BiSearchAlt } from "react-icons/bi";
+
+const customStyles = {
+  rows: {
+    style: {
+      minHeight: "50px", // override the row height
+      cursor: "pointer",
+    },
+  },
+  headCells: {
+    style: {
+      paddingLeft: "8px", // override the cell padding for head cells
+      paddingRight: "8px",
+      backgroundColor: "#00A5A3",
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: "5px", // override the cell padding for data cells
+      paddingRight: "5px",
+    },
+  },
+};
 
 const Table = ({
   columns,
@@ -21,35 +42,36 @@ const Table = ({
   const handleRowClick = (row) => {
     const id =
       tableRowItem === "trainsession"
-        ? row.original.ts_id
+        ? row.ts_id
         : tableRowItem === "traingroup"
-        ? row.original.tg_id
+        ? row.tg_id
         : tableRowItem === "participants"
-        ? row.original.p_id
-        : row.original.ts_id;
+        ? row.p_id
+        : row.ts_id;
 
     navigate(`/${tableRowItem}/${id}`);
   };
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data });
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleSearch = (e) => {
+    const value = e.target.value;
+
+    const filteredItems = data.filter((item) => {
+      return columns.some((column) => {
+        const field = item[column.id];
+        if (field === null || field === undefined) {
+          return false;
+        }
+        return field.toString().toLowerCase().includes(value.toLowerCase());
+      });
+    });
+
+    setFilteredData(filteredItems);
+
+    setSearchText(e.target.value);
   };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  useEffect(() => {
-    if (rows.length > 0) {
-      setPage(0);
-    }
-  }, [rows]);
 
   return (
     <div>
@@ -69,56 +91,25 @@ const Table = ({
         />
         <Exportbutton columns={columns} data={data} pathName={tableRowItem} />
       </div>
-      <div className="table__container">
-        <table {...getTableProps()} className="table__head">
-          <thead className="table__header">
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>
-                    {column.render("Header")}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-
-          <tbody {...getTableBodyProps()} className="table__body">
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                prepareRow(row);
-                return (
-                  <tr
-                    {...row.getRowProps()}
-                    onClick={() => handleRowClick(row)}
-                  >
-                    {row.cells.map((cell) => (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    ))}
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchText}
+          onChange={handleSearch}
+        />
+        <span className="search-icon">
+          {/* use search icon from react-icons */}
+          <BiSearchAlt />
+        </span>
       </div>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50, 100]}
-        component="div"
-        count={rows.length} //
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{
-          borderTop: "1px solid #EEEEF2",
-
-          borderBottom: "1px solid #ccc",
-          display: "flex",
-          justifyContent: "space-around",
-          alignItems: "center",
-          fontSize: "14px",
-        }}
+      <DataTable
+        columns={columns}
+        data={searchText.length > 0 ? filteredData : data}
+        onRowClicked={handleRowClick}
+        pagination
+        highlightOnHover
+        customStyles={customStyles}
       />
     </div>
   );

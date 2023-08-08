@@ -1,14 +1,9 @@
 import React from "react";
 import "./tscard.css";
 import { MdMan, MdWoman } from "react-icons/md";
-import {
-  CircularProgressbarWithChildren,
-  buildStyles,
-} from "react-circular-progressbar";
+import { PieChart } from "@mui/x-charts";
 
 const Statstscard = ({ stats }) => {
-  const percentage = 100;
-
   // get percentage of total_males from stats
   let totalMales = 0;
   let totalFemales = 0;
@@ -32,59 +27,31 @@ const Statstscard = ({ stats }) => {
           Total Attendance
         </p>
         <div style={{ display: "flex" }}>
-          <div style={{ marginRight: "30px" }}>
-            <div className="mafa__attendance" style={{ paddingBottom: "10px" }}>
-              <div className="cardts__icon">
-                <MdMan size={22} />
-              </div>
-              <div>
-                <p className="attend__text">Male</p>
-                <p className="attend__figure">
-                  {maleAttendancePercentage.toFixed(2)}%
-                </p>
-              </div>
-            </div>
-            <div className="mafa__attendance">
-              <div className="cardts__icon">
-                <MdWoman size={22} />
-              </div>
-              <div>
-                <p className="attend__text">Female</p>
-                <p className="attend__figure">
-                  {femaleAttendancePercentage.toFixed(2)}%
-                </p>
-              </div>
-            </div>
-          </div>
-          <div style={{ width: "100px" }}>
-            <CircularProgressbarWithChildren
-              value={percentage}
-              styles={buildStyles({
-                rotation: 0.5,
-                strokeLinecap: "round",
-                textSize: "20px",
-                pathTransitionDuration: 0.5,
-                pathColor: "rgba(244, 103, 0, 1)",
-                textColor: "rgba(244, 103, 0, 1)",
-                trailColor: "#ECF3FE",
-              })}
-            >
-              <div style={{ position: "absolute", top: "15px" }}>
-                <p
-                  style={{
-                    fontSize: "20px",
-                    textAlign: "center",
-                    color: "#F46700",
-                    fontWeight: "600",
-                  }}
-                >
-                  {percentage} %
-                </p>
-                <p style={{ fontSize: "10px", fontWeight: "500", color: "" }}>
-                  Attendance
-                </p>
-              </div>
-            </CircularProgressbarWithChildren>
+          <div style={{ width: "300px" }}>
+            <PieChart
+              series={[
+                {
+                  arcLabel: (item) => `${item.value}%`,
+                  arcLabelMinAngle: 65,
+                  data: [
+                    {
+                      id: 0,
+                      value: maleAttendancePercentage.toFixed(1),
+                      label: "Male",
+                      color: "#3F51B5",
+                    },
+                    {
+                      id: 1,
+                      value: femaleAttendancePercentage.toFixed(1),
+                      label: "Female",
+                      color: "#FF4081",
+                    },
+                  ],
+                },
+              ]}
+              width={230}
+              height={200}
+            />
           </div>
         </div>
       </div>

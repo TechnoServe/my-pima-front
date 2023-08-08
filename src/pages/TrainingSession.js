@@ -8,16 +8,61 @@ const TrainingSession = ({
   setFilteredSessions,
 }) => {
   const columns = [
-    { Header: "No.", accessor: "num" },
-    { Header: "Session Name", accessor: "ts_name" },
-    { Header: "Module Name", accessor: "ts_module" },
-    { Header: "Training Group", accessor: "ts_group" },
-    { Header: "TNS Id", accessor: "tns_id" },
-    { Header: "Farmer Trainer", accessor: "farmer_trainer" },
-    { Header: "Status", accessor: "ts_status" },
-    { Header: "MA", accessor: "total_males" },
-    { Header: "FA", accessor: "total_females" },
-    { Header: "Session Date", accessor: "session_date" },
+    { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
+    {
+      id: "ts_name",
+      name: "Session Name",
+      selector: (row) => row.ts_name,
+      sortable: true,
+    },
+    {
+      id: "ts_module",
+      name: "Module Name",
+      selector: (row) => row.ts_module,
+      sortable: true,
+    },
+    {
+      id: "ts_group",
+      name: "Training Group",
+      selector: (row) => row.ts_group,
+      sortable: true,
+    },
+    {
+      id: "tns_id",
+      name: "TNS Id",
+      selector: (row) => row.tns_id,
+      sortable: true,
+    },
+    {
+      id: "farmer_trainer",
+      name: "Farmer Trainer",
+      selector: (row) => row.farmer_trainer,
+      sortable: true,
+    },
+    {
+      id: "ts_status",
+      name: "Status",
+      selector: (row) => row.ts_status,
+      sortable: true,
+    },
+    {
+      id: "total_males",
+      name: "MA",
+      selector: (row) => row.total_males,
+      sortable: true,
+    },
+    {
+      id: "total_females",
+      name: "FA",
+      selector: (row) => row.total_females,
+      sortable: true,
+    },
+    {
+      id: "session_date",
+      name: "Session Date",
+      selector: (row) => row.session_date,
+      sortable: true,
+    },
   ];
   const tableRowItem = "trainsession";
 

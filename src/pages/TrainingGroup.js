@@ -19,12 +19,37 @@ const TrainingGroup = ({
   const [totalParticipants, setTotalParticipants] = useState(0); // eslint-disable-line no-unused-vars
 
   const columns = [
-    { Header: "No.", accessor: "num" },
-    { Header: "Training Group Name", accessor: "tg_name" },
-    { Header: "TNS ID", accessor: "tns_id" },
-    { Header: "No of Participants", accessor: "total_participants" },
-    { Header: "Business Advisor", accessor: "business_advisor" },
-    { Header: "Farmer Trainer", accessor: "farmer_trainer" },
+    { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
+    {
+      id: "tg_name",
+      name: "Training Group Name",
+      selector: (row) => row.tg_name,
+      sortable: true,
+    },
+    {
+      id: "tns_id",
+      name: "TNS ID",
+      selector: (row) => row.tns_id,
+      sortable: true,
+    },
+    {
+      id: "total_participants",
+      name: "No of Participants",
+      selector: (row) => row.total_participants,
+      sortable: true,
+    },
+    {
+      id: "business_advisor",
+      name: "Business Advisor",
+      selector: (row) => row.business_advisor,
+      sortable: true,
+    },
+    {
+      id: "farmer_trainer",
+      name: "Farmer Trainer",
+      selector: (row) => row.farmer_trainer,
+      sortable: true,
+    },
   ];
 
   const rows = trainingGroups

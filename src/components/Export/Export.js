@@ -70,36 +70,34 @@ export default function Exportbutton({ columns, data, pathName }) {
     setIsIconUp(!isIconUp);
   };
   const handleClose = (format) => {
-    const headers = columns.map(({ Header }) => Header);
+    const headers = columns.map(({ name }) => name);
 
     try {
-      const csvExporter = new ExportToCsv({
-        fieldSeparator: ",",
-        quoteStrings: '"',
-        decimalSeparator: ".",
-        showLabels: true,
-        useTextFile: false,
-        useBom: true,
-        filename: `${
-          pathName === "traingroup"
-            ? "mypima_training_group"
-            : pathName === "trainsession"
-            ? "mypima_training_session"
-            : pathName === "participants"
-            ? "mypima_participants"
-            : "mypima_attendance"
-        } ${new Date().toLocaleDateString()}`,
-        headers,
-      });
-
-      csvExporter.generateCsv(
-        data.map(
-          ({ tg_id, ts_id, p_id, attendance_id, __typename, ...rest }) => rest
-        )
-      );
-
       if (format === "csv") {
-        csvExporter.generateCsv();
+        const csvExporter = new ExportToCsv({
+          fieldSeparator: ",",
+          quoteStrings: '"',
+          decimalSeparator: ".",
+          showLabels: true,
+          useTextFile: false,
+          useBom: true,
+          filename: `${
+            pathName === "traingroup"
+              ? "mypima_training_group"
+              : pathName === "trainsession"
+              ? "mypima_training_session"
+              : pathName === "participants"
+              ? "mypima_participants"
+              : "mypima_attendance"
+          } ${new Date().toLocaleDateString()}`,
+          headers,
+        });
+
+        csvExporter.generateCsv(
+          data.map(
+            ({ tg_id, ts_id, p_id, attendance_id, __typename, ...rest }) => rest
+          )
+        );
       } else if (format === "xls") {
         downloadExcel({
           fileName: `${
@@ -158,7 +156,7 @@ export default function Exportbutton({ columns, data, pathName }) {
         }}
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={() => handleClose("")}
       >
         <MenuItem onClick={() => handleClose("csv")} disableRipple>
           Export as CSV

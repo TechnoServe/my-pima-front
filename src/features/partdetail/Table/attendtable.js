@@ -11,16 +11,26 @@ const Attendtable = ({ trainingSessions, participant }) => {
   const [rows, setRows] = useState([]); // eslint-disable-line no-unused-vars
 
   const columns = [
-    { Header: "No.", accessor: "num" },
-    { Header: "Session Name", accessor: "session_name" },
-    { Header: "Attendance Name", accessor: "attendance_name" },
+    { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
-      Header: "Status",
-      accessor: "attendance_status",
-      Cell: ({ value }) => {
+      id: "session_name",
+      name: "Session Name",
+      selector: (row) => row.session_name,
+      sortable: true,
+    },
+    {
+      id: "attendance_name",
+      name: "Attendance Name",
+      selector: (row) => row.attendance_name,
+      sortable: true,
+    },
+    {
+      id: "attendance_status",
+      name: "Status",
+      selector: (row) => {
         return (
           <div>
-            {value === "Present" ? (
+            {row.attendance_status === "Present" ? (
               <Chip label={"Attended"} color="success" variant="outlined" />
             ) : (
               <Chip label={"Missed"} color="error" variant="outlined" />
@@ -28,8 +38,14 @@ const Attendtable = ({ trainingSessions, participant }) => {
           </div>
         );
       },
+      sortable: true,
     },
-    { Header: "Date", accessor: "attendance_date" },
+    {
+      id: "attendance_date",
+      name: "Date",
+      selector: (row) => row.attendance_date,
+      sortable: true,
+    },
   ];
   const tableRowItem = "trainsession";
 

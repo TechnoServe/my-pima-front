@@ -3,24 +3,60 @@ import Table from "../components/Table/Table";
 
 const Participants = ({ participants, trainingGroups }) => {
   const columns = [
-    { Header: "No.", accessor: "num" },
-    { Header: "Full Name", accessor: "full_name" },
-    { Header: "Gender", accessor: "gender" },
-    { Header: "Location", accessor: "location" },
-    { Header: "TNS Id", accessor: "tns_id" },
+    { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
-      Header: "Training Group",
-      accessor: "training_group",
-      Cell: ({ value }) =>
+      id: "full_name",
+      name: "Full Name",
+      selector: (row) => row.full_name,
+      sortable: true,
+    },
+    {
+      id: "gender",
+      name: "Gender",
+      selector: (row) => row.gender,
+      sortable: true,
+    },
+    {
+      id: "location",
+      name: "Location",
+      selector: (row) => row.location,
+      sortable: true,
+    },
+    {
+      id: "tns_id",
+      name: "TNS Id",
+      selector: (row) => row.tns_id,
+      sortable: true,
+    },
+    {
+      id: "training_group",
+      name: "Training Group",
+      selector: (row) =>
         trainingGroups
-          ? trainingGroups.find((tg) => tg.tg_id === value)
-            ? trainingGroups.find((tg) => tg.tg_id === value).tg_name
+          ? trainingGroups.find((tg) => tg.tg_id === row.tg_id)
+            ? trainingGroups.find((tg) => tg.tg_id === row.tg_id).tg_name
             : "N/A"
           : "N/A",
+      sortable: true,
     },
-    { Header: "Status", accessor: "status" },
-    { Header: "Farmer Trainer", accessor: "farmer_trainer" },
-    { Header: "Business Advisor", accessor: "business_advisor" },
+    {
+      id: "status",
+      name: "Status",
+      selector: (row) => row.status,
+      sortable: true,
+    },
+    {
+      id: "farmer_trainer",
+      name: "Farmer Trainer",
+      selector: (row) => row.farmer_trainer,
+      sortable: true,
+    },
+    {
+      id: "business_advisor",
+      name: "Business Advisor",
+      selector: (row) => row.business_advisor,
+      sortable: true,
+    },
   ];
   const tableRowItem = "participants";
 
