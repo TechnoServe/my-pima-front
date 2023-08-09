@@ -1,4 +1,5 @@
 import React from "react";
+import { Chip } from "@mui/material";
 import Table from "../components/Table/Table";
 
 const Participants = ({ participants, trainingGroups }) => {
@@ -42,7 +43,15 @@ const Participants = ({ participants, trainingGroups }) => {
     {
       id: "status",
       name: "Status",
-      selector: (row) => row.status,
+      selector: (row) => (
+        <div>
+          {row.status === "Active" ? (
+            <Chip label={"Active"} color="success" variant="outlined" />
+          ) : (
+            <Chip label={"Inactive"} color="error" variant="outlined" />
+          )}
+        </div>
+      ),
       sortable: true,
     },
     {

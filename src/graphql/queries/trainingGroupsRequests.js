@@ -12,6 +12,7 @@ const GET_TRAINING_GROUPS_PER_PROJECT = gql`
         total_participants
         farmer_trainer
         business_advisor
+        status
       }
     }
   }

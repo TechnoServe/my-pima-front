@@ -3,6 +3,7 @@ import Table from "../components/Table/Table";
 import Statsframe from "../features/statstg/Statsframe";
 import { useQuery } from "@apollo/client";
 import { BeatLoader } from "react-spinners";
+import { Chip } from "@mui/material";
 import { GET_PROJECT_STATISTICS } from "../graphql/queries/projectsRequests";
 
 const TrainingGroup = ({
@@ -50,6 +51,20 @@ const TrainingGroup = ({
       selector: (row) => row.farmer_trainer,
       sortable: true,
     },
+    {
+      id: "status",
+      name: "Status",
+      selector: (row) => (
+        <div>
+          {row.status === "Active" ? (
+            <Chip label={"Active"} color="success" variant="outlined" />
+          ) : (
+            <Chip label={"Inactive"} color="error" variant="outlined" />
+          )}
+        </div>
+      ),
+      sortable: true,
+    },
   ];
 
   const rows = trainingGroups
@@ -57,10 +72,11 @@ const TrainingGroup = ({
         num: index + 1,
         tg_id: trainingGroup.tg_id,
         tg_name: trainingGroup.tg_name,
-        tns_id: trainingGroup.tns_id,
+        tns_id: trainingGroup.tns_id || "N/A",
         total_participants: trainingGroup.total_participants,
         business_advisor: trainingGroup.business_advisor,
         farmer_trainer: trainingGroup.farmer_trainer,
+        status: trainingGroup.status,
       }))
     : [];
 
@@ -73,7 +89,9 @@ const TrainingGroup = ({
       setTotalParticipants(total);
     }
   }, [trainingGroups]);
+
   const tableRowItem = "traingroup";
+
   return (
     <div>
       <h1 className="module__heading">Training Groups</h1>

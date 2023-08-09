@@ -26,9 +26,9 @@ const Statsframe = ({ statistics, totalParticipants }) => {
   ];
 
   return (
-    <div style={{ marginBottom: "0", display: "flex" }}>
+    <div style={{ width: "100%", marginBottom: "20px", display: "flex" }}>
       {statsData.map((data, index) => (
-        <div key={index} style={{ margin: "10px", marginBottom: "20px" }}>
+        <div key={index}>
           <Statscard
             heading={data.heading}
             figures={data.figures}

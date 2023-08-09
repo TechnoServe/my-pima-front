@@ -1,7 +1,7 @@
 import React from "react";
 import Detailscontent from "../tgdetail.js/Detailscontent";
-import farmerimage from "./assets/userimage.jpg";
-import { Avatar, Divider } from "@mui/material";
+import { Divider } from "@mui/material";
+import Avatar from "react-avatar";
 
 const Partscontentview = ({ participant }) => {
   return (
@@ -11,10 +11,17 @@ const Partscontentview = ({ participant }) => {
           className="parts__image"
           style={{ display: "flex", alignSelf: "center" }}
         >
-          <Avatar
+          {/* <Avatar
             alt="farmer-image"
             src={farmerimage}
             sx={{ width: 60, height: 60 }}
+          /> */}
+          <Avatar
+            name={participant.full_name}
+            size="50"
+            textSizeRatio={1.75}
+            round={true}
+            color="#8A92A6"
           />
         </div>
         <p
@@ -54,7 +61,7 @@ const Partscontentview = ({ participant }) => {
 
           <div>
             <p style={{ fontSize: "11px", paddingTop: "40px" }}>
-              Edit Information
+              {/* Edit Information */}
             </p>
           </div>
         </div>

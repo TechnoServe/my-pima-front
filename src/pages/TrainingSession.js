@@ -1,4 +1,5 @@
 import React from "react";
+import { Chip } from "@mui/material";
 import Table from "../components/Table/Table";
 
 const TrainingSession = ({
@@ -8,24 +9,33 @@ const TrainingSession = ({
   setFilteredSessions,
 }) => {
   const columns = [
-    { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
+    {
+      id: "num",
+      name: "No.",
+      selector: (row) => row.num,
+      sortable: true,
+      grow: 1,
+    },
     {
       id: "ts_name",
       name: "Session Name",
       selector: (row) => row.ts_name,
       sortable: true,
+      grow: 2,
     },
     {
       id: "ts_module",
       name: "Module Name",
       selector: (row) => row.ts_module,
       sortable: true,
+      grow: 2,
     },
     {
       id: "ts_group",
       name: "Training Group",
       selector: (row) => row.ts_group,
       sortable: true,
+      grow: 2,
     },
     {
       id: "tns_id",
@@ -38,11 +48,20 @@ const TrainingSession = ({
       name: "Farmer Trainer",
       selector: (row) => row.farmer_trainer,
       sortable: true,
+      grow: 2,
     },
     {
       id: "ts_status",
       name: "Status",
-      selector: (row) => row.ts_status,
+      selector: (row) => (
+        <div>
+          {row.ts_status === "Active" ? (
+            <Chip label={"Active"} color="success" variant="outlined" />
+          ) : (
+            <Chip label={"Inactive"} color="error" variant="outlined" />
+          )}
+        </div>
+      ),
       sortable: true,
     },
     {
@@ -50,18 +69,21 @@ const TrainingSession = ({
       name: "MA",
       selector: (row) => row.total_males,
       sortable: true,
+      grow: 1,
     },
     {
       id: "total_females",
       name: "FA",
       selector: (row) => row.total_females,
       sortable: true,
+      grow: 1,
     },
     {
       id: "session_date",
       name: "Session Date",
       selector: (row) => row.session_date,
       sortable: true,
+      grow: 2,
     },
   ];
   const tableRowItem = "trainsession";
@@ -73,7 +95,7 @@ const TrainingSession = ({
         ts_name: trainingSession.ts_name,
         ts_module: trainingSession.ts_module,
         ts_group: trainingSession.ts_group,
-        tns_id: trainingSession.tns_id,
+        tns_id: trainingSession.tns_id || "N/A",
         farmer_trainer: trainingSession.farmer_trainer,
         ts_status: trainingSession.ts_status,
         total_males: trainingSession.total_males,
@@ -97,5 +119,4 @@ const TrainingSession = ({
   );
 };
 
-// Rest of the code remains the same
 export default TrainingSession;
