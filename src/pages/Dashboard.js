@@ -5,6 +5,9 @@ import { BsPersonBoundingBox } from "react-icons/bs";
 import { GiFarmer } from "react-icons/gi";
 import { FaTripadvisor } from "react-icons/fa";
 import ProjectTimeline from "../components/ProjectTimeline/ProjectTimeline";
+import { NavLink } from "react-router-dom";
+import ListUpModal from "../components/Modals/ListUpModal";
+import { useState } from "react";
 
 const Dashboard = ({
   trainingGroups,
@@ -12,32 +15,44 @@ const Dashboard = ({
   participants,
   projectStats,
 }) => {
+  const [open, setOpen] = useState(false);
+  const [list, setList] = useState([]);
+  const [title, setTitle] = useState("");
+
   const statsData = [
     {
+      name: "total_training_groups",
       heading: "Total Training Groups",
       figures: trainingGroups.length,
       icon: <MdGroups />,
       color: "#25245D",
+      path: "/traingroup",
     },
     {
+      name: "total_training_sessions",
       heading: "Total Training Sessions",
       figures: trainingSessions ? trainingSessions.length : 0,
       icon: <MdEventRepeat />,
       color: "#25245D",
+      path: "/trainsession",
     },
     {
+      name: "total_participants",
       heading: "Total Participants",
       figures: participants.length,
       icon: <BsPersonBoundingBox />,
       color: "#087C8F",
+      path: "/participants",
     },
     {
+      name: "total_bas",
       heading: "Active BA's",
       figures: projectStats.total_bas,
       icon: <FaTripadvisor />,
       color: "#F46700",
     },
     {
+      name: "total_fts",
       heading: "Farmer Trainers",
       figures: projectStats.total_fts,
       icon: <GiFarmer />,
@@ -53,6 +68,25 @@ const Dashboard = ({
     { date: "2023-11-15", title: "End of Project" },
   ];
 
+  const openList = (e, name) => {
+    e.preventDefault();
+
+    if (name === "total_bas") {
+      setOpen(true);
+      setTitle("Business Advisors");
+      setList([
+        ...new Set(trainingGroups.map((group) => group.business_advisor)),
+      ]);
+    }
+    if (name === "total_fts") {
+      setOpen(true);
+      setTitle("Farmer Trainers");
+      setList([
+        ...new Set(trainingGroups.map((group) => group.farmer_trainer)),
+      ]);
+    }
+  };
+
   return (
     <div>
       <h1 className="module__heading">Your Dashboard</h1>
@@ -67,12 +101,18 @@ const Dashboard = ({
       >
         {statsData.map((data, index) => (
           <div key={index}>
-            <Card
-              heading={data.heading}
-              figures={data.figures}
-              icon={data.icon}
-              color={data.color}
-            />
+            <NavLink
+              to={data.path ? data.path : null}
+              key={index}
+              onClick={(e) => (data.path ? null : openList(e, data.name))}
+            >
+              <Card
+                heading={data.heading}
+                figures={data.figures}
+                icon={data.icon}
+                color={data.color}
+              />
+            </NavLink>
           </div>
         ))}{" "}
       </div>
@@ -95,6 +135,13 @@ const Dashboard = ({
         </h2>
         <ProjectTimeline events={eventData} />
       </div>
+
+      <ListUpModal
+        open={trainingGroups.length > 0 ? open : false}
+        handleClose={() => setOpen(false)}
+        data={list}
+        title={title}
+      />
     </div>
   );
 };
