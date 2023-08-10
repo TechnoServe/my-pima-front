@@ -69,7 +69,6 @@ const Navbar = () => {
   const [filter, setFilter] = useState({
     businessAdvisor: "",
     farmerTrainer: "",
-    trainingGroup: "",
     moduleName: "",
     sessionDate: "",
   });

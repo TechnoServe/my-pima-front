@@ -50,26 +50,21 @@ const FilterContent = ({
   };
 
   const handleSearch = () => {
-    if (filter.trainingGroup) {
-      setFilteredGroups(
-        data.filter((group) => group.tg_name.includes(filter.trainingGroup))
-      );
-      return;
-    }
+    setFilteredGroups && setFilteredGroups([]);
+    setFilteredSessions && setFilteredSessions([]);
+    handleClose();
 
     if (filter.farmerTrainer) {
       setFilteredGroups(
-        data.filter((group) =>
-          group.farmer_trainer.includes(filter.farmerTrainer)
-        )
+        data.filter((group) => group.farmer_trainer === filter.farmerTrainer)
       );
       return;
     }
 
     if (filter.businessAdvisor) {
       setFilteredGroups(
-        data.filter((group) =>
-          group.business_advisor.includes(filter.businessAdvisor)
+        data.filter(
+          (group) => group.business_advisor === filter.businessAdvisor
         )
       );
       return;
@@ -88,17 +83,12 @@ const FilterContent = ({
       );
       return;
     }
-
-    setFilteredGroups && setFilteredGroups([]);
-    setFilteredSessions && setFilteredSessions([]);
-    handleClose();
   };
 
   const handleReset = () => {
     setFilter({
       businessAdvisor: "",
       farmerTrainer: "",
-      trainingGroup: "",
       moduleName: "",
       sessionDate: "",
     });
@@ -167,21 +157,6 @@ const FilterContent = ({
                 />
               )
             }
-            {
-              // display selected filters here, get non-empty values from filter object
-              filter && filter.trainingGroup && (
-                <Chip
-                  label={filter.trainingGroup}
-                  size="small"
-                  onDelete={() => {
-                    setFilter((prevState) => ({
-                      ...prevState,
-                      trainingGroup: "",
-                    }));
-                  }}
-                />
-              )
-            }
 
             {filter && filter.moduleName && (
               <Chip
@@ -215,8 +190,7 @@ const FilterContent = ({
                 filter.businessAdvisor === "" &&
                 filter.farmerTrainer === "" &&
                 filter.moduleName === "" &&
-                filter.sessionDate === "" &&
-                filter.trainingGroup === "" && (
+                filter.sessionDate === "" && (
                   <em style={{ fontSize: "11px", color: "#969696" }}>
                     Nothing yet
                   </em>

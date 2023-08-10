@@ -99,7 +99,6 @@ const Table = ({
           onChange={handleSearch}
         />
         <span className="search-icon">
-          {/* use search icon from react-icons */}
           <BiSearchAlt />
         </span>
       </div>
