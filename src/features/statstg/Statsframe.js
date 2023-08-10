@@ -3,11 +3,11 @@ import Statscard from "./Statscard";
 import { MdGroups, MdBarChart } from "react-icons/md";
 import { BsPersonBoundingBox } from "react-icons/bs";
 
-const Statsframe = ({ statistics, totalParticipants }) => {
+const Statsframe = ({ statistics, totalParticipants, totalGroups }) => {
   const statsData = [
     {
       heading: "Total Training Groups",
-      figures: statistics.total_groups,
+      figures: totalGroups,
       icon: <MdGroups />,
       color: "#25245D",
     },

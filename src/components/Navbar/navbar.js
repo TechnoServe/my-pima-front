@@ -9,7 +9,10 @@ import Participants from "../../pages/Participants";
 import FarmVisit from "../../pages/FarmVisit";
 import { BeatLoader } from "react-spinners";
 import ProjectListDropdown from "../ProjectDrop/ProjectListDropdown";
-import { GET_ASSIGNED_PROJECTS } from "../../graphql/queries/projectsRequests";
+import {
+  GET_ASSIGNED_PROJECTS,
+  GET_PROJECT_STATISTICS,
+} from "../../graphql/queries/projectsRequests";
 import { useQuery } from "@apollo/client";
 import { toast } from "react-hot-toast";
 import { GET_TRAINING_GROUPS_PER_PROJECT } from "../../graphql/queries/trainingGroupsRequests";
@@ -31,6 +34,10 @@ const Navbar = () => {
   const [trainingGroups, setTrainingGroups] = useState([]);
   const [trainingSessions, setTrainingSessions] = useState([]);
   const [participants, setParticipants] = useState([]);
+  const [projectStats, setProjectStats] = useState({
+    total_bas: 0,
+    total_fts: 0,
+  });
 
   const { data, error, loading } = useQuery(GET_ASSIGNED_PROJECTS, {
     variables: {
@@ -53,6 +60,10 @@ const Navbar = () => {
 
   const participantsPerProject = useQuery(GET_PARTICIPANTS_PER_PROJECT, {
     variables: { projectId: selectedProject },
+  });
+
+  const projectStatistics = useQuery(GET_PROJECT_STATISTICS, {
+    variables: { sfProjectId: selectedProject },
   });
 
   const [filter, setFilter] = useState({
@@ -81,20 +92,26 @@ const Navbar = () => {
     if (favProject) {
       setSelectedProject(favProject);
     }
+  }, [favProject]);
 
+  useEffect(() => {
     if (trainingGroupsPerProject.data) {
       setTrainingGroups(
         trainingGroupsPerProject.data.trainingGroupsByProject.trainingGroups
       );
     }
+  }, [trainingGroupsPerProject.data]);
 
+  useEffect(() => {
     if (trainingSessionsPerProject.data) {
       setTrainingSessions(
         trainingSessionsPerProject.data.trainingSessionsByProject
           .trainingSessions
       );
     }
+  }, [trainingSessionsPerProject.data]);
 
+  useEffect(() => {
     if (participantsPerProject.data) {
       setParticipants(
         participantsPerProject.data.getParticipantsByProject.status === 200
@@ -102,12 +119,21 @@ const Navbar = () => {
           : []
       );
     }
-  }, [
-    favProject,
-    trainingGroupsPerProject.data,
-    trainingSessionsPerProject.data,
-    participantsPerProject.data,
-  ]);
+  }, [participantsPerProject.data]);
+
+  useEffect(() => {
+    if (
+      projectStatistics.data &&
+      projectStatistics.data.getProjectStatistics.status === 200
+    ) {
+      setProjectStats({
+        total_bas:
+          projectStatistics.data.getProjectStatistics.statistics.total_bas,
+        total_fts:
+          projectStatistics.data.getProjectStatistics.statistics.total_fts,
+      });
+    }
+  }, [projectStatistics.data]);
 
   return (
     <>
@@ -126,8 +152,28 @@ const Navbar = () => {
                 )}
 
                 <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route
+                    path="/"
+                    element={
+                      <Dashboard
+                        trainingGroups={trainingGroups}
+                        trainingSessions={trainingSessions}
+                        participants={participants}
+                        projectStats={projectStats}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <Dashboard
+                        trainingGroups={trainingGroups}
+                        trainingSessions={trainingSessions}
+                        participants={participants}
+                        projectStats={projectStats}
+                      />
+                    }
+                  />
                   <Route
                     path="/traingroup"
                     element={
@@ -138,10 +184,13 @@ const Navbar = () => {
                               ? filteredGroups
                               : trainingGroups
                           }
+                          orgTrainingGroups={trainingGroups}
                           selectedProject={selectedProject}
                           filter={filter}
                           setFilter={setFilter}
                           setFilteredGroups={setFilteredGroups}
+                          projectStats={projectStats}
+                          participants={participants}
                         />
                       ) : (
                         <BeatLoader

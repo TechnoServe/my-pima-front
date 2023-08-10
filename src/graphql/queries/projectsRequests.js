@@ -21,8 +21,6 @@ const GET_PROJECT_STATISTICS = gql`
       message
       status
       statistics {
-        total_groups
-        total_participants
         total_bas
         total_fts
       }
