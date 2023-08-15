@@ -91,7 +91,7 @@ const Participants = ({ participants, trainingGroups }) => {
         <Table columns={columns} data={rows} tableRowItem={tableRowItem} />
       ) : (
         <div className="no__data">
-          <h1 style={{ fontSize: "20px" }}>No Participants Yet</h1>
+          <h1 style={{ fontSize: "20px" }}>No Participant Yet</h1>
         </div>
       )}
     </div>

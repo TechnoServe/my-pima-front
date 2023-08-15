@@ -1,18 +1,101 @@
 import React from "react";
+import Table from "../components/Table/Table";
+import { Chip } from "@mui/material";
 
-const FarmVisit = () => {
+const FarmVisit = ({ farmVisits }) => {
+  const columns = [
+    { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
+    {
+      id: "fv_name",
+      name: "Farm Visit Name",
+      selector: (row) => row.fv_name,
+      sortable: true,
+    },
+    {
+      id: "training_group",
+      name: "Training Group",
+      selector: (row) => row.training_group,
+      sortable: true,
+    },
+    {
+      id: "training_session",
+      name: "Training Session",
+      selector: (row) => row.training_session,
+      sortable: true,
+    },
+    {
+      id: "tns_id",
+      name: "TNS Id",
+      selector: (row) => row.tns_id,
+      sortable: true,
+    },
+    {
+      id: "farm_visited",
+      name: "Farm Visited",
+      selector: (row) => row.farm_visited,
+      sortable: true,
+    },
+    {
+      id: "household_id",
+      name: "Household Id",
+      selector: (row) => row.household_id,
+      sortable: true,
+    },
+    {
+      id: "farmer_trainer",
+      name: "Farmer Trainer",
+      selector: (row) => row.farmer_trainer,
+      sortable: true,
+    },
+    {
+      id: "has_training",
+      name: "Has Training",
+      selector: (row) => (
+        <div>
+          {row.has_training === "Yes" ? (
+            <Chip label="Yes" color="success" />
+          ) : (
+            <Chip label="No" color="error" />
+          )}
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      id: "date_visited",
+      name: "Date Visited",
+      selector: (row) => row.date_visited,
+      sortable: true,
+    },
+  ];
+  const tableRowItem = "farm_visit";
+
+  const rows = farmVisits
+    ? farmVisits.map((fv, index) => ({
+        num: index + 1,
+        fv_id: fv.fv_id,
+        fv_name: fv.fv_name,
+        training_group: fv.training_group,
+        training_session: fv.training_session,
+        tns_id: fv.tns_id,
+        farm_visited: fv.farm_visited,
+        household_id: fv.household_id,
+        farmer_trainer: fv.farmer_trainer,
+        has_training: fv.has_training,
+        date_visited: fv.date_visited,
+      }))
+    : [];
+
   return (
     <div>
-      <h1>Farm Visit</h1>
-      <div
-        style={{
-          width: "100%",
-          color: "#0D3C61",
-          textAlign: "center",
-        }}
-      >
-        <em>Coming Soon</em>
-      </div>
+      <h1 className="module__heading">Farm Visits View</h1>
+      {farmVisits.length > 0 ? (
+        <Table columns={columns} data={rows} tableRowItem={tableRowItem} />
+      ) : (
+        <div className="no__data">
+          <h1 style={{ fontSize: "20px" }}>No Farm Visit Yet</h1>
+        </div>
+      )}
     </div>
   );
 };

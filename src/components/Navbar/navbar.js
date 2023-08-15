@@ -22,6 +22,7 @@ import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../../graphql/queries/trainin
 import Tsdetail from "../../features/tsdetail/Tsdetail";
 import Partdetail from "../../features/partdetail/Partdetail";
 import { GET_PARTICIPANTS_PER_PROJECT } from "../../graphql/queries/participantsRequests";
+import { GET_FARM_VISITS_PER_PROJECT } from "../../graphql/queries/farmVisitsRequests";
 
 const Navbar = () => {
   if (localStorage.getItem("myPimaUserData") === null) {
@@ -34,6 +35,7 @@ const Navbar = () => {
   const [trainingGroups, setTrainingGroups] = useState([]);
   const [trainingSessions, setTrainingSessions] = useState([]);
   const [participants, setParticipants] = useState([]);
+  const [farmVisits, setFarmVisits] = useState([]);
   const [projectStats, setProjectStats] = useState({
     total_bas: 0,
     total_fts: 0,
@@ -59,6 +61,10 @@ const Navbar = () => {
   );
 
   const participantsPerProject = useQuery(GET_PARTICIPANTS_PER_PROJECT, {
+    variables: { projectId: selectedProject },
+  });
+
+  const farmVisitsPerProject = useQuery(GET_FARM_VISITS_PER_PROJECT, {
     variables: { projectId: selectedProject },
   });
 
@@ -119,6 +125,16 @@ const Navbar = () => {
       );
     }
   }, [participantsPerProject.data]);
+
+  useEffect(() => {
+    if (farmVisitsPerProject.data) {
+      setFarmVisits(
+        farmVisitsPerProject.data.getFarmVisitsByProject.status === 200
+          ? farmVisitsPerProject.data.getFarmVisitsByProject.farmVisits
+          : []
+      );
+    }
+  }, [farmVisitsPerProject.data]);
 
   useEffect(() => {
     if (
@@ -269,7 +285,26 @@ const Navbar = () => {
                       />
                     }
                   />
-                  <Route path="/farmvisit" element={<FarmVisit />} />
+                  <Route
+                    path="/farmvisit"
+                    element={
+                      !farmVisitsPerProject.loading ? (
+                        <FarmVisit
+                          farmVisits={farmVisits}
+                          selectedProject={selectedProject}
+                        />
+                      ) : (
+                        <BeatLoader
+                          color="#0D3C61"
+                          size={15}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        />
+                      )
+                    }
+                  />
                 </Routes>
               </div>
             ) : (
