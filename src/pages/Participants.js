@@ -1,8 +1,13 @@
 import React from "react";
 import { Chip } from "@mui/material";
 import Table from "../components/Table/Table";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import UploadParticipantsModal from "../components/Modals/UploadParticipantsModal";
+import { useState } from "react";
 
 const Participants = ({ participants, trainingGroups }) => {
+  const [open, setOpen] = useState(false);
+
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
@@ -86,7 +91,19 @@ const Participants = ({ participants, trainingGroups }) => {
 
   return (
     <div>
-      <h1 className="module__heading">Participants View</h1>
+      <div className="flex__heading">
+        <h1 className="module__heading">Participants View</h1>{" "}
+        <FaCloudUploadAlt
+          title="Upload New Participants"
+          style={{
+            fontSize: "30px",
+            cursor: "pointer",
+            marginLeft: "10px",
+            fill: "#00A5A3",
+          }}
+          onClick={() => setOpen(true)}
+        />{" "}
+      </div>
       {participants.length > 0 ? (
         <Table columns={columns} data={rows} tableRowItem={tableRowItem} />
       ) : (
@@ -94,6 +111,13 @@ const Participants = ({ participants, trainingGroups }) => {
           <h1 style={{ fontSize: "20px" }}>No Participant Yet</h1>
         </div>
       )}
+
+      <UploadParticipantsModal
+        open={open}
+        setOpen={setOpen}
+        columns={columns}
+        data={rows}
+      />
     </div>
   );
 };
