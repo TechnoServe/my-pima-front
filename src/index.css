@@ -9,8 +9,8 @@
 }
 
 html {
-  scroll-behavior:smooth;
-	height: 100%;
+  scroll-behavior: smooth;
+  height: 100%;
 }
 
 body {
@@ -18,19 +18,22 @@ body {
     "Oxygen", "Ubuntu", "Cantarell", "Open Sans", sans-serif;
   line-height: 1.7;
   height: 100%;
-
 }
-.page__container{
+.page__container {
   width: auto;
   height: auto;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   margin: 0 20px;
   margin-bottom: 10px;
-  
 }
-.module__heading{
+.module__heading {
   font-size: 20px;
+}
+.flex__heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 .no__data {
   font-size: 16px;
