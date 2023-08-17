@@ -1,142 +1,113 @@
+import React, { useState } from "react";
+import { FileUploader } from "react-drag-drop-files";
 import {
-  Box,
+  Dialog,
+  DialogContent,
+  Typography,
   Button,
   CircularProgress,
-  Dialog,
+  Box,
   DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
 } from "@mui/material";
-import React from "react";
-import { useState } from "react";
-import CloudUploadIcon from "@mui/icons-material/CloudUploadOutlined";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
-const FileUploadContainer = () => {
+const UploadParticipantsModal = ({ open, setOpen }) => {
   const [fileInfo, setFileInfo] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploading, setUploading] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [file, setFile] = useState(null);
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // You can perform validations here (file type, size, etc.)
-      // For simplicity, let's assume the file is valid
+  const handleChange = (file) => {
+    setFile(file);
 
-      // Set file info
+    const reader = new FileReader();
+    reader.onload = (e) => {
       setFileInfo({
-        name: file.name,
+        filename: file.name,
         size: file.size,
+        type: file.type,
+        data: e.target.result,
       });
-    }
+    };
+    reader.readAsDataURL(file);
   };
 
-  const handleUpload = () => {
-    // Simulating upload progress
-    setUploading(true);
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress = Math.min(progress + 10, 100);
-      setUploadProgress(progress);
-      if (progress === 100) {
-        clearInterval(interval);
-        setUploading(false);
-      }
-    }, 500);
-  };
+  const handleClose = (e, reason) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") return;
 
-  return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      border="dashed 2px #ccc"
-      padding={2}
-    >
-      {!fileInfo ? (
-        <>
-          <label
-            htmlFor="file-input"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <CloudUploadIcon fontSize="large" />
-            <Typography variant="subtitle1">
-              Drag and drop a file here or click to upload.
-            </Typography>
-            <Typography variant="body2">
-              Supported file types with max size.
-            </Typography>
-          </label>
-          <input
-            id="file-input"
-            type="file"
-            accept=".csv, .xlsx"
-            onChange={handleFileUpload}
-            style={{ display: "none" }}
-          />
-        </>
-      ) : (
-        <>
-          <Typography variant="h6">{fileInfo.name}</Typography>
-          <Typography
-            variant="body2"
-            align="center"
-            fontStyle={{ fontStyle: "italic" }}
-          >
-            <h5>File Size:</h5>
-            {
-              // convert size to KB with 2 decimal places
-              // when size is larger than 1MB, convert to MB with 2 decimal places
-              fileInfo.size > 1024 * 1024
-                ? ` ${(fileInfo.size / (1024 * 1024)).toFixed(2)} MB`
-                : ` ${(fileInfo.size / 1024).toFixed(2)} KB`
-            }
-          </Typography>
-          <Typography
-            variant="body2"
-            align="center"
-            fontStyle={{ fontStyle: "italic" }}
-          >
-            <h5>Total Records:</h5>
-            {" 40"}
-          </Typography>
-          <Typography variant="body2">{`${uploadProgress}% Uploaded`}</Typography>
-          {uploading ? (
-            <CircularProgress size={60} thickness={5} />
-          ) : (
-            <button onClick={handleUpload}>Proceed</button>
-          )}
-        </>
-      )}
-    </Box>
-  );
-};
-
-const UploadParticipantsModal = ({ open, setOpen, columns, data }) => {
-  const handleClose = (event, reason) => {
-    if (reason === "backdropClick" || reason === "escapeKeyDown") {
-      return;
-    }
-
+    setFileInfo(null);
+    setUploadPercentage(0);
     setOpen(false);
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Upload Participants</DialogTitle>
       <DialogContent>
-        <FileUploadContainer />
+        {!fileInfo ? (
+          <FileUploader
+            label={"Drag and drop or browse a file to upload. File must be: "}
+            handleChange={handleChange}
+            name="file"
+            types={["csv", "xls", "xlsx"]}
+          />
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+            className="file-info"
+          >
+            <Typography variant="body2">
+              <h5>Name:</h5> <em>{fileInfo.filename}</em>
+            </Typography>
+            <Typography variant="body2">
+              <h5>Size:</h5>{" "}
+              <em>
+                {fileInfo.size > 1000000
+                  ? `${Math.round((fileInfo.size / 1000000) * 100) / 100} MB`
+                  : `${Math.round((fileInfo.size / 1000) * 100) / 100} KB`}
+              </em>
+            </Typography>
+            <Typography variant="body2">
+              <h5>Type:</h5> <em>{fileInfo.type}</em>
+            </Typography>
+            <Typography variant="body2">
+              <h5>Total Records:</h5> <em>30</em>
+            </Typography>
+            {/* add button to get back to upload new file */}
+            <div className="upload_actions">
+              <AiOutlineCloseCircle
+                onClick={() => {
+                  setFileInfo(null);
+                  setUploadPercentage(0);
+                }}
+                className="back__icon"
+                title="Back to Upload New File"
+              />
+              <FaCloudUploadAlt
+                title="Proceed Records Processing"
+                className="upload__icon"
+              />
+            </div>
+          </Box>
+        )}
+        {uploadPercentage > 0 && uploadPercentage < 100 && (
+          <div className="progress-container">
+            <CircularProgress
+              variant="determinate"
+              value={uploadPercentage}
+              size={80}
+              thickness={4}
+              color="primary"
+            />
+            F<Typography variant="body1">{`${uploadPercentage}%`}</Typography>
+          </div>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleClose}>Upload</Button>
       </DialogActions>
     </Dialog>
   );

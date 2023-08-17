@@ -30,6 +30,7 @@
     "react-circular-progressbar": "^2.1.0",
     "react-data-table-component": "^7.5.3",
     "react-dom": "^18.2.0",
+    "react-drag-drop-files": "^2.3.10",
     "react-export-table-to-excel": "^1.0.6",
     "react-horizontal-timeline-tooltip": "^1.0.1",
     "react-hot-toast": "^2.4.1",
