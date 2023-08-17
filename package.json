@@ -19,6 +19,7 @@
     "chartjs-adapter-moment": "^1.0.1",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
+    "excellentexport": "^3.9.6",
     "export-to-csv": "^0.2.1",
     "graphql": "^16.7.0",
     "jsonwebtoken": "^9.0.0",

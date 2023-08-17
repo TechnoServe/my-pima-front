@@ -1,10 +1,13 @@
 import { useState } from "react";
 import "./table.css";
-import Exportbutton from "../Export/Export";
 import FilterContainer from "../Filter/FilterContainer";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { BiSearchAlt } from "react-icons/bi";
+import { Button } from "@mui/material";
+import { FaFileExport } from "react-icons/fa";
+import { ExportToCsv } from "export-to-csv";
+import { downloadExcel } from "react-export-table-to-excel";
 
 const customStyles = {
   rows: {
@@ -37,6 +40,18 @@ const Table = ({
   setFilteredSessions,
   tableRowItem,
 }) => {
+  const pathName = window.location.pathname.split("/")[1];
+  const filename =
+    pathName === "traingroup"
+      ? "mypima_training_group"
+      : pathName === "trainsession"
+      ? "mypima_training_session"
+      : pathName === "participants"
+      ? "mypima_participants"
+      : pathName === "farmvisit"
+      ? "mypima_farm_visit"
+      : "mypima_attendance";
+
   const navigate = useNavigate();
 
   const handleRowClick = (row) => {
@@ -47,7 +62,9 @@ const Table = ({
         ? row.tg_id
         : tableRowItem === "participants"
         ? row.p_id
-        : row.ts_id;
+        : tableRowItem === "farmvisit"
+        ? row.fv_id
+        : row.attendance_id;
 
     navigate(`/${tableRowItem}/${id}`);
   };
@@ -73,6 +90,40 @@ const Table = ({
     setSearchText(e.target.value);
   };
 
+  const handleCSVExport = () => {
+    const csvExporter = new ExportToCsv({
+      fieldSeparator: ",",
+      quoteStrings: '"',
+      decimalSeparator: ".",
+      showLabels: true,
+      useTextFile: false,
+      useBom: true,
+      filename: `${filename} ${new Date().toLocaleDateString()}`,
+      headers: columns.map((column) => column.name),
+    });
+
+    csvExporter.generateCsv(
+      data.map(
+        ({ tg_id, ts_id, p_id, attendance_id, fv_id, __typename, ...rest }) =>
+          rest
+      )
+    );
+  };
+
+  const handleExcelExport = () => {
+    downloadExcel({
+      fileName: `${filename} ${new Date().toLocaleDateString()}`,
+      sheet: filename,
+      tablePayload: {
+        header: columns.map((column) => column.name),
+        body: data.map(
+          ({ tg_id, ts_id, p_id, attendance_id, fv_id, __typename, ...rest }) =>
+            rest
+        ),
+      },
+    });
+  };
+
   return (
     <div>
       <div
@@ -89,7 +140,6 @@ const Table = ({
           setFilteredSessions={setFilteredSessions}
           data={data}
         />
-        <Exportbutton columns={columns} data={data} pathName={tableRowItem} />
       </div>
       <div className="search-container">
         <input
@@ -109,6 +159,41 @@ const Table = ({
         pagination
         highlightOnHover
         customStyles={customStyles}
+        className="table-container"
+        actions={
+          <>
+            <Button
+              variant="outlined"
+              sx={{
+                color: "#00A5A3",
+                borderColor: "#00A5A3",
+              }}
+              onClick={handleCSVExport}
+            >
+              <FaFileExport
+                style={{
+                  marginRight: "5px",
+                }}
+              />{" "}
+              CSV
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{
+                color: "#00A5A3",
+                borderColor: "#00A5A3",
+              }}
+              onClick={handleExcelExport}
+            >
+              <FaFileExport
+                style={{
+                  marginRight: "5px",
+                }}
+              />{" "}
+              Excel
+            </Button>
+          </>
+        }
       />
     </div>
   );
