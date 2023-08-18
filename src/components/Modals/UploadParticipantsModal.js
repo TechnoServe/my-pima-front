@@ -8,14 +8,38 @@ import {
   CircularProgress,
   Box,
   DialogActions,
+  Chip,
 } from "@mui/material";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { BiErrorAlt } from "react-icons/bi";
+import { useEffect } from "react";
 
-const UploadParticipantsModal = ({ open, setOpen, columns, data }) => {
+const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
+  const requiredColumns = [
+    "Name",
+    "Last Name",
+    "Gender",
+    "Age",
+    "Phone Number",
+    "Primary Household Member",
+    "TNS Id",
+    "HouseHold Number",
+    "HouseHold Name",
+    "Farm Size",
+    "FF NO",
+    "Training Group",
+    "Project",
+    "Resend to OpenFN",
+    "Check Status",
+    "Create in Commcare",
+    "Household",
+  ];
   const [fileInfo, setFileInfo] = useState(null);
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [file, setFile] = useState(null);
+  const [loadedColumns, setLoadedColumns] = useState([]);
+  const [distinctProjects, setDistinctProjects] = useState([]);
 
   const handleChange = (file) => {
     setFile(file);
@@ -26,11 +50,35 @@ const UploadParticipantsModal = ({ open, setOpen, columns, data }) => {
         filename: file.name,
         size: file.size,
         type: file.type,
-        data: e.target.result,
+        data: e.target.result.split(/\r\n|\n/),
       });
+
+      const loadedData = e.target.result.split(/\r\n|\n/);
+      const loadedColumns = loadedData[0].split(",");
+
+      setLoadedColumns(loadedColumns);
     };
-    reader.readAsDataURL(file);
+    reader.readAsText(file);
   };
+
+  useEffect(() => {
+    // get distinct values of project column
+    if (!fileInfo) return;
+
+    if (fileInfo.data && fileInfo.data.length < 2) return;
+
+    const projectColumn = fileInfo.data.map(
+      (row) => row.split(",")[loadedColumns.indexOf("Project")]
+    );
+
+    // remove Project column header and falsey values
+    projectColumn.shift();
+
+    // remove falsy values
+    const filteredProjectColumn = projectColumn.filter((project) => project);
+
+    setDistinctProjects([...new Set(filteredProjectColumn)]);
+  }, [fileInfo, loadedColumns]);
 
   const handleClose = (e, reason) => {
     if (reason === "backdropClick" || reason === "escapeKeyDown") return;
@@ -38,6 +86,25 @@ const UploadParticipantsModal = ({ open, setOpen, columns, data }) => {
     setFileInfo(null);
     setUploadPercentage(0);
     setOpen(false);
+  };
+
+  const handleUpload = () => {
+    // write new csv file with data belonging to project in view
+    const projectIndex = loadedColumns.indexOf("Project");
+    const project = fileInfo.data[1].split(",")[projectIndex];
+
+    const projectData = fileInfo.data.filter((row) => {
+      const rowProject = row.split(",")[projectIndex];
+      return rowProject === project;
+    });
+
+    const projectDataString = `${loadedColumns.join(",")}\n${projectData.join("\n")}`;
+
+    const newFile = new File([projectDataString], fileInfo.filename, {
+      type: "text/csv",
+    });
+
+    console.log(projectDataString);
   };
 
   return (
@@ -48,8 +115,132 @@ const UploadParticipantsModal = ({ open, setOpen, columns, data }) => {
             label={"Drag and drop or browse a file to upload. File must be: "}
             handleChange={handleChange}
             name="file"
-            types={["csv", "xls", "xlsx"]}
+            types={["csv"]}
           />
+        ) : // check if all required columns are not present and show error
+        loadedColumns.filter((column) => requiredColumns.includes(column))
+            .length !== requiredColumns.length ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+            className="file-info"
+          >
+            <Typography variant="body1">
+              <BiErrorAlt
+                style={{
+                  fontSize: "2rem",
+                  color: "#B90101",
+                }}
+              />
+              File must contain all required columns:{" "}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              {requiredColumns.map((column, index) => (
+                <Chip
+                  key={index}
+                  label={column}
+                  sx={{
+                    margin: "5px 0.5rem",
+                  }}
+                  color="primary"
+                  variant="outlined"
+                />
+              ))}
+            </Typography>
+            <div className="upload_actions">
+              <AiOutlineCloseCircle
+                onClick={() => {
+                  setFileInfo(null);
+                  setUploadPercentage(0);
+                }}
+                className="back__icon"
+                title="Back to Upload New File"
+              />
+            </div>
+          </Box>
+        ) : // check if fileinfo data are empty and show error
+        fileInfo.data.length - 2 < 1 ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+            className="file-info"
+          >
+            <Typography
+              variant="body1"
+              sx={{
+                fontStyle: "italic",
+              }}
+            >
+              <BiErrorAlt
+                style={{
+                  fontSize: "1.5rem",
+                  color: "#B90101",
+                }}
+              />
+              There are no records in the file. Please upload a file with data.
+            </Typography>
+            <div className="upload_actions">
+              <AiOutlineCloseCircle
+                onClick={() => {
+                  setFileInfo(null);
+                  setUploadPercentage(0);
+                }}
+                className="back__icon"
+                title="Back to Upload New File"
+              />
+            </div>
+          </Box>
+        ) : // check if project in file matches project in view
+        distinctProjects.length === 1 &&
+          !distinctProjects.includes(navigatedProject) ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+            className="file-info"
+          >
+            <Typography
+              variant="body1"
+              sx={{
+                fontStyle: "italic",
+              }}
+            >
+              <BiErrorAlt
+                style={{
+                  fontSize: "1.5rem",
+                  color: "#B90101",
+                }}
+              />
+              The project(s) in the file does not match the project you are
+              currently navigating. Please upload a file with the correct
+              project.
+            </Typography>
+            <div className="upload_actions">
+              <AiOutlineCloseCircle
+                onClick={() => {
+                  setFileInfo(null);
+                  setUploadPercentage(0);
+                }}
+                className="back__icon"
+                title="Back to Upload New File"
+              />
+            </div>
+          </Box>
         ) : (
           <Box
             sx={{
@@ -74,8 +265,40 @@ const UploadParticipantsModal = ({ open, setOpen, columns, data }) => {
               <h5>Type:</h5> <em>{fileInfo.type}</em>
             </Typography>
             <Typography variant="body2">
-              <h5>Total Records:</h5> <em>30</em>
+              <h5>Total Records:</h5>{" "}
+              <em>
+                {
+                  // format number with commas
+                  (fileInfo.data.length - 2)
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+              </em>
             </Typography>
+            {distinctProjects.length > 1 && (
+              <Typography variant="body4" sx={{ marginBottom: "10px" }}>
+                Only records for{" "}
+                <em>
+                  <b>
+                    {navigatedProject}{" "}
+                    {`(
+                      ${
+                        fileInfo.data.filter((row) => {
+                          const rowProject =
+                            row.split(",")[loadedColumns.indexOf("Project")];
+                          return (
+                            rowProject ===
+                            fileInfo.data[1].split(",")[
+                              loadedColumns.indexOf("Project")
+                            ]
+                          );
+                        }).length
+                      } records)`}
+                  </b>
+                </em>{" "}
+                will be processed from this file.
+              </Typography>
+            )}
             {/* add button to get back to upload new file */}
             <div className="upload_actions">
               <AiOutlineCloseCircle
@@ -89,6 +312,7 @@ const UploadParticipantsModal = ({ open, setOpen, columns, data }) => {
               <FaCloudUploadAlt
                 title="Proceed Records Processing"
                 className="upload__icon"
+                onClick={handleUpload}
               />
             </div>
           </Box>
@@ -102,7 +326,7 @@ const UploadParticipantsModal = ({ open, setOpen, columns, data }) => {
               thickness={4}
               color="primary"
             />
-            F<Typography variant="body1">{`${uploadPercentage}%`}</Typography>
+            <Typography variant="body1">{`${uploadPercentage}%`}</Typography>
           </div>
         )}
       </DialogContent>

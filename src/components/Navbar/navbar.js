@@ -299,6 +299,7 @@ const Navbar = () => {
                             participants={participants}
                             trainingGroups={trainingGroups}
                             selectedProject={selectedProject}
+                            projects={projects}
                           />
                         ) : (
                           <BeatLoader

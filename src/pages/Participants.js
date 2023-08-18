@@ -5,7 +5,12 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import UploadParticipantsModal from "../components/Modals/UploadParticipantsModal";
 import { useState } from "react";
 
-const Participants = ({ participants, trainingGroups }) => {
+const Participants = ({
+  participants,
+  trainingGroups,
+  selectedProject,
+  projects,
+}) => {
   const [open, setOpen] = useState(false);
 
   const columns = [
@@ -115,8 +120,10 @@ const Participants = ({ participants, trainingGroups }) => {
       <UploadParticipantsModal
         open={open}
         setOpen={setOpen}
-        columns={columns}
-        data={rows}
+        navigatedProject={
+          projects.find((project) => project.sf_project_id === selectedProject)
+            .project_name
+        }
       />
     </div>
   );
