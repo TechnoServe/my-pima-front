@@ -12,7 +12,7 @@ import {
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
-const UploadParticipantsModal = ({ open, setOpen }) => {
+const UploadParticipantsModal = ({ open, setOpen, columns, data }) => {
   const [fileInfo, setFileInfo] = useState(null);
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [file, setFile] = useState(null);

@@ -23,6 +23,7 @@ import Tsdetail from "../../features/tsdetail/Tsdetail";
 import Partdetail from "../../features/partdetail/Partdetail";
 import { GET_PARTICIPANTS_PER_PROJECT } from "../../graphql/queries/participantsRequests";
 import { GET_FARM_VISITS_PER_PROJECT } from "../../graphql/queries/farmVisitsRequests";
+import LoaderPage from "../../pages/LoaderPage";
 
 const Navbar = () => {
   if (localStorage.getItem("myPimaUserData") === null) {
@@ -151,195 +152,231 @@ const Navbar = () => {
   }, [projectStatistics.data]);
 
   return (
-    <>
-      <Sidebar>
-        {!loading && projects.length > 0 ? (
-          <>
-            {location.pathname !== "/profile" ? (
-              <div className="page__container">
-                {!loading && (
-                  <ProjectListDropdown
-                    projects={projects}
-                    selectedProject={selectedProject}
-                    setSelectedProject={setSelectedProject}
-                    setFilteredGroups={setFilteredGroups}
-                  />
-                )}
+    <div
+      style={{
+        width: "100%",
+        height: "100vh",
+      }}
+    >
+      {trainingGroupsPerProject.loading ||
+      trainingSessionsPerProject.loading ||
+      participantsPerProject.loading ||
+      farmVisitsPerProject.loading ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <LoaderPage
+            loadings={{
+              load1: trainingGroupsPerProject.loading,
+              load2: trainingSessionsPerProject.loading,
+              load3: participantsPerProject.loading,
+              load4: farmVisitsPerProject.loading,
+            }}
+          />
+          <BeatLoader
+            color={"#1F2272"}
+            loading={true}
+            size={10}
+            style={{ marginTop: "10px" }}
+          />
+        </div>
+      ) : (
+        <Sidebar>
+          {!loading && projects.length > 0 ? (
+            <>
+              {location.pathname !== "/profile" ? (
+                <div className="page__container">
+                  {!loading && (
+                    <ProjectListDropdown
+                      projects={projects}
+                      selectedProject={selectedProject}
+                      setSelectedProject={setSelectedProject}
+                      setFilteredGroups={setFilteredGroups}
+                    />
+                  )}
 
-                <Routes>
-                  <Route
-                    path="/"
-                    element={
-                      <Dashboard
-                        trainingGroups={trainingGroups}
-                        trainingSessions={trainingSessions}
-                        participants={participants}
-                        projectStats={projectStats}
-                      />
-                    }
-                  />
-                  <Route
-                    path="/dashboard"
-                    element={
-                      <Dashboard
-                        trainingGroups={trainingGroups}
-                        trainingSessions={trainingSessions}
-                        participants={participants}
-                        projectStats={projectStats}
-                      />
-                    }
-                  />
-                  <Route
-                    path="/traingroup"
-                    element={
-                      !trainingGroupsPerProject.loading ? (
-                        <TrainingGroup
-                          trainingGroups={
-                            filteredGroups.length > 0
-                              ? filteredGroups
-                              : trainingGroups
-                          }
-                          orgTrainingGroups={trainingGroups}
-                          selectedProject={selectedProject}
-                          filter={filter}
-                          setFilter={setFilter}
-                          setFilteredGroups={setFilteredGroups}
-                          projectStats={projectStats}
-                          participants={participants}
-                        />
-                      ) : (
-                        <BeatLoader
-                          color="#0D3C61"
-                          size={15}
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
-                        />
-                      )
-                    }
-                  />
-                  <Route
-                    path="/traingroup/:id"
-                    element={<Tgdetail trainingGroups={trainingGroups} />}
-                  />
-
-                  <Route
-                    path="/trainsession"
-                    element={
-                      !trainingSessionsPerProject.loading ? (
-                        <TrainingSession
-                          trainingSessions={
-                            filteredSessions.length > 0
-                              ? filteredSessions
-                              : trainingSessions
-                          }
-                          selectedProject={selectedProject}
-                          filter={filter}
-                          setFilter={setFilter}
-                          setFilteredSessions={setFilteredSessions}
-                        />
-                      ) : (
-                        <BeatLoader
-                          color="#0D3C61"
-                          size={15}
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
-                        />
-                      )
-                    }
-                  />
-                  <Route
-                    path="/trainsession/:id"
-                    element={<Tsdetail trainingSessions={trainingSessions} />}
-                  />
-                  <Route
-                    path="/participants"
-                    element={
-                      !participantsPerProject.loading ? (
-                        <Participants
-                          participants={participants}
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={
+                        <Dashboard
                           trainingGroups={trainingGroups}
-                          selectedProject={selectedProject}
+                          trainingSessions={trainingSessions}
+                          participants={participants}
+                          projectStats={projectStats}
                         />
-                      ) : (
-                        <BeatLoader
-                          color="#0D3C61"
-                          size={15}
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
+                      }
+                    />
+                    <Route
+                      path="/dashboard"
+                      element={
+                        <Dashboard
+                          trainingGroups={trainingGroups}
+                          trainingSessions={trainingSessions}
+                          participants={participants}
+                          projectStats={projectStats}
                         />
-                      )
-                    }
-                  />
-                  <Route
-                    path="/participants/:id"
-                    element={
-                      <Partdetail
-                        participants={participants}
-                        trainingSessions={trainingSessions}
-                      />
-                    }
-                  />
-                  <Route
-                    path="/farmvisit"
-                    element={
-                      !farmVisitsPerProject.loading ? (
-                        <FarmVisit
-                          farmVisits={farmVisits}
-                          selectedProject={selectedProject}
+                      }
+                    />
+                    <Route
+                      path="/traingroup"
+                      element={
+                        !trainingGroupsPerProject.loading ? (
+                          <TrainingGroup
+                            trainingGroups={
+                              filteredGroups.length > 0
+                                ? filteredGroups
+                                : trainingGroups
+                            }
+                            orgTrainingGroups={trainingGroups}
+                            selectedProject={selectedProject}
+                            filter={filter}
+                            setFilter={setFilter}
+                            setFilteredGroups={setFilteredGroups}
+                            projectStats={projectStats}
+                            participants={participants}
+                          />
+                        ) : (
+                          <BeatLoader
+                            color="#0D3C61"
+                            size={15}
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/traingroup/:id"
+                      element={<Tgdetail trainingGroups={trainingGroups} />}
+                    />
+
+                    <Route
+                      path="/trainsession"
+                      element={
+                        !trainingSessionsPerProject.loading ? (
+                          <TrainingSession
+                            trainingSessions={
+                              filteredSessions.length > 0
+                                ? filteredSessions
+                                : trainingSessions
+                            }
+                            selectedProject={selectedProject}
+                            filter={filter}
+                            setFilter={setFilter}
+                            setFilteredSessions={setFilteredSessions}
+                          />
+                        ) : (
+                          <BeatLoader
+                            color="#0D3C61"
+                            size={15}
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/trainsession/:id"
+                      element={<Tsdetail trainingSessions={trainingSessions} />}
+                    />
+                    <Route
+                      path="/participants"
+                      element={
+                        !participantsPerProject.loading ? (
+                          <Participants
+                            participants={participants}
+                            trainingGroups={trainingGroups}
+                            selectedProject={selectedProject}
+                          />
+                        ) : (
+                          <BeatLoader
+                            color="#0D3C61"
+                            size={15}
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/participants/:id"
+                      element={
+                        <Partdetail
+                          participants={participants}
+                          trainingSessions={trainingSessions}
                         />
-                      ) : (
-                        <BeatLoader
-                          color="#0D3C61"
-                          size={15}
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
-                        />
-                      )
-                    }
-                  />
-                </Routes>
-              </div>
-            ) : (
-              <Routes>
-                <Route path="/profile" element={<Profile />} />
-              </Routes>
-            )}
-          </>
-        ) : (
-          // no projects assigned
-          <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            style={{ height: "100vh" }}
-          >
-            <Grid item>
-              {loading ? (
-                <BeatLoader
-                  color="#0D3C61"
-                  size={15}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                />
+                      }
+                    />
+                    <Route
+                      path="/farmvisit"
+                      element={
+                        !farmVisitsPerProject.loading ? (
+                          <FarmVisit
+                            farmVisits={farmVisits}
+                            selectedProject={selectedProject}
+                          />
+                        ) : (
+                          <BeatLoader
+                            color="#0D3C61"
+                            size={15}
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          />
+                        )
+                      }
+                    />
+                  </Routes>
+                </div>
               ) : (
-                <em style={{ color: "#0D3C61" }}>No Projects Assigned</em>
+                <Routes>
+                  <Route path="/profile" element={<Profile />} />
+                </Routes>
               )}
+            </>
+          ) : (
+            // no projects assigned
+            <Grid
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              style={{ height: "100vh" }}
+            >
+              <Grid item>
+                {loading ? (
+                  <BeatLoader
+                    color="#0D3C61"
+                    size={15}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  />
+                ) : (
+                  <em style={{ color: "#0D3C61" }}>No Projects Assigned</em>
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-        )}
-      </Sidebar>
-    </>
+          )}
+        </Sidebar>
+      )}
+    </div>
   );
 };
 
