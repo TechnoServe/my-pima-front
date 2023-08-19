@@ -5,15 +5,17 @@ import {
   DialogContent,
   Typography,
   Button,
-  CircularProgress,
   Box,
   DialogActions,
   Chip,
+  Alert,
 } from "@mui/material";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { BiErrorAlt } from "react-icons/bi";
 import { useEffect } from "react";
+import { useMutation } from "@apollo/client";
+import { UPLOAD_PARTICIPANTS } from "../../graphql/queries/participantsRequests";
 
 const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
   const requiredColumns = [
@@ -36,13 +38,17 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
     "Household",
   ];
   const [fileInfo, setFileInfo] = useState(null);
-  const [uploadPercentage, setUploadPercentage] = useState(0);
   const [file, setFile] = useState(null);
   const [loadedColumns, setLoadedColumns] = useState([]);
   const [distinctProjects, setDistinctProjects] = useState([]);
+  const [uploadResult, setUploadResult] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const [uploadParticipants] = useMutation(UPLOAD_PARTICIPANTS);
 
   const handleChange = (file) => {
     setFile(file);
+    setUploadResult(null);
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -84,11 +90,14 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
     if (reason === "backdropClick" || reason === "escapeKeyDown") return;
 
     setFileInfo(null);
-    setUploadPercentage(0);
     setOpen(false);
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
+    if (isProcessing) return;
+
+    setIsProcessing(true);
+    setUploadResult(null);
     // write new csv file with data belonging to project in view
     const projectIndex = loadedColumns.indexOf("Project");
     const project = fileInfo.data[1].split(",")[projectIndex];
@@ -98,13 +107,32 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
       return rowProject === project;
     });
 
-    const projectDataString = `${loadedColumns.join(",")}\n${projectData.join("\n")}`;
+    const projectDataString = `${loadedColumns.join(",")}\n${projectData.join(
+      "\n"
+    )}`;
 
     const newFile = new File([projectDataString], fileInfo.filename, {
       type: "text/csv",
     });
 
-    console.log(projectDataString);
+    await uploadParticipants({
+      variables: {
+        partsFile: newFile,
+      },
+    })
+      .then((res) => {
+        setUploadResult(res.data.uploadParticipants);
+        setIsProcessing(false);
+      })
+      .catch((err) => {
+        console.log(err);
+
+        setIsProcessing(false);
+        setUploadResult({
+          status: 500,
+          message: "Something went wrong. Please try again.",
+        });
+      });
   };
 
   return (
@@ -117,6 +145,24 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
             name="file"
             types={["csv"]}
           />
+        ) : // check is uploadResult is not null and show result
+        uploadResult ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+            className="file-info"
+          >
+            <Typography variant="body2">
+              {uploadResult.status === 200 ? (
+                <Alert severity="success">{uploadResult.message}</Alert>
+              ) : (
+                <Alert severity="error">{uploadResult.message}</Alert>
+              )}
+            </Typography>
+          </Box>
         ) : // check if all required columns are not present and show error
         loadedColumns.filter((column) => requiredColumns.includes(column))
             .length !== requiredColumns.length ? (
@@ -161,7 +207,6 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
               <AiOutlineCloseCircle
                 onClick={() => {
                   setFileInfo(null);
-                  setUploadPercentage(0);
                 }}
                 className="back__icon"
                 title="Back to Upload New File"
@@ -196,7 +241,6 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
               <AiOutlineCloseCircle
                 onClick={() => {
                   setFileInfo(null);
-                  setUploadPercentage(0);
                 }}
                 className="back__icon"
                 title="Back to Upload New File"
@@ -234,7 +278,6 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
               <AiOutlineCloseCircle
                 onClick={() => {
                   setFileInfo(null);
-                  setUploadPercentage(0);
                 }}
                 className="back__icon"
                 title="Back to Upload New File"
@@ -303,8 +346,9 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
             <div className="upload_actions">
               <AiOutlineCloseCircle
                 onClick={() => {
-                  setFileInfo(null);
-                  setUploadPercentage(0);
+                  if (!isProcessing) {
+                    setFileInfo(null);
+                  }
                 }}
                 className="back__icon"
                 title="Back to Upload New File"
@@ -317,21 +361,11 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
             </div>
           </Box>
         )}
-        {uploadPercentage > 0 && uploadPercentage < 100 && (
-          <div className="progress-container">
-            <CircularProgress
-              variant="determinate"
-              value={uploadPercentage}
-              size={80}
-              thickness={4}
-              color="primary"
-            />
-            <Typography variant="body1">{`${uploadPercentage}%`}</Typography>
-          </div>
-        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose} disabled={isProcessing}>
+          Cancel
+        </Button>
       </DialogActions>
     </Dialog>
   );

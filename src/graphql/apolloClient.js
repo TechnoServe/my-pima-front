@@ -1,10 +1,12 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { RetryLink } from "apollo-link-retry";
+import { createUploadLink } from "apollo-upload-client";
 
-const link = new HttpLink({
+const link = createUploadLink({
   uri: process.env.REACT_APP_API_HOST,
   headers: {
     authorization: localStorage.getItem("my-pima-token") || "",
+    "Apollo-Require-Preflight": "true",
   },
   fetchOptions: {
     mode: "cors",

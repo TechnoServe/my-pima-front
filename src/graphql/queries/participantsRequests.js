@@ -59,8 +59,18 @@ const GET_ATTENDANCE_PER_PARTICIPANT = gql`
   }
 `;
 
+const UPLOAD_PARTICIPANTS = gql`
+  mutation UploadParticipants($partsFile: Upload!) {
+    uploadParticipants(parts_file: $partsFile) {
+      message
+      status
+    }
+  }
+`;
+
 export {
   GET_PARTICIPANTS_PER_PROJECT,
   GET_PARTICIPANTS_PER_TG,
   GET_ATTENDANCE_PER_PARTICIPANT,
+  UPLOAD_PARTICIPANTS,
 };
