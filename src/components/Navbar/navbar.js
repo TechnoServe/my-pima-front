@@ -85,20 +85,21 @@ const Navbar = () => {
   useEffect(() => {
     if (data) {
       setProjects(data.getProjectsAssigned.projects);
+
       data.getProjectsAssigned.projects.length > 0 &&
-        setSelectedProject(data.getProjectsAssigned.projects[0].sf_project_id);
+        setSelectedProject(
+          data.getProjectsAssigned.projects.find(
+            (project) => project.sf_project_id === favProject
+          )
+            ? favProject
+            : data.getProjectsAssigned.projects[0].sf_project_id
+        );
     }
 
     if (error) {
       toast.error(error.message);
     }
-  }, [data, error]);
-
-  useEffect(() => {
-    if (favProject) {
-      setSelectedProject(favProject);
-    }
-  }, [favProject]);
+  }, [data, error, favProject]);
 
   useEffect(() => {
     if (trainingGroupsPerProject.data) {

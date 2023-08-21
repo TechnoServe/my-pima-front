@@ -100,11 +100,10 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
     setUploadResult(null);
     // write new csv file with data belonging to project in view
     const projectIndex = loadedColumns.indexOf("Project");
-    const project = fileInfo.data[1].split(",")[projectIndex];
 
     const projectData = fileInfo.data.filter((row) => {
       const rowProject = row.split(",")[projectIndex];
-      return rowProject === project;
+      return rowProject === navigatedProject;
     });
 
     const projectDataString = `${loadedColumns.join(",")}\n${projectData.join(
@@ -247,9 +246,8 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
               />
             </div>
           </Box>
-        ) : // check if project in file matches project in view
-        distinctProjects.length === 1 &&
-          !distinctProjects.includes(navigatedProject) ? (
+        ) : // check if project in file matches project in view and show error
+        !distinctProjects.includes(navigatedProject) ? (
           <Box
             sx={{
               display: "flex",
@@ -266,7 +264,7 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
             >
               <BiErrorAlt
                 style={{
-                  fontSize: "1.5rem",
+                  fontSize: "3rem",
                   color: "#B90101",
                 }}
               />
@@ -329,12 +327,8 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
                         fileInfo.data.filter((row) => {
                           const rowProject =
                             row.split(",")[loadedColumns.indexOf("Project")];
-                          return (
-                            rowProject ===
-                            fileInfo.data[1].split(",")[
-                              loadedColumns.indexOf("Project")
-                            ]
-                          );
+
+                          return rowProject === navigatedProject;
                         }).length
                       } records)`}
                   </b>

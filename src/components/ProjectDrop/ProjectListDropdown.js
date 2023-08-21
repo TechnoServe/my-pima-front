@@ -7,13 +7,11 @@ const ProjectListDropdown = ({
   setSelectedProject,
   setFilteredGroups,
   dropdownlabel1,
-  dropdownlabel2,
   style,
 }) => {
   const handleProjectSelect = (event) => {
     setSelectedProject(event.target.value);
     setFilteredGroups([]);
-    console.log(event.target.value);
 
     localStorage.setItem("fav_project", event.target.value);
   };
