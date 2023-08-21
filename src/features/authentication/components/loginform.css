@@ -134,10 +134,10 @@
     display: flex;
     padding-bottom: 20px;
   }
-  .heroimage svg {
+  .heroimage img {
     width: 100%;
     max-width: max-content;
-    height: auto;
+    height: 70%;
     max-height: max-content;
   }
   .form__starts {

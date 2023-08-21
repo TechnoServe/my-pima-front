@@ -2,7 +2,7 @@ import "./loginform.css";
 import Logo from "../../../components/Logo";
 import React, { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { ReactComponent as HeroImgH } from "../assets/heroimg.svg";
+import PimaImage from "../assets/heroimg.png";
 import { BeatLoader } from "react-spinners";
 import { useAuth } from "../../../context/useAuth";
 import { GoogleLogin } from "@react-oauth/google";
@@ -79,7 +79,7 @@ const LoginForm = () => {
       </div>
       <div className="form__container">
         <div className="heroimage">
-          <HeroImgH />
+          <img src={PimaImage} alt="hero" className="hero" />
         </div>
         <div className="form__starts">
           <h2 className="form__login">Login</h2>
