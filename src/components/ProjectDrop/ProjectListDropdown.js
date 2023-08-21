@@ -13,6 +13,7 @@ const ProjectListDropdown = ({
   const handleProjectSelect = (event) => {
     setSelectedProject(event.target.value);
     setFilteredGroups([]);
+    console.log(event.target.value);
 
     localStorage.setItem("fav_project", event.target.value);
   };
@@ -42,6 +43,7 @@ const ProjectListDropdown = ({
             id="project-dropdown"
             value={selectedProject}
             onChange={handleProjectSelect}
+            disabled={projects.length <= 1}
           >
             {projects.map((project, index) => (
               <MenuItem value={project.sf_project_id} key={index}>
