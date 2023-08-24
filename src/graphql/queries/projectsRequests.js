@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 const GET_ALL_PROJECTS = gql`
   query {
@@ -13,7 +13,7 @@ const GET_ALL_PROJECTS = gql`
       }
     }
   }
-`;
+`
 
 const GET_PROJECT_STATISTICS = gql`
   query GetProjectStatistics($sfProjectId: ID!) {
@@ -26,7 +26,7 @@ const GET_PROJECT_STATISTICS = gql`
       }
     }
   }
-`;
+`
 
 const GET_ASSIGNED_PROJECTS = gql`
   query GetProjectsAssigned($userId: ID!) {
@@ -41,6 +41,6 @@ const GET_ASSIGNED_PROJECTS = gql`
       }
     }
   }
-`;
+`
 
-export { GET_ALL_PROJECTS, GET_PROJECT_STATISTICS, GET_ASSIGNED_PROJECTS };
+export { GET_ALL_PROJECTS, GET_PROJECT_STATISTICS, GET_ASSIGNED_PROJECTS }

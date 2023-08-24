@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 const GET_PARTICIPANTS_PER_PROJECT = gql`
   query GetParticipantsByProject($projectId: String!) {
@@ -19,7 +19,7 @@ const GET_PARTICIPANTS_PER_PROJECT = gql`
       }
     }
   }
-`;
+`
 
 const GET_PARTICIPANTS_PER_TG = gql`
   query GetParticipantsByGroup($tgId: String!) {
@@ -40,7 +40,7 @@ const GET_PARTICIPANTS_PER_TG = gql`
       }
     }
   }
-`;
+`
 
 const GET_ATTENDANCE_PER_PARTICIPANT = gql`
   query GetAttendanceByParticipant($participantId: String!) {
@@ -57,7 +57,7 @@ const GET_ATTENDANCE_PER_PARTICIPANT = gql`
       }
     }
   }
-`;
+`
 
 const UPLOAD_PARTICIPANTS = gql`
   mutation UploadParticipants($partsFile: Upload!) {
@@ -66,11 +66,6 @@ const UPLOAD_PARTICIPANTS = gql`
       status
     }
   }
-`;
+`
 
-export {
-  GET_PARTICIPANTS_PER_PROJECT,
-  GET_PARTICIPANTS_PER_TG,
-  GET_ATTENDANCE_PER_PARTICIPANT,
-  UPLOAD_PARTICIPANTS,
-};
+export { GET_PARTICIPANTS_PER_PROJECT, GET_PARTICIPANTS_PER_TG, GET_ATTENDANCE_PER_PARTICIPANT, UPLOAD_PARTICIPANTS }

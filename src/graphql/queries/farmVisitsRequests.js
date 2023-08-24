@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 const GET_FARM_VISITS_PER_PROJECT = gql`
   query GetFarmVisitsByProject($projectId: String!) {
@@ -19,7 +19,7 @@ const GET_FARM_VISITS_PER_PROJECT = gql`
       }
     }
   }
-`;
+`
 
 const GET_FARM_VISITS_PER_TG = gql`
   query GetFarmVisitsByGroup($tgId: String!) {
@@ -40,6 +40,6 @@ const GET_FARM_VISITS_PER_TG = gql`
       }
     }
   }
-`;
+`
 
-export { GET_FARM_VISITS_PER_PROJECT, GET_FARM_VISITS_PER_TG };
+export { GET_FARM_VISITS_PER_PROJECT, GET_FARM_VISITS_PER_TG }

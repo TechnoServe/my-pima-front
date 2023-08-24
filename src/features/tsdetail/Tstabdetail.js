@@ -8,6 +8,7 @@ import { useQuery } from "@apollo/client";
 import { GET_TRAINING_SESSION_IMAGE } from "../../graphql/queries/trainingSessionsRequests";
 import { BeatLoader } from "react-spinners";
 import Statstscard from "../statsts/Statstscard";
+import { Toaster } from "react-hot-toast";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   marginBottom: "10px",
@@ -92,10 +93,17 @@ const Tstabdetail = ({ details }) => {
                   paragraph={details.tns_id || "N/A"}
                 />
               </div>
-              <Detailscontent
-                heading={"Farmer Trainer"}
-                paragraph={details.farmer_trainer || "N/A"}
-              />
+              <div className="ts__details-container1">
+                <Detailscontent
+                  heading={"Farmer Trainer"}
+                  paragraph={details.farmer_trainer || "N/A"}
+                />
+                <div style={{ paddingBottom: "20px" }}></div>
+                <Detailscontent
+                  heading={"Is Session Verified?"}
+                  paragraph={details.is_verified ? "Yes" : "No"}
+                />
+              </div>
             </div>
           </div>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -130,12 +138,15 @@ const Tstabdetail = ({ details }) => {
               <Imagecontainer
                 open={open}
                 handleClose={handleClose}
+                id={details.ts_id}
+                isVerified={details.is_verified}
                 sessionImageUrl={session_image}
               />
             )}
           </div>
         </Paper>
       </div>
+      <Toaster />
     </div>
   );
 };

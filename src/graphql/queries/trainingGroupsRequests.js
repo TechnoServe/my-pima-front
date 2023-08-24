@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 const GET_TRAINING_GROUPS_PER_PROJECT = gql`
   query TrainingGroupsByProject($projectId: String!) {
@@ -16,6 +16,6 @@ const GET_TRAINING_GROUPS_PER_PROJECT = gql`
       }
     }
   }
-`;
+`
 
-export { GET_TRAINING_GROUPS_PER_PROJECT };
+export { GET_TRAINING_GROUPS_PER_PROJECT }

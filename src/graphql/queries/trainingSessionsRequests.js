@@ -15,6 +15,7 @@ const GET_TRAINING_SESSIONS_PER_PROJECT = gql`
         ts_status
         total_males
         total_females
+        is_verified
         session_date
       }
     }
@@ -34,6 +35,7 @@ const GET_TRAINING_SESSIONS_PER_GROUP = gql`
         ts_status
         total_males
         total_females
+        is_verified
         session_date
       }
     }
@@ -50,8 +52,21 @@ const GET_TRAINING_SESSION_IMAGE = gql`
   }
 `;
 
+const VALIDATE_TRAINING_SESSION = gql`
+  mutation ValidateSession($tsId: ID!, $status: Boolean!) {
+    validateSession(ts_id: $tsId, status: $status) {
+      message
+      status
+      trainingSession {
+        ts_id
+      }
+    }
+  }
+`;
+
 export {
   GET_TRAINING_SESSIONS_PER_PROJECT,
   GET_TRAINING_SESSIONS_PER_GROUP,
   GET_TRAINING_SESSION_IMAGE,
+  VALIDATE_TRAINING_SESSION,
 };

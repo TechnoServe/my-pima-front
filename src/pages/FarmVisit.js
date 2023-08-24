@@ -1,74 +1,66 @@
-import React from "react";
-import Table from "../components/Table/Table";
-import { Chip } from "@mui/material";
+import React from 'react'
+import Table from '../components/Table/Table'
+import { Chip } from '@mui/material'
 
 const FarmVisit = ({ farmVisits }) => {
   const columns = [
-    { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
+    { id: 'num', name: 'No.', selector: (row) => row.num, sortable: true },
     {
-      id: "fv_name",
-      name: "Farm Visit Name",
+      id: 'fv_name',
+      name: 'Farm Visit Name',
       selector: (row) => row.fv_name,
-      sortable: true,
+      sortable: true
     },
     {
-      id: "training_group",
-      name: "Training Group",
+      id: 'training_group',
+      name: 'Training Group',
       selector: (row) => row.training_group,
-      sortable: true,
+      sortable: true
     },
     {
-      id: "training_session",
-      name: "Training Session",
+      id: 'training_session',
+      name: 'Training Session',
       selector: (row) => row.training_session,
-      sortable: true,
+      sortable: true
     },
     {
-      id: "tns_id",
-      name: "TNS Id",
+      id: 'tns_id',
+      name: 'TNS Id',
       selector: (row) => row.tns_id,
-      sortable: true,
+      sortable: true
     },
     {
-      id: "farm_visited",
-      name: "Farm Visited",
+      id: 'farm_visited',
+      name: 'Farm Visited',
       selector: (row) => row.farm_visited,
-      sortable: true,
+      sortable: true
     },
     {
-      id: "household_id",
-      name: "Household Id",
+      id: 'household_id',
+      name: 'Household Id',
       selector: (row) => row.household_id,
-      sortable: true,
+      sortable: true
     },
     {
-      id: "farmer_trainer",
-      name: "Farmer Trainer",
+      id: 'farmer_trainer',
+      name: 'Farmer Trainer',
       selector: (row) => row.farmer_trainer,
-      sortable: true,
+      sortable: true
     },
     {
-      id: "has_training",
-      name: "Has Training",
-      selector: (row) => (
-        <div>
-          {row.has_training === "Yes" ? (
-            <Chip label="Yes" color="success" />
-          ) : (
-            <Chip label="No" color="error" />
-          )}
-        </div>
-      ),
-      sortable: true,
+      id: 'has_training',
+      name: 'Has Training',
+      selector: (row) => <div>{row.has_training === 'Yes' ? <Chip label='Yes' color='success' /> : <Chip label='No' color='error' />}</div>,
+      sortable: true
     },
     {
-      id: "date_visited",
-      name: "Date Visited",
+      id: 'date_visited',
+      name: 'Date Visited',
       selector: (row) => row.date_visited,
-      sortable: true,
-    },
-  ];
-  const tableRowItem = "farm_visit";
+      sortable: true
+    }
+  ]
+  const tableRowItem = 'farm_visit'
 
   const rows = farmVisits
     ? farmVisits.map((fv, index) => ({
@@ -82,22 +74,22 @@ const FarmVisit = ({ farmVisits }) => {
         household_id: fv.household_id,
         farmer_trainer: fv.farmer_trainer,
         has_training: fv.has_training,
-        date_visited: fv.date_visited,
+        date_visited: fv.date_visited
       }))
-    : [];
+    : []
 
   return (
     <div>
-      <h1 className="module__heading">Farm Visits View</h1>
+      <h1 className='module__heading'>Farm Visits View</h1>
       {farmVisits.length > 0 ? (
         <Table columns={columns} data={rows} tableRowItem={tableRowItem} />
       ) : (
-        <div className="no__data">
-          <h1 style={{ fontSize: "20px" }}>No Farm Visit Yet</h1>
+        <div className='no__data'>
+          <h1 style={{ fontSize: '20px' }}>No Farm Visit Yet</h1>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default FarmVisit;
+export default FarmVisit

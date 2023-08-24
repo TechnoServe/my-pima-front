@@ -5,17 +5,14 @@ import {
   DialogContent,
   DialogActions,
   IconButton,
-  Chip,
 } from "@mui/material";
-import {
-  MdClose,
-  MdCancel,
-  MdCheck,
-  MdFullscreen,
-  MdFullscreenExit,
-} from "react-icons/md";
+import { MdClose, MdFullscreen, MdFullscreenExit } from "react-icons/md";
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
+import { useMutation } from "@apollo/client";
+import { VALIDATE_TRAINING_SESSION } from "../../../graphql/queries/trainingSessionsRequests";
+import { BeatLoader } from "react-spinners";
+import { toast } from "react-hot-toast";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   marginBottom: "10px",
@@ -49,23 +46,48 @@ const StyledButton2 = styled(Button)(({ theme }) => ({
   },
 }));
 
-const Imagecontainer = ({ open, handleClose, sessionImageUrl }) => {
+const Imagecontainer = ({
+  open,
+  handleClose,
+  sessionImageUrl,
+  id,
+  isVerified,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isApproved, setIsApproved] = useState(false);
-  const [isRejected, setIsRejected] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [validateSession] = useMutation(VALIDATE_TRAINING_SESSION);
 
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
   };
 
-  const handleApprove = () => {
-    setIsApproved(true);
-    setIsRejected(false);
-  };
+  const handleSessionValidation = async (id, is_valid) => {
+    setIsLoading(true);
 
-  const handleReject = () => {
-    setIsRejected(true);
-    setIsApproved(false);
+    try {
+      await validateSession({
+        variables: {
+          tsId: id,
+          status: is_valid,
+        },
+      });
+
+      toast.success("Session validated successfully");
+
+      // reload the page after 3 seconds
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Error validating session");
+
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -134,36 +156,33 @@ const Imagecontainer = ({ open, handleClose, sessionImageUrl }) => {
         </DialogContent>
 
         <DialogActions>
-          {isApproved ? (
-            <Chip
-              label="Approved"
-              sx={{
-                fontSize: "12px",
-                marginBottom: "10px",
-                backgroundColor: "#ECFAF2",
-                color: "#41C980",
-              }}
-              icon={<MdCheck color="41C980" />}
-            />
-          ) : isRejected ? (
-            <Chip
-              label="Rejected"
-              sx={{
-                fontSize: "12px",
-                marginBottom: "10px",
-                backgroundColor: "#FFF5F5",
-                color: "#C81B1B",
-              }}
-              icon={<MdCancel color="C81B1B" />}
-            />
-          ) : (
-            <>
-              <StyledButton onClick={handleApprove}>Approve</StyledButton>
-              <StyledButton2 onClick={handleReject} variant="outlined">
-                Reject
+          {
+            // If the session is not verified, don't show the reject button
+            isVerified ? (
+              <StyledButton2
+                onClick={() => handleSessionValidation(id, false)}
+                variant="outlined"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <BeatLoader size={8} color={"#fff"} loading={isLoading} />
+                ) : (
+                  "Reject"
+                )}
               </StyledButton2>
-            </>
-          )}
+            ) : (
+              <StyledButton
+                onClick={() => handleSessionValidation(id, true)}
+                disabled={isVerified || isLoading}
+              >
+                {isLoading ? (
+                  <BeatLoader size={8} color={"#fff"} loading={isLoading} />
+                ) : (
+                  "Approve"
+                )}
+              </StyledButton>
+            )
+          }
         </DialogActions>
       </Dialog>
     </>

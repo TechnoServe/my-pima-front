@@ -1,32 +1,26 @@
-import React from "react";
-import "./tscard.css";
-import { PieChart } from "@mui/x-charts";
+import React from 'react'
+import './tscard.css'
+import { PieChart } from '@mui/x-charts'
 
 const Statstscard = ({ stats }) => {
   // get percentage of total_males from stats
-  let totalMales = 0;
-  let totalFemales = 0;
+  let totalMales = 0
+  let totalFemales = 0
 
-  totalMales += isNaN(stats.total_males) ? 0 : Number(stats.total_males);
-  totalFemales += isNaN(stats.total_females) ? 0 : Number(stats.total_females);
+  totalMales += isNaN(stats.total_males) ? 0 : Number(stats.total_males)
+  totalFemales += isNaN(stats.total_females) ? 0 : Number(stats.total_females)
 
-  const totalAttendance = totalMales + totalFemales;
+  const totalAttendance = totalMales + totalFemales
 
-  const maleAttendancePercentage =
-    totalAttendance > 0 ? (totalMales / totalAttendance) * 100 : 0;
-  const femaleAttendancePercentage =
-    totalAttendance > 0 ? (totalFemales / totalAttendance) * 100 : 0;
+  const maleAttendancePercentage = totalAttendance > 0 ? (totalMales / totalAttendance) * 100 : 0
+  const femaleAttendancePercentage = totalAttendance > 0 ? (totalFemales / totalAttendance) * 100 : 0
 
   return (
     <div>
-      <div className="cardts__container">
-        <p
-          style={{ color: "#7D7F88", fontWeight: "600", paddingBottom: "10px" }}
-        >
-          Total Attendance
-        </p>
-        <div style={{ display: "flex" }}>
-          <div style={{ width: "300px" }}>
+      <div className='cardts__container'>
+        <p style={{ color: '#7D7F88', fontWeight: '600', paddingBottom: '10px' }}>Total Attendance</p>
+        <div style={{ display: 'flex' }}>
+          <div style={{ width: '300px' }}>
             <PieChart
               series={[
                 {
@@ -36,17 +30,17 @@ const Statstscard = ({ stats }) => {
                     {
                       id: 0,
                       value: maleAttendancePercentage.toFixed(1),
-                      label: "Male",
-                      color: "#3F51B5",
+                      label: 'Male',
+                      color: '#3F51B5'
                     },
                     {
                       id: 1,
                       value: femaleAttendancePercentage.toFixed(1),
-                      label: "Female",
-                      color: "#FF4081",
-                    },
-                  ],
-                },
+                      label: 'Female',
+                      color: '#FF4081'
+                    }
+                  ]
+                }
               ]}
               width={230}
               height={200}
@@ -55,7 +49,7 @@ const Statstscard = ({ stats }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Statstscard;
+export default Statstscard
