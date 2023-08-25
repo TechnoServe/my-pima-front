@@ -1,5 +1,5 @@
 import React from 'react'
-import Detailscontent from '../tgdetail.js/Detailscontent'
+import Detailscontent from '../tgdetail/Detailscontent'
 import { Divider } from '@mui/material'
 import Avatar from 'react-avatar'
 

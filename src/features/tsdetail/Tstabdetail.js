@@ -1,8 +1,8 @@
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import "../tgdetail.js/tgdetail.css";
-import Detailscontent from "../tgdetail.js/Detailscontent";
+import "../tgdetail/tgdetail.css";
+import Detailscontent from "../tgdetail/Detailscontent";
 import Imagecontainer from "./sessionimage/Imagecontainer";
 import { useQuery } from "@apollo/client";
 import { GET_TRAINING_SESSION_IMAGE } from "../../graphql/queries/trainingSessionsRequests";

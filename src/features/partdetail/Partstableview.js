@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { Typography, Tabs, Tab, Box } from '@mui/material'
-import { a11yProps } from '../tgdetail.js/Tgtabs'
+import { a11yProps } from '../tgdetail/Tgtabs'
 import { useState } from 'react'
 import Attendtable from './Table/attendtable'
 

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Typography, Tabs, Tab, Box } from '@mui/material'
 import Tstabdetail from './Tstabdetail'
-import { a11yProps } from '../tgdetail.js/Tgtabs'
+import { a11yProps } from '../tgdetail/Tgtabs'
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props
