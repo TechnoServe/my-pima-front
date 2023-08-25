@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { Typography, Tabs, Tab, Box } from "@mui/material";
 import Tgtabdetail from "./Tgtabdetail";
 import Tstabtable from "./tstabtable";
-import { useQuery } from "@apollo/client";
-import { GET_TRAINING_SESSIONS_PER_GROUP } from "../../graphql/queries/trainingSessionsRequests";
-import { BeatLoader } from "react-spinners";
-import { toast } from "react-hot-toast";
 import FvTabTable from "./fvtabtable";
+import PartsTabTable from "./partstabtable";
 
 export function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,28 +39,17 @@ export function a11yProps(index) {
   };
 }
 
-export default function Tgtabs({ details, farmVisits }) {
+export default function Tgtabs({
+  details,
+  trainingSessions,
+  farmVisits,
+  participants,
+}) {
   const [value, setValue] = useState(0);
-  const [trainingSessions, setTrainingSessions] = useState([]); // eslint-disable-line no-unused-vars
-
-  const { data, loading, error } = useQuery(GET_TRAINING_SESSIONS_PER_GROUP, {
-    variables: { tgId: details.tg_id },
-  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  useEffect(() => {
-    if (data && data.trainingSessionsByGroup.status === 200) {
-      setTrainingSessions(data.trainingSessionsByGroup.trainingSessions);
-    }
-    if (error) {
-      console.log(error);
-
-      toast.error("Error fetching training sessions");
-    }
-  }, [data, error]);
 
   return (
     <Box sx={{ width: "100%", marginTop: "20px" }}>
@@ -73,31 +59,23 @@ export default function Tgtabs({ details, farmVisits }) {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label="Details" {...a11yProps(0)} />
-          <Tab label="Training session list" {...a11yProps(1)} />
-          <Tab label="Farm Visit" {...a11yProps(2)} />
+          <Tab label="TG Details" {...a11yProps(0)} />
+          <Tab label="TG sessions" {...a11yProps(1)} />
+          <Tab label="TG Farm Visits" {...a11yProps(2)} />
+          <Tab label="TG Participants" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
         <Tgtabdetail details={details} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        {loading ? (
-          <BeatLoader color="#0D3C61" size={10} />
-        ) : (
-          <Tstabtable trainingSessions={trainingSessions} />
-        )}
+        <Tstabtable trainingSessions={trainingSessions} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <FvTabTable
-          farmVisits={
-            farmVisits.length > 0
-              ? farmVisits.filter(
-                  (farmVisit) => farmVisit.training_group === details.tg_name
-                )
-              : []
-          }
-        />
+        <FvTabTable farmVisits={farmVisits} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+        <PartsTabTable participants={participants} />
       </CustomTabPanel>
     </Box>
   );

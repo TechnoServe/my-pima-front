@@ -262,7 +262,9 @@ const Navbar = () => {
                       element={
                         <Tgdetail
                           trainingGroups={trainingGroups}
+                          trainingSessions={trainingSessions}
                           farmVisits={farmVisits}
+                          participants={participants}
                         />
                       }
                     />

@@ -12,18 +12,6 @@ const FvTabTable = ({ farmVisits }) => {
       sortable: true,
     },
     {
-      id: "training_group",
-      name: "Training Group",
-      selector: (row) => row.training_group,
-      sortable: true,
-    },
-    {
-      id: "training_session",
-      name: "Training Session",
-      selector: (row) => row.training_session,
-      sortable: true,
-    },
-    {
       id: "tns_id",
       name: "TNS Id",
       selector: (row) => row.tns_id,
@@ -76,7 +64,6 @@ const FvTabTable = ({ farmVisits }) => {
         num: index + 1,
         fv_id: fv.fv_id,
         fv_name: fv.fv_name,
-        training_group: fv.training_group,
         training_session: fv.training_session,
         tns_id: fv.tns_id,
         farm_visited: fv.farm_visited,

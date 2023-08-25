@@ -11,7 +11,12 @@ const Styles = {
   maxWidth: "80%",
 };
 
-const Tgdetail = ({ trainingGroups, farmVisits }) => {
+const Tgdetail = ({
+  trainingGroups,
+  trainingSessions,
+  farmVisits,
+  participants,
+}) => {
   const breadCrumbs = "Training group";
   // get params from url
   const params = useParams();
@@ -42,7 +47,29 @@ const Tgdetail = ({ trainingGroups, farmVisits }) => {
               this page to Excel or CSV format.
             </p>
           </div>
-          <Tgtabs details={selectedTrainingGroup} farmVisits={farmVisits} />
+          <Tgtabs
+            details={selectedTrainingGroup}
+            trainingSessions={
+              trainingSessions.length > 0 &&
+              trainingSessions.filter(
+                (session) => session.ts_group === selectedTrainingGroup.tg_name
+              )
+            }
+            farmVisits={
+              farmVisits.length > 0 &&
+              farmVisits.filter(
+                (farmVisit) =>
+                  farmVisit.training_group === selectedTrainingGroup.tg_name
+              )
+            }
+            participants={
+              participants.length > 0 &&
+              participants.filter(
+                (participant) =>
+                  participant.training_group === selectedTrainingGroup.tg_id
+              )
+            }
+          />
         </>
       )}
     </div>
