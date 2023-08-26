@@ -62,14 +62,14 @@ const Imagecontainer = ({
     setIsExpanded((prev) => !prev);
   };
 
-  const handleSessionValidation = async (id, is_valid) => {
+  const handleSessionValidation = async (id, validation_status) => {
     setIsLoading(true);
 
     try {
       await validateSession({
         variables: {
           tsId: id,
-          status: is_valid,
+          status: validation_status,
         },
       });
 
@@ -77,10 +77,9 @@ const Imagecontainer = ({
 
       // reload the page after 3 seconds
       setTimeout(() => {
+        setIsLoading(false);
         window.location.reload();
       }, 3000);
-
-      setIsLoading(false);
     } catch (error) {
       console.log(error);
 
@@ -156,11 +155,10 @@ const Imagecontainer = ({
         </DialogContent>
 
         <DialogActions>
-          {
-            // If the session is not verified, don't show the reject button
-            isVerified ? (
+          {!isVerified && (
+            <>
               <StyledButton2
-                onClick={() => handleSessionValidation(id, false)}
+                onClick={() => handleSessionValidation(id, "rejected")}
                 variant="outlined"
                 disabled={isLoading}
               >
@@ -170,10 +168,9 @@ const Imagecontainer = ({
                   "Reject"
                 )}
               </StyledButton2>
-            ) : (
               <StyledButton
-                onClick={() => handleSessionValidation(id, true)}
-                disabled={isVerified || isLoading}
+                onClick={() => handleSessionValidation(id, "verified")}
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <BeatLoader size={8} color={"#fff"} loading={isLoading} />
@@ -181,8 +178,8 @@ const Imagecontainer = ({
                   "Approve"
                 )}
               </StyledButton>
-            )
-          }
+            </>
+          )}
         </DialogActions>
       </Dialog>
     </>

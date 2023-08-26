@@ -16,6 +16,7 @@ const GET_TRAINING_SESSIONS_PER_PROJECT = gql`
         total_males
         total_females
         is_verified
+        validation_status
         session_date
       }
     }
@@ -36,6 +37,7 @@ const GET_TRAINING_SESSIONS_PER_GROUP = gql`
         total_males
         total_females
         is_verified
+        validation_status
         session_date
       }
     }
@@ -53,7 +55,7 @@ const GET_TRAINING_SESSION_IMAGE = gql`
 `;
 
 const VALIDATE_TRAINING_SESSION = gql`
-  mutation ValidateSession($tsId: ID!, $status: Boolean!) {
+  mutation ValidateSession($tsId: ID!, $status: String!) {
     validateSession(ts_id: $tsId, status: $status) {
       message
       status

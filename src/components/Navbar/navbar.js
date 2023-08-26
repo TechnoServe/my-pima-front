@@ -10,6 +10,7 @@ import FarmVisit from "../../pages/FarmVisit";
 import { BeatLoader } from "react-spinners";
 import ProjectListDropdown from "../ProjectDrop/ProjectListDropdown";
 import {
+  GET_ALL_PROJECTS,
   GET_ASSIGNED_PROJECTS,
   GET_PROJECT_STATISTICS,
 } from "../../graphql/queries/projectsRequests";
@@ -33,6 +34,7 @@ const Navbar = () => {
 
   // get current path
   const location = useLocation();
+  const [allProjects, setAllProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [trainingGroups, setTrainingGroups] = useState([]);
   const [trainingSessions, setTrainingSessions] = useState([]);
@@ -50,6 +52,8 @@ const Navbar = () => {
   });
   const [selectedProject, setSelectedProject] = useState("");
   const favProject = localStorage.getItem("fav_project");
+
+  const getAllProjects = useQuery(GET_ALL_PROJECTS);
 
   const trainingGroupsPerProject = useQuery(GET_TRAINING_GROUPS_PER_PROJECT, {
     variables: { projectId: selectedProject },
@@ -82,6 +86,20 @@ const Navbar = () => {
   });
   const [filteredGroups, setFilteredGroups] = useState([]);
   const [filteredSessions, setFilteredSessions] = useState([]);
+
+  useEffect(() => {
+    if (
+      getAllProjects.data &&
+      getAllProjects.data.getProjects.status === 200 &&
+      getAllProjects.data.getProjects.projects.length > 0
+    ) {
+      setAllProjects(getAllProjects.data.getProjects.projects);
+    }
+
+    if (getAllProjects.error) {
+      toast.error(getAllProjects.error.message);
+    }
+  }, [getAllProjects]);
 
   useEffect(() => {
     if (data) {
@@ -351,7 +369,10 @@ const Navbar = () => {
                         )
                       }
                     />
-                    <Route path="/manage" element={<Management />} />
+                    <Route
+                      path="/manage"
+                      element={<Management allProjects={allProjects} />}
+                    />
                   </Routes>
                 </div>
               ) : (

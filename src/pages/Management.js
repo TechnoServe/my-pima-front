@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { Typography, Tabs, Tab, Box } from "@mui/material";
+import AssignProjects from "../components/AssignProjects";
 
 export function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -35,7 +36,7 @@ export function a11yProps(index) {
   };
 }
 
-export default function Management() {
+export default function Management({ allProjects }) {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -55,7 +56,7 @@ export default function Management() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        Assign Projects
+        <AssignProjects allProjects={allProjects} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         Assign Permissions
