@@ -5,6 +5,9 @@ import Typography from "@mui/material/Typography";
 import { CardActionArea, CardActions, Grid } from "@mui/material";
 import { GrFormView } from "react-icons/gr";
 import AssignModal from "./Modals/AssignModal";
+import { useState } from "react";
+import { useLazyQuery } from "@apollo/client";
+import { GET_PROJECT_ROLES_BY_PROJECT_ID } from "../graphql/queries/projectsRequests";
 
 const Styles = {
   marginTop: "15px",
@@ -15,6 +18,29 @@ const Styles = {
 };
 
 const AssignProjects = ({ allProjects }) => {
+  const [open, setOpen] = useState(false);
+  const [list, setList] = useState([]);
+  const [title, setTitle] = useState("");
+
+  const [getProjectRolesByProjectId, { data }] = useLazyQuery(
+    GET_PROJECT_ROLES_BY_PROJECT_ID
+  );
+
+  const handleOpenModal = async (project) => {
+    await getProjectRolesByProjectId({
+      variables: {
+        projectId: project.project_id,
+      },
+    });
+
+    if (data && data.getProjectRolesByProjectId) {
+      const { project_role } = data.getProjectRolesByProjectId;
+      setList(project_role);
+      setTitle(project.project_name);
+      setOpen(true);
+    }
+  };
+
   return (
     <>
       <div style={{ margin: "10px 0 15px 0" }}>
@@ -49,6 +75,9 @@ const AssignProjects = ({ allProjects }) => {
                     style={{
                       cursor: "pointer",
                     }}
+                    onClick={() => {
+                      handleOpenModal(project);
+                    }}
                   />
                 </CardActions>
               </Card>
@@ -59,7 +88,12 @@ const AssignProjects = ({ allProjects }) => {
         <p>No projects found</p>
       )}
 
-      {/* <AssignModal open={trainingGroups.length > 0 ? open : false} handleClose={() => setOpen(false)} data={list} title={title} /> */}
+      <AssignModal
+        open={open}
+        handleClose={() => setOpen(false)}
+        data={list}
+        title={title}
+      />
     </>
   );
 };
