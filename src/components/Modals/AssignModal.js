@@ -9,18 +9,77 @@ import {
   DialogTitle,
   Divider,
   FormControl,
+  InputBase,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Typography,
+  alpha,
+  styled,
 } from "@mui/material";
 import { AiOutlineMinusCircle } from "react-icons/ai";
-import { BiSolidPencil } from "react-icons/bi";
+import { BiSearchAlt, BiSolidPencil } from "react-icons/bi";
 import Select from "react-select";
+import { useState } from "react";
+
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(1),
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+}));
 
 const AssignModal = ({ open, handleClose, title, data }) => {
-  const [toggleAdd, setToggleAdd] = React.useState(false);
+  const [toggleAdd, setToggleAdd] = useState(false);
+  const [filteredData, setFilteredData] = useState(data);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+
+    const filtered = data.filter(
+      (item) =>
+        item.tbl_user.user_name.toLowerCase().includes(value.toLowerCase()) ||
+        item.tbl_role.role_name.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setFilteredData(filtered);
+  };
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -89,8 +148,28 @@ const AssignModal = ({ open, handleClose, title, data }) => {
           </Box>
         ) : (
           <List>
+            {/* add search field */}
+            <ListItem
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "5px 0",
+              }}
+            >
+              <Search onChange={handleSearch}>
+                <SearchIconWrapper>
+                  <BiSearchAlt />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search any…"
+                  inputProps={{ "aria-label": "search" }}
+                />
+              </Search>
+            </ListItem>
+
             {data && data.length > 0 ? (
-              data.map((item, index) => (
+              filteredData.map((item, index) => (
                 <ListItem
                   key={index}
                   sx={{
