@@ -300,10 +300,23 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
             className="file-info"
           >
             <Typography variant="body2">
-              <h5>Name:</h5> <em>{fileInfo.filename}</em>
+              <em
+                style={{
+                  fontWeight: "bold",
+                }}
+              >
+                Name:
+              </em>{" "}
+              <em>{fileInfo.filename}</em>
             </Typography>
             <Typography variant="body2">
-              <h5>Size:</h5>{" "}
+              <em
+                style={{
+                  fontWeight: "bold",
+                }}
+              >
+                Size:
+              </em>{" "}
               <em>
                 {fileInfo.size > 1000000
                   ? `${Math.round((fileInfo.size / 1000000) * 100) / 100} MB`
@@ -311,10 +324,23 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
               </em>
             </Typography>
             <Typography variant="body2">
-              <h5>Type:</h5> <em>{fileInfo.type}</em>
+              <em
+                style={{
+                  fontWeight: "bold",
+                }}
+              >
+                Type:
+              </em>{" "}
+              <em>{fileInfo.type}</em>
             </Typography>
             <Typography variant="body2">
-              <h5>Total Records:</h5>{" "}
+              <em
+                style={{
+                  fontWeight: "bold",
+                }}
+              >
+                Total Records:
+              </em>{" "}
               <em>
                 {
                   // format number with commas
