@@ -372,20 +372,42 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
             )}
             {/* add button to get back to upload new file */}
             <div className="upload_actions">
-              <AiOutlineCloseCircle
-                onClick={() => {
-                  if (!isProcessing) {
-                    setFileInfo(null);
-                  }
-                }}
-                className="back__icon"
-                title="Back to Upload New File"
-              />
-              <FaCloudUploadAlt
-                title="Proceed Records Processing"
-                className="upload__icon"
-                onClick={handleUpload}
-              />
+              {isProcessing ? (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    marginBottom: "10px",
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  <em
+                    style={{
+                      fontWeight: "bold",
+                      color: "#6C757D",
+                    }}
+                  >
+                    Data are being processed, wait...
+                  </em>
+                </Typography>
+              ) : (
+                <>
+                  <AiOutlineCloseCircle
+                    onClick={() => {
+                      if (!isProcessing) {
+                        setFileInfo(null);
+                      }
+                    }}
+                    className="back__icon"
+                    title="Back to Upload New File"
+                  />
+                  <FaCloudUploadAlt
+                    title="Proceed Records Processing"
+                    className="upload__icon"
+                    onClick={handleUpload}
+                  />
+                </>
+              )}
             </div>
           </Box>
         )}
