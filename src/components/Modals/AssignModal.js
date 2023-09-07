@@ -22,6 +22,7 @@ import { AiOutlineMinusCircle } from "react-icons/ai";
 import { BiSearchAlt, BiSolidPencil } from "react-icons/bi";
 import Select from "react-select";
 import { useState } from "react";
+import { useEffect } from "react";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -67,7 +68,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const AssignModal = ({ open, handleClose, title, data }) => {
   const [toggleAdd, setToggleAdd] = useState(false);
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState([]);
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -81,9 +82,20 @@ const AssignModal = ({ open, handleClose, title, data }) => {
     setFilteredData(filtered);
   };
 
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
+
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle fontSize={"18px"}>
+        <Chip
+          label={data.length}
+          style={{
+            color: "#333",
+          }}
+          variant="contained"
+        />{" "}
         Users Assigned to{" "}
         <Chip label={title} color="primary" variant="contained" />
         <Divider />
@@ -168,7 +180,7 @@ const AssignModal = ({ open, handleClose, title, data }) => {
               </Search>
             </ListItem>
 
-            {data && data.length > 0 ? (
+            {filteredData.length > 0 ? (
               filteredData.map((item, index) => (
                 <ListItem
                   key={index}
@@ -196,13 +208,13 @@ const AssignModal = ({ open, handleClose, title, data }) => {
                 </ListItem>
               ))
             ) : (
-              <em
+              <Typography
                 style={{
                   alignSelf: "center",
                 }}
               >
                 No users assigned to this project
-              </em>
+              </Typography>
             )}
           </List>
         )}

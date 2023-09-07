@@ -75,9 +75,7 @@ const AssignProjects = ({ allProjects }) => {
                     style={{
                       cursor: "pointer",
                     }}
-                    onClick={() => {
-                      handleOpenModal(project);
-                    }}
+                    onClick={() => handleOpenModal(project)}
                   />
                 </CardActions>
               </Card>

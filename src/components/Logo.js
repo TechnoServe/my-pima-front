@@ -8,7 +8,7 @@ const logoStyle = {
   color: '#F46700',
   fontSize: '20px',
   fontWeight: '900',
-  margin: '20px',
+  padding: '20px',
   marginBottom: '0'
 }
 export default Logo

@@ -94,7 +94,7 @@ const Sidebar = ({ children }) => {
             }}
             className="bars"
           >
-            <HiMenuAlt2 onClick={toggle} />
+            <HiMenuAlt2 onClick={toggle} color="white" />
           </div>
         </div>
         <div className="mid__section">
