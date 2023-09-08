@@ -22,9 +22,24 @@ const UsersForm = ({ onSubmit, selectedUser, onSelect }) => {
         {selectedUser ? "Edit User" : "Add User"}
       </Typography>
       <form onSubmit={handleSubmit}>
-        <TextField label="Name" variant="standard" fullWidth />
-        <TextField label="Email" variant="standard" fullWidth />
-        <TextField label="Mobile No." variant="standard" fullWidth />
+        <TextField
+          label="Name"
+          value={selectedUser ? selectedUser.user_name : ""}
+          variant="standard"
+          fullWidth
+        />
+        <TextField
+          label="Email"
+          value={selectedUser ? selectedUser.user_email : ""}
+          variant="standard"
+          fullWidth
+        />
+        <TextField
+          label="Mobile No."
+          value={selectedUser ? selectedUser.mobile_no : ""}
+          variant="standard"
+          fullWidth
+        />
         <Box sx={{ marginTop: "10px" }}>
           <Typography variant="body1" sx={{ marginBottom: "10px" }}>
             Select Role

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Typography, Tabs, Tab, Box } from "@mui/material";
 import AssignProjects from "../components/AssignProjects";
 import Users from "./Users";
 import Permissions from "./Permissions";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_USERS } from "../graphql/queries/usersRequests";
 
 export function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,6 +42,15 @@ export function a11yProps(index) {
 
 export default function Management({ allProjects }) {
   const [value, setValue] = useState(0);
+  const [users, setUsers] = useState([]);
+
+  const getAllUsers = useQuery(GET_ALL_USERS);
+
+  useEffect(() => {
+    if (getAllUsers.data) {
+      setUsers(getAllUsers.data.getUsers.users);
+    }
+  }, [getAllUsers.data]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -65,7 +76,7 @@ export default function Management({ allProjects }) {
         <Permissions />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <Users />
+        <Users users={users} />
       </CustomTabPanel>
     </Box>
   );

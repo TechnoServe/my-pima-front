@@ -66,8 +66,15 @@ const UsersList = ({ users, onSelect }) => {
 
     const filtered = users.filter(
       (item) =>
-        item.username.toLowerCase().includes(value.toLowerCase()) ||
-        item.email.toLowerCase().includes(value.toLowerCase())
+        item.user_name.toLowerCase().includes(value.toLowerCase()) ||
+        (item.user_email &&
+          item.user_email.toLowerCase().includes(value.toLowerCase())) ||
+        (item.mobile_no &&
+          item.mobile_no.toLowerCase().includes(value.toLowerCase())) ||
+        (item.sf_user_id &&
+          item.sf_user_id.toLowerCase().includes(value.toLowerCase())) ||
+        (item.role.role_name &&
+          item.role.role_name.toLowerCase().includes(value.toLowerCase()))
     );
 
     setFilteredUsers(filtered);
@@ -100,9 +107,9 @@ const UsersList = ({ users, onSelect }) => {
             <Card key={user.id} sx={{ marginBottom: 2 }}>
               <CardContent>
                 <Typography variant="h6">
-                  {user.username}
+                  {user.user_name}
                   <Chip
-                    label={user.role}
+                    label={user.role.role_name}
                     color="secondary"
                     variant="outlined"
                     sx={{ marginLeft: "10px" }}
@@ -116,7 +123,9 @@ const UsersList = ({ users, onSelect }) => {
                   }}
                 >
                   <Typography variant="subtitle2">Email:</Typography>
-                  <Typography variant="subtitle1">{user.email}</Typography>
+                  <Typography variant="subtitle1">
+                    {user.user_email || "N/A"}
+                  </Typography>
                 </Box>
                 <Box
                   sx={{
@@ -126,7 +135,9 @@ const UsersList = ({ users, onSelect }) => {
                   }}
                 >
                   <Typography variant="subtitle2">Mobile No.:</Typography>
-                  <Typography variant="subtitle1">{user.mobile}</Typography>
+                  <Typography variant="subtitle1">
+                    {user.mobile_no || "N/A"}
+                  </Typography>
                 </Box>
                 <Box
                   sx={{
@@ -136,9 +147,9 @@ const UsersList = ({ users, onSelect }) => {
                   }}
                 >
                   <Typography variant="subtitle2">SF Id:</Typography>
-                  <Typography variant="subtitle1">{user.sf_id}</Typography>
+                  <Typography variant="subtitle1">{user.sf_user_id}</Typography>
                 </Box>
-                <Box
+                {/* <Box
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -149,7 +160,7 @@ const UsersList = ({ users, onSelect }) => {
                     Project Belongs To:
                   </Typography>
                   <Typography variant="subtitle1">{user.project}</Typography>
-                </Box>
+                </Box> */}
                 <Divider />
                 <Box
                   sx={{

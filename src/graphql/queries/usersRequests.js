@@ -9,7 +9,12 @@ const GET_ALL_USERS = gql`
         user_id
         sf_user_id
         user_name
+        user_email
+        mobile_no
         account_status
+        role {
+          role_name
+        }
       }
     }
   }
