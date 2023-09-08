@@ -8,7 +8,6 @@ import { useQuery } from "@apollo/client";
 import { GET_TRAINING_SESSION_IMAGE } from "../../graphql/queries/trainingSessionsRequests";
 import { BeatLoader } from "react-spinners";
 import Statstscard from "../statsts/Statstscard";
-import { Toaster } from "react-hot-toast";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   marginBottom: "10px",
@@ -154,7 +153,6 @@ const Tstabdetail = ({ details }) => {
           </div>
         </Paper>
       </div>
-      <Toaster />
     </div>
   );
 };

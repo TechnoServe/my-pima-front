@@ -23,6 +23,15 @@ import { BiSearchAlt, BiSolidPencil } from "react-icons/bi";
 import Select from "react-select";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import {
+  GET_ALL_USERS,
+  UPDATE_USER,
+} from "../../graphql/queries/usersRequests";
+import { GET_ALL_ROLES } from "../../graphql/queries/rolesRequests";
+import toast from "react-hot-toast";
+import { BeatLoader } from "react-spinners";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -69,6 +78,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const AssignModal = ({ open, handleClose, title, data }) => {
   const [toggleAdd, setToggleAdd] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [isBeingUpdated, setIsBeingUpdated] = useState(false);
+  const getAllUsers = useQuery(GET_ALL_USERS);
+  const getAllRoles = useQuery(GET_ALL_ROLES);
+
+  const [updateUser] = useMutation(UPDATE_USER);
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -85,6 +103,43 @@ const AssignModal = ({ open, handleClose, title, data }) => {
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
+
+  useEffect(() => {
+    if (getAllUsers.data) {
+      setUsers(getAllUsers.data.getUsers.users);
+    }
+  }, [getAllUsers.data]);
+
+  useEffect(() => {
+    if (getAllRoles.data) {
+      setRoles(getAllRoles.data.getRoles.roles);
+    }
+  }, [getAllRoles.data]);
+
+  const handleUpdateUser = async () => {
+    if (selectedUser && selectedRole) {
+      setIsBeingUpdated(true);
+      const { data } = await updateUser({
+        variables: {
+          userId: selectedUser,
+          roleId: selectedRole,
+        },
+      });
+
+      if (data.updateUser.status === 200) {
+        toast.success(data.updateUser.message);
+        setSelectedUser(null);
+        setSelectedRole(null);
+        setIsBeingUpdated(false);
+        setToggleAdd(false);
+      } else {
+        setIsBeingUpdated(false);
+        toast.error(data.updateUser.message);
+      }
+    } else {
+      toast.error("Please select user and role");
+    }
+  };
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -115,7 +170,17 @@ const AssignModal = ({ open, handleClose, title, data }) => {
               </Typography>
               <Select
                 name="user"
-                options={[]}
+                options={
+                  users.length > 0
+                    ? users.map((item) => ({
+                        value: item.user_id,
+                        label: item.user_name,
+                      }))
+                    : []
+                }
+                onChange={(e) => {
+                  setSelectedUser(e.value);
+                }}
                 className="basic-multi-select"
                 classNamePrefix="select"
               />
@@ -126,7 +191,17 @@ const AssignModal = ({ open, handleClose, title, data }) => {
               </Typography>
               <Select
                 name="role"
-                options={[]}
+                options={
+                  roles.length > 0
+                    ? roles.map((item) => ({
+                        value: item.role_id,
+                        label: item.role_name,
+                      }))
+                    : []
+                }
+                onChange={(e) => {
+                  setSelectedRole(e.value);
+                }}
                 className="basic-multi-select"
                 classNamePrefix="select"
               />
@@ -143,14 +218,22 @@ const AssignModal = ({ open, handleClose, title, data }) => {
                 variant="contained"
                 color="primary"
                 sx={{ marginTop: "10px", marginRight: "10px" }}
+                onClick={handleUpdateUser}
+                disabled={isBeingUpdated}
               >
-                Save
+                {isBeingUpdated ? (
+                  <BeatLoader color={"#fff"} loading={true} size={10} />
+                ) : (
+                  "Save"
+                )}
               </Button>
               <Button
                 variant="contained"
                 color="error"
                 sx={{ marginTop: "10px" }}
                 onClick={() => {
+                  setSelectedUser(null);
+                  setSelectedRole(null);
                   setToggleAdd(false);
                 }}
               >

@@ -15,7 +15,7 @@ import {
   GET_PROJECT_STATISTICS,
 } from "../../graphql/queries/projectsRequests";
 import { useQuery } from "@apollo/client";
-import { toast } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import { GET_TRAINING_GROUPS_PER_PROJECT } from "../../graphql/queries/trainingGroupsRequests";
 import Tgdetail from "../../features/tgdetail/Tgdetail";
 import { Grid } from "@mui/material";
@@ -408,6 +408,7 @@ const Navbar = () => {
           )}
         </Sidebar>
       )}
+      <Toaster position="top-right" />
     </div>
   );
 };
