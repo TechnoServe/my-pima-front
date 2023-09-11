@@ -81,17 +81,19 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
 
     if (fileInfo.data && fileInfo.data.length < 2) return;
 
-    const projectColumn = fileInfo.data.map(
-      (row) => row[loadedColumns.indexOf("Project")]
-    );
+    if (loadedColumns) {
+      const projectColumn = fileInfo.data.map(
+        (row) => row[loadedColumns.indexOf("Project")]
+      );
 
-    // remove Project column header and falsey values
-    projectColumn.shift();
+      // remove Project column header and falsey values
+      projectColumn.shift();
 
-    // remove falsy values
-    const filteredProjectColumn = projectColumn.filter((project) => project);
+      // remove falsy values
+      const filteredProjectColumn = projectColumn.filter((project) => project);
 
-    setDistinctProjects([...new Set(filteredProjectColumn)]);
+      setDistinctProjects([...new Set(filteredProjectColumn)]);
+    }
   }, [fileInfo, loadedColumns]);
 
   const handleClose = (e, reason) => {
@@ -171,7 +173,8 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
             </Typography>
           </Box>
         ) : // check if all required columns are not present and show error
-        loadedColumns.filter((column) => requiredColumns.includes(column))
+        loadedColumns &&
+          loadedColumns.filter((column) => requiredColumns.includes(column))
             .length !== requiredColumns.length ? (
           <Box
             sx={{
