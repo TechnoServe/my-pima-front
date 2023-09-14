@@ -26,6 +26,7 @@ import { GET_PARTICIPANTS_PER_PROJECT } from "../../graphql/queries/participants
 import { GET_FARM_VISITS_PER_PROJECT } from "../../graphql/queries/farmVisitsRequests";
 import LoaderPage from "../../pages/LoaderPage";
 import Management from "../../pages/Management";
+import { GET_ALL_ATTENDANCES } from "../../graphql/queries/attendancesRequests";
 
 const Navbar = () => {
   if (localStorage.getItem("myPimaUserData") === null) {
@@ -39,6 +40,7 @@ const Navbar = () => {
   const [trainingGroups, setTrainingGroups] = useState([]);
   const [trainingSessions, setTrainingSessions] = useState([]);
   const [participants, setParticipants] = useState([]);
+  const [allAttendances, setAllAttendances] = useState([]);
   const [farmVisits, setFarmVisits] = useState([]);
   const [projectStats, setProjectStats] = useState({
     total_bas: 0,
@@ -69,6 +71,8 @@ const Navbar = () => {
   const participantsPerProject = useQuery(GET_PARTICIPANTS_PER_PROJECT, {
     variables: { projectId: selectedProject },
   });
+
+  const getAllAttendances = useQuery(GET_ALL_ATTENDANCES);
 
   const farmVisitsPerProject = useQuery(GET_FARM_VISITS_PER_PROJECT, {
     variables: { projectId: selectedProject },
@@ -148,6 +152,16 @@ const Navbar = () => {
   }, [participantsPerProject.data]);
 
   useEffect(() => {
+    if (getAllAttendances.data) {
+      setAllAttendances(
+        getAllAttendances.data.getAttendances.status === 200
+          ? getAllAttendances.data.getAttendances.attendance
+          : []
+      );
+    }
+  }, [getAllAttendances.data]);
+
+  useEffect(() => {
     if (farmVisitsPerProject.data) {
       setFarmVisits(
         farmVisitsPerProject.data.getFarmVisitsByProject.status === 200
@@ -181,6 +195,7 @@ const Navbar = () => {
       {trainingGroupsPerProject.loading ||
       trainingSessionsPerProject.loading ||
       participantsPerProject.loading ||
+      getAllAttendances.loading ||
       farmVisitsPerProject.loading ? (
         <div
           style={{
@@ -192,12 +207,22 @@ const Navbar = () => {
             alignItems: "center",
           }}
         >
+          <img
+            src={process.env.PUBLIC_URL + "/techno-logo-transparent.png"}
+            alt="technoServe-logo"
+            style={{
+              width: "200px",
+              height: "auto",
+              marginBottom: "40px",
+            }}
+          />
           <LoaderPage
             loadings={{
               load1: trainingGroupsPerProject.loading,
               load2: trainingSessionsPerProject.loading,
               load3: participantsPerProject.loading,
               load4: farmVisitsPerProject.loading,
+              load5: getAllAttendances.loading,
             }}
           />
           <BeatLoader
@@ -324,6 +349,7 @@ const Navbar = () => {
                         !participantsPerProject.loading ? (
                           <Participants
                             participants={participants}
+                            allAttendances={allAttendances}
                             trainingGroups={trainingGroups}
                             selectedProject={selectedProject}
                             projects={projects}

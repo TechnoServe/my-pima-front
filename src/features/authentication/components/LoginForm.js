@@ -93,7 +93,7 @@ const LoginForm = () => {
               id='email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder='moyoweke@gmail.com'
+              placeholder='someone@tns.org'
               className='form__input'
               required
             />

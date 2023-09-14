@@ -25,13 +25,13 @@ const Sidebar = ({ children }) => {
       icon: <MdOutlineDashboardCustomize />,
     },
     {
-      path: "/trainsession",
-      name: "Training Session",
+      path: "/traingroup",
+      name: "Training Groups",
       icon: <MdOutlineGroups />,
     },
     {
-      path: "/traingroup",
-      name: "Training Group",
+      path: "/trainsession",
+      name: "Training Sessions",
       icon: <MdOutlineCalendarToday />,
     },
     {
@@ -41,7 +41,7 @@ const Sidebar = ({ children }) => {
     },
     {
       path: "/farmvisit",
-      name: "Farm Visit",
+      name: "Farm Visits",
       icon: <HiOutlineTruck />,
     },
     {
