@@ -71,12 +71,12 @@ const Tstabtable = ({ trainingSessions }) => {
         ts_id: trainingSession.ts_id,
         ts_name: trainingSession.ts_name,
         ts_module: trainingSession.ts_module,
-        tns_id: trainingSession.tns_id,
-        farmer_trainer: trainingSession.farmer_trainer,
+        tns_id: trainingSession.tns_id || "N/A",
+        farmer_trainer: trainingSession.farmer_trainer || 'N/A',
         ts_status: trainingSession.ts_status,
         total_males: trainingSession.total_males,
         total_females: trainingSession.total_females,
-        session_date: trainingSession.session_date,
+        session_date: trainingSession.session_date || "N/A",
       }))
     : [];
 

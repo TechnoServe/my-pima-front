@@ -1,78 +1,90 @@
-import React from 'react'
-import Table from '../components/Table/Table'
-import Statsframe from '../features/statstg/Statsframe'
-import { Chip } from '@mui/material'
+import React from "react";
+import Table from "../components/Table/Table";
+import Statsframe from "../features/statstg/Statsframe";
+import { Chip } from "@mui/material";
 
-const TrainingGroup = ({ trainingGroups, orgTrainingGroups, filter, setFilter, setFilteredGroups, projectStats, participants }) => {
+const TrainingGroup = ({
+  trainingGroups,
+  orgTrainingGroups,
+  filter,
+  setFilter,
+  setFilteredGroups,
+  projectStats,
+  participants,
+}) => {
   const columns = [
-    { id: 'num', name: 'No.', selector: (row) => row.num, sortable: true },
+    { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
-      id: 'tg_name',
-      name: 'Training Group Name',
+      id: "tg_name",
+      name: "Training Group Name",
       selector: (row) => row.tg_name,
-      sortable: true
+      sortable: true,
     },
     {
-      id: 'tns_id',
-      name: 'TNS ID',
+      id: "tns_id",
+      name: "TNS ID",
       selector: (row) => row.tns_id,
-      sortable: true
+      sortable: true,
     },
     {
-      id: 'total_participants',
-      name: 'No of Participants',
+      id: "total_participants",
+      name: "No of Participants",
       selector: (row) => row.total_participants,
-      sortable: true
+      sortable: true,
     },
     {
-      id: 'business_advisor',
-      name: 'Business Advisor',
+      id: "business_advisor",
+      name: "Business Advisor",
       selector: (row) => row.business_advisor,
-      sortable: true
+      sortable: true,
     },
     {
-      id: 'farmer_trainer',
-      name: 'Farmer Trainer',
+      id: "farmer_trainer",
+      name: "Farmer Trainer",
       selector: (row) => row.farmer_trainer,
-      sortable: true
+      sortable: true,
     },
     {
-      id: 'status',
-      name: 'Status',
+      id: "status",
+      name: "Status",
       selector: (row) => (
         <div>
-          {row.status === 'Active' ? (
-            <Chip label={'Active'} color='success' variant='outlined' />
+          {row.status === "Active" ? (
+            <Chip label={"Active"} color="success" variant="outlined" />
           ) : (
-            <Chip label={'Inactive'} color='error' variant='outlined' />
+            <Chip label={"Inactive"} color="error" variant="outlined" />
           )}
         </div>
       ),
-      sortable: true
-    }
-  ]
+      sortable: true,
+    },
+  ];
 
   const rows = trainingGroups
     ? trainingGroups.map((trainingGroup, index) => ({
         num: index + 1,
         tg_id: trainingGroup.tg_id,
         tg_name: trainingGroup.tg_name,
-        tns_id: trainingGroup.tns_id || 'N/A',
+        tns_id: trainingGroup.tns_id || "N/A",
         total_participants: trainingGroup.total_participants,
         business_advisor: trainingGroup.business_advisor,
         farmer_trainer: trainingGroup.farmer_trainer,
-        status: trainingGroup.status
+        status: trainingGroup.status,
       }))
-    : []
+    : [];
 
-  const tableRowItem = 'traingroup'
+  const tableRowItem = "traingroup";
 
   return (
     <div>
-      <h1 className='module__heading'>Training Groups</h1>
+      <h1 className="module__heading">Training Groups</h1>
       {trainingGroups.length > 0 ? (
         <div>
-          <Statsframe statistics={projectStats} totalParticipants={participants.length} totalGroups={orgTrainingGroups.length} />
+          <Statsframe
+            statistics={projectStats}
+            totalParticipants={participants.length}
+            totalGroups={orgTrainingGroups.length}
+          />
           <Table
             columns={columns}
             data={rows}
@@ -83,12 +95,12 @@ const TrainingGroup = ({ trainingGroups, orgTrainingGroups, filter, setFilter, s
           />
         </div>
       ) : (
-        <div className='no__data'>
+        <div className="no__data">
           <em>No Active Group Found</em>
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default TrainingGroup
+export default TrainingGroup;

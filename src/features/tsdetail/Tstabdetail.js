@@ -47,18 +47,23 @@ const Tstabdetail = ({ details }) => {
 
   return (
     <div>
-      <div>
-        <Paper elevation={2}>
-          <div>
-            <div className="details__title">{details.ts_name}</div>
-            <div style={{ padding: "10px", paddingLeft: "20px" }}></div>
+      <Paper elevation={2}>
+        <div>
+          <div className="details__title">{details.ts_name}</div>
+          <div style={{ padding: "10px", paddingLeft: "20px" }}></div>
+          <div
+            className="ts__details-container"
+            style={{ display: "flex", gap: "50px" }}
+          >
+            <div style={{ width: "250px" }}>
+              <Statstscard stats={details} />
+            </div>
             <div
-              className="ts__details-container"
-              style={{ display: "flex", gap: "50px" }}
+              style={{
+                display: "flex",
+                gap: "20px",
+              }}
             >
-              <div style={{ width: "250px" }}>
-                <Statstscard stats={details} />
-              </div>
               <div className="ts__details-container1">
                 <Detailscontent
                   heading={"Module Name"}
@@ -112,47 +117,47 @@ const Tstabdetail = ({ details }) => {
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <StyledButton
-              onClick={handleClick}
-              id="demo-customized-button"
-              aria-controls={open ? "demo-customized-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              disabled={session_image ? false : true}
-              style={{
-                backgroundColor: `${
-                  session_image
-                    ? "rgba(244, 103, 0, 1)"
-                    : "rgba(244, 103, 0, 0.5)"
-                }`,
-                color: "#fff",
-                cursor: `${session_image ? "pointer" : "not-allowed"}`,
-              }}
-            >
-              {loading ? (
-                <BeatLoader
-                  color={"rgba(244, 103, 0, 1)"}
-                  loading={loading}
-                  size={10}
-                />
-              ) : (
-                "View Session Image"
-              )}
-            </StyledButton>
-            {open && (
-              <Imagecontainer
-                open={open}
-                handleClose={handleClose}
-                id={details.ts_id}
-                isVerified={details.is_verified}
-                validationStatus={details.validation_status}
-                sessionImageUrl={session_image}
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <StyledButton
+            onClick={handleClick}
+            id="demo-customized-button"
+            aria-controls={open ? "demo-customized-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            disabled={session_image ? false : true}
+            style={{
+              backgroundColor: `${
+                session_image
+                  ? "rgba(244, 103, 0, 1)"
+                  : "rgba(244, 103, 0, 0.5)"
+              }`,
+              color: "#fff",
+              cursor: `${session_image ? "pointer" : "not-allowed"}`,
+            }}
+          >
+            {loading ? (
+              <BeatLoader
+                color={"rgba(244, 103, 0, 1)"}
+                loading={loading}
+                size={10}
               />
+            ) : (
+              "View Session Image"
             )}
-          </div>
-        </Paper>
-      </div>
+          </StyledButton>
+          {open && (
+            <Imagecontainer
+              open={open}
+              handleClose={handleClose}
+              id={details.ts_id}
+              isVerified={details.is_verified}
+              validationStatus={details.validation_status}
+              sessionImageUrl={session_image}
+            />
+          )}
+        </div>
+      </Paper>
     </div>
   );
 };

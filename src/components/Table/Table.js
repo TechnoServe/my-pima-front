@@ -92,31 +92,6 @@ const Table = ({
   };
 
   const handleCSVExport = () => {
-    // Create a map to store monthly attendance data
-    const monthlyAttendanceMap = new Map();
-
-    // filter all attendances by data's participant ids
-    const filteredAttendances = allAttendances.filter((attendance) =>
-      data.some((participant) => participant.p_id === attendance.participant_id)
-    );
-
-    // Iterate through the attendance data to calculate monthly attendance
-    filteredAttendances.forEach((attendance) => {
-      const { attendance_date, attendance_status, participant_id } = attendance;
-      const [year, month] = attendance_date.split("-");
-      const key = `${year}-${month}`;
-
-      // Initialize the monthly attendance object if it doesn't exist
-      if (!monthlyAttendanceMap.has(key)) {
-        monthlyAttendanceMap.set(key, {});
-      }
-
-      // Set the attendance status for the participant in the corresponding month
-      const monthlyAttendance = monthlyAttendanceMap.get(key);
-      monthlyAttendance[participant_id] =
-        attendance_status === "Present" ? "1" : "0";
-    });
-
     // Create an array of headers for the CSV file
     const partsHeaders = [
       "num",
@@ -131,20 +106,51 @@ const Table = ({
       "farmer_trainer",
       "business_advisor",
     ];
+    if (tableRowItem === "participants") {
+      // Create a map to store monthly attendance data
+      const monthlyAttendanceMap = new Map();
 
-    // Add monthly columns to the headers
-    for (const [monthKey] of monthlyAttendanceMap) {
-      partsHeaders.push(monthKey);
-    }
+      // filter all attendances by data's participant ids
+      const filteredAttendances = allAttendances.filter((attendance) =>
+        data.some(
+          (participant) => participant.p_id === attendance.participant_id
+        )
+      );
 
-    // Prepare data for writing to the CSV file
-    const csvRows = data.map((participant) => {
-      const rowData = { ...participant };
-      for (const [monthKey, monthlyAttendance] of monthlyAttendanceMap) {
-        rowData[monthKey] = monthlyAttendance[participant.p_id] || "";
+      // Iterate through the attendance data to calculate monthly attendance
+      filteredAttendances.forEach((attendance) => {
+        const { attendance_date, attendance_status, participant_id } =
+          attendance;
+        const [year, month] = attendance_date.split("-");
+        const key = `${year}-${month}`;
+
+        // Initialize the monthly attendance object if it doesn't exist
+        if (!monthlyAttendanceMap.has(key)) {
+          monthlyAttendanceMap.set(key, {});
+        }
+
+        // Set the attendance status for the participant in the corresponding month
+        const monthlyAttendance = monthlyAttendanceMap.get(key);
+        monthlyAttendance[participant_id] =
+          attendance_status === "Present" ? "1" : "0";
+      });
+
+      // Add monthly columns to the headers
+      for (const [monthKey] of monthlyAttendanceMap) {
+        partsHeaders.push(monthKey);
       }
-      return rowData;
-    });
+
+      // Prepare data for writing to the CSV file
+      const csvRows = data.map((participant) => {
+        const rowData = { ...participant };
+        for (const [monthKey, monthlyAttendance] of monthlyAttendanceMap) {
+          rowData[monthKey] = monthlyAttendance[participant.p_id] || "";
+        }
+        return rowData;
+      });
+
+      data = csvRows;
+    }
 
     // Combine header and rows to form the CSV content
     const csvExporter = new ExportToCsv({
@@ -155,11 +161,14 @@ const Table = ({
       useTextFile: false,
       useBom: true,
       filename: `${filename} ${new Date().toLocaleDateString()}`,
-      headers: partsHeaders,
+      headers:
+        tableRowItem === "participants"
+          ? partsHeaders
+          : columns.map((column) => column.name),
     });
 
     csvExporter.generateCsv(
-      csvRows.map(
+      data.map(
         ({ tg_id, ts_id, p_id, attendance_id, fv_id, __typename, ...rest }) =>
           rest
       )
@@ -189,25 +198,30 @@ const Table = ({
           justifyContent: "flex-end",
         }}
       >
-        <FilterContainer
-          filter={filter}
-          setFilter={setFilter}
-          setFilteredGroups={setFilteredGroups}
-          setFilteredSessions={setFilteredSessions}
-          data={data}
-        />
+        {data.length > 0 && filter && (
+          <FilterContainer
+            filter={filter}
+            setFilter={setFilter}
+            setFilteredGroups={setFilteredGroups}
+            setFilteredSessions={setFilteredSessions}
+            data={data}
+          />
+        )}
       </div>
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchText}
-          onChange={handleSearch}
-        />
-        <span className="search-icon">
-          <BiSearchAlt />
-        </span>
-      </div>
+
+      {data.length > 0 && (
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchText}
+            onChange={handleSearch}
+          />
+          <span className="search-icon">
+            <BiSearchAlt />
+          </span>
+        </div>
+      )}
       <DataTable
         columns={columns}
         data={searchText.length > 0 ? filteredData : data}
@@ -217,38 +231,40 @@ const Table = ({
         customStyles={customStyles}
         className="table-container"
         actions={
-          <>
-            <Button
-              variant="outlined"
-              sx={{
-                color: "#00A5A3",
-                borderColor: "#00A5A3",
-              }}
-              onClick={handleCSVExport}
-            >
-              <FaFileExport
-                style={{
-                  marginRight: "5px",
+          data.length > 0 && (
+            <>
+              <Button
+                variant="outlined"
+                sx={{
+                  color: "#00A5A3",
+                  borderColor: "#00A5A3",
                 }}
-              />{" "}
-              CSV
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{
-                color: "#00A5A3",
-                borderColor: "#00A5A3",
-              }}
-              onClick={handleExcelExport}
-            >
-              <FaFileExport
-                style={{
-                  marginRight: "5px",
+                onClick={handleCSVExport}
+              >
+                <FaFileExport
+                  style={{
+                    marginRight: "5px",
+                  }}
+                />{" "}
+                CSV
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{
+                  color: "#00A5A3",
+                  borderColor: "#00A5A3",
                 }}
-              />{" "}
-              Excel
-            </Button>
-          </>
+                onClick={handleExcelExport}
+              >
+                <FaFileExport
+                  style={{
+                    marginRight: "5px",
+                  }}
+                />{" "}
+                Excel
+              </Button>
+            </>
+          )
         }
       />
     </div>
