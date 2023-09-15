@@ -39,11 +39,11 @@ const Sidebar = ({ children }) => {
       name: "Participants",
       icon: <MdOutlinePersonSearch />,
     },
-    {
-      path: "/farmvisit",
-      name: "Farm Visits",
-      icon: <HiOutlineTruck />,
-    },
+    // {
+    //   path: "/farmvisit",
+    //   name: "Farm Visits",
+    //   icon: <HiOutlineTruck />,
+    // },
     {
       path: "/manage",
       name: "Management",
@@ -99,11 +99,7 @@ const Sidebar = ({ children }) => {
         </div>
         <div className="mid__section">
           {menuItem.map((item, index) => (
-            <NavLink
-              to={item.path}
-              key={index}
-              className="link"
-            >
+            <NavLink to={item.path} key={index} className="link">
               <div className="icon">{item.icon}</div>
               <div
                 style={{ display: isOpen ? "block" : "none" }}

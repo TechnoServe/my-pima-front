@@ -1,8 +1,8 @@
 import React from "react";
 import { Chip } from "@mui/material";
-import Table from "../../components/Table/Table";
+import Table from "../../../components/Table/Table";
 
-const FvTabTable = ({ farmVisits }) => {
+const FvTabTable = ({ farmVisitsPerPart }) => {
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
@@ -15,12 +15,6 @@ const FvTabTable = ({ farmVisits }) => {
       id: "tns_id",
       name: "TNS Id",
       selector: (row) => row.tns_id,
-      sortable: true,
-    },
-    {
-      id: "farm_visited",
-      name: "Farm Visited",
-      selector: (row) => row.farm_visited,
       sortable: true,
     },
     {
@@ -59,14 +53,13 @@ const FvTabTable = ({ farmVisits }) => {
 
   const tableRowItem = "farmvisit";
 
-  const rows = farmVisits
-    ? farmVisits.map((fv, index) => ({
+  const rows = farmVisitsPerPart
+    ? farmVisitsPerPart.map((fv, index) => ({
         num: index + 1,
         fv_id: fv.fv_id,
         fv_name: fv.fv_name,
         training_session: fv.training_session,
         tns_id: fv.tns_id,
-        farm_visited: fv.farm_visited,
         household_id: fv.household_id,
         farmer_trainer: fv.farmer_trainer,
         has_training: fv.has_training,

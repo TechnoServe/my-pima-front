@@ -67,7 +67,9 @@ const Table = ({
         ? row.fv_id
         : row.attendance_id;
 
-    navigate(`/${tableRowItem}/${id}`);
+    if (tableRowItem !== "farmvisit") {
+      navigate(`/${tableRowItem}/${id}`);
+    }
   };
 
   const [searchText, setSearchText] = useState("");
