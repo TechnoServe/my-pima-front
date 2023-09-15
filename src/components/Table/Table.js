@@ -108,6 +108,7 @@ const Table = ({
       "farmer_trainer",
       "business_advisor",
     ];
+
     if (tableRowItem === "participants") {
       // Create a map to store monthly attendance data
       const monthlyAttendanceMap = new Map();
@@ -136,6 +137,8 @@ const Table = ({
         monthlyAttendance[participant_id] =
           attendance_status === "Present" ? "1" : "0";
       });
+
+      console.log(monthlyAttendanceMap);
 
       // Add monthly columns to the headers
       for (const [monthKey] of monthlyAttendanceMap) {

@@ -32,6 +32,7 @@ import {
 import { GET_ALL_ROLES } from "../../graphql/queries/rolesRequests";
 import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
+import { ADD_PROJECT_ROLE } from "../../graphql/queries/projectsRequests";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -75,7 +76,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const AssignModal = ({ open, handleClose, title, data }) => {
+const AssignModal = ({ open, handleClose, title, data, selectedProject }) => {
   const [toggleAdd, setToggleAdd] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [users, setUsers] = useState([]);
@@ -83,8 +84,10 @@ const AssignModal = ({ open, handleClose, title, data }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedRole, setSelectedRole] = useState(null);
   const [isBeingUpdated, setIsBeingUpdated] = useState(false);
+  const [isNew, setIsNew] = useState(false);
   const getAllUsers = useQuery(GET_ALL_USERS);
   const getAllRoles = useQuery(GET_ALL_ROLES);
+  const [addProjectRole] = useMutation(ADD_PROJECT_ROLE);
 
   const [updateUser] = useMutation(UPDATE_USER);
 
@@ -93,8 +96,8 @@ const AssignModal = ({ open, handleClose, title, data }) => {
 
     const filtered = data.filter(
       (item) =>
-        item.tbl_user.user_name.toLowerCase().includes(value.toLowerCase()) ||
-        item.tbl_role.role_name.toLowerCase().includes(value.toLowerCase())
+        item.user.user_name.toLowerCase().includes(value.toLowerCase()) ||
+        item.role.role_name.toLowerCase().includes(value.toLowerCase())
     );
 
     setFilteredData(filtered);
@@ -115,6 +118,32 @@ const AssignModal = ({ open, handleClose, title, data }) => {
       setRoles(getAllRoles.data.getRoles.roles);
     }
   }, [getAllRoles.data]);
+
+  const handleAddUser = async () => {
+    if (selectedUser && selectedRole) {
+      setIsBeingUpdated(true);
+      const { data } = await addProjectRole({
+        variables: {
+          userId: selectedUser,
+          projectId: selectedProject.project_id,
+          roleId: selectedRole,
+        },
+      });
+
+      if (data.addProjectRole.status === 200) {
+        toast.success(data.addProjectRole.message);
+        setSelectedUser(null);
+        setSelectedRole(null);
+        setIsBeingUpdated(false);
+        setToggleAdd(false);
+      } else {
+        setIsBeingUpdated(false);
+        toast.error(data.addProjectRole.message);
+      }
+    } else {
+      toast.error("Please select user and role");
+    }
+  };
 
   const handleUpdateUser = async () => {
     if (selectedUser && selectedRole) {
@@ -170,6 +199,16 @@ const AssignModal = ({ open, handleClose, title, data }) => {
               </Typography>
               <Select
                 name="user"
+                defaultValue={
+                  !isNew
+                    ? {
+                        value: selectedUser,
+                        label: users.find(
+                          (item) => item.user_id === selectedUser
+                        ).user_name,
+                      }
+                    : null
+                }
                 options={
                   users.length > 0
                     ? users.map((item) => ({
@@ -191,6 +230,16 @@ const AssignModal = ({ open, handleClose, title, data }) => {
               </Typography>
               <Select
                 name="role"
+                defaultValue={
+                  !isNew
+                    ? {
+                        value: selectedRole,
+                        label: roles.find(
+                          (item) => item.role_id === selectedRole
+                        ).role_name,
+                      }
+                    : null
+                }
                 options={
                   roles.length > 0
                     ? roles.map((item) => ({
@@ -218,13 +267,15 @@ const AssignModal = ({ open, handleClose, title, data }) => {
                 variant="contained"
                 color="primary"
                 sx={{ marginTop: "10px", marginRight: "10px" }}
-                onClick={handleUpdateUser}
+                onClick={isNew ? handleAddUser : handleUpdateUser}
                 disabled={isBeingUpdated}
               >
                 {isBeingUpdated ? (
                   <BeatLoader color={"#fff"} loading={true} size={10} />
-                ) : (
+                ) : isNew ? (
                   "Save"
+                ) : (
+                  "Modify"
                 )}
               </Button>
               <Button
@@ -274,16 +325,32 @@ const AssignModal = ({ open, handleClose, title, data }) => {
                     padding: "5px 0",
                   }}
                 >
-                  <ListItemText primary={item.tbl_user.user_name} />
+                  <ListItemText
+                    primary={item.user ? item.user.user_name : "N/A"}
+                  />
                   <Chip
-                    label={item.tbl_role.role_name}
+                    label={item.role ? item.role.role_name : "N/A"}
                     color="secondary"
                     variant="outlined"
                     size="small"
                     sx={{ marginRight: "10px" }}
                   />
                   <ListItemIcon
-                    children={<BiSolidPencil size={20} color={"gray"} />}
+                    children={
+                      <BiSolidPencil
+                        size={20}
+                        color={"gray"}
+                        style={{
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setSelectedUser(item.user.user_id);
+                          setSelectedRole(item.role.role_id);
+                          setToggleAdd(true);
+                          setIsNew(false);
+                        }}
+                      />
+                    }
                   />
                   <ListItemIcon
                     children={<AiOutlineMinusCircle size={20} color={"red"} />}
@@ -303,15 +370,17 @@ const AssignModal = ({ open, handleClose, title, data }) => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={() => {
-            setToggleAdd(true);
-          }}
-          color="primary"
-          disabled={toggleAdd}
-        >
-          Add New
-        </Button>
+        {!toggleAdd && (
+          <Button
+            onClick={() => {
+              setToggleAdd(true);
+              setIsNew(true);
+            }}
+            color="primary"
+          >
+            Add New
+          </Button>
+        )}
         <Button onClick={handleClose} color="primary">
           Close
         </Button>

@@ -21,6 +21,7 @@ const AssignProjects = ({ allProjects }) => {
   const [open, setOpen] = useState(false);
   const [list, setList] = useState([]);
   const [title, setTitle] = useState("");
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const [getProjectRolesByProjectId, { data }] = useLazyQuery(
     GET_PROJECT_ROLES_BY_PROJECT_ID
@@ -37,6 +38,7 @@ const AssignProjects = ({ allProjects }) => {
       const { project_role } = data.getProjectRolesByProjectId;
       setList(project_role);
       setTitle(project.project_name);
+      setSelectedProject(project);
       setOpen(true);
     }
   };
@@ -91,6 +93,7 @@ const AssignProjects = ({ allProjects }) => {
         handleClose={() => setOpen(false)}
         data={list}
         title={title}
+        selectedProject={selectedProject}
       />
     </>
   );

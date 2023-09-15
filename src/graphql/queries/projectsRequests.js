@@ -50,19 +50,28 @@ const GET_PROJECT_ROLES_BY_PROJECT_ID = gql`
       status
       project_role {
         pr_id
-        tbl_user {
+        user {
           user_id
           user_name
         }
-        tbl_project {
+        project {
           project_id
           project_name
         }
-        tbl_role {
+        role {
           role_id
           role_name
         }
       }
+    }
+  }
+`;
+
+const ADD_PROJECT_ROLE = gql`
+  mutation AddProjectRole($userId: ID!, $projectId: ID!, $roleId: String) {
+    addProjectRole(user_id: $userId, project_id: $projectId, role_id: $roleId) {
+      message
+      status
     }
   }
 `;
@@ -72,4 +81,5 @@ export {
   GET_PROJECT_STATISTICS,
   GET_ASSIGNED_PROJECTS,
   GET_PROJECT_ROLES_BY_PROJECT_ID,
+  ADD_PROJECT_ROLE,
 };
