@@ -81,6 +81,7 @@ main {
     position: fixed;
     bottom: 0;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+    z-index: 999;
   }
   .top_section,
   .bottom__section {
@@ -90,6 +91,9 @@ main {
   .mid__section {
     margin-top: 0;
     display: flex;
+  }
+  main {
+    margin-left: 0 !important;
   }
   .link {
     background-color: transparent;
