@@ -29,10 +29,6 @@ import Management from "../../pages/Management";
 import { GET_ALL_ATTENDANCES } from "../../graphql/queries/attendancesRequests";
 
 const Navbar = () => {
-  if (localStorage.getItem("myPimaUserData") === null) {
-    window.location.href = "/login";
-  }
-
   // get current path
   const location = useLocation();
   const [allProjects, setAllProjects] = useState([]);
@@ -87,6 +83,7 @@ const Navbar = () => {
     farmerTrainer: "",
     moduleName: "",
     sessionDate: "",
+    sessionApproval: "",
   });
   const [filteredGroups, setFilteredGroups] = useState([]);
   const [filteredSessions, setFilteredSessions] = useState([]);
@@ -135,6 +132,11 @@ const Navbar = () => {
   useEffect(() => {
     if (trainingSessionsPerProject.data) {
       setTrainingSessions(
+        trainingSessionsPerProject.data.trainingSessionsByProject
+          .trainingSessions
+      );
+
+      setFilteredSessions(
         trainingSessionsPerProject.data.trainingSessionsByProject
           .trainingSessions
       );
@@ -276,7 +278,7 @@ const Navbar = () => {
                         !trainingGroupsPerProject.loading ? (
                           <TrainingGroup
                             trainingGroups={
-                              filteredGroups.length > 0
+                              filteredGroups && filteredGroups.length > 0
                                 ? filteredGroups
                                 : trainingGroups
                             }
@@ -318,7 +320,7 @@ const Navbar = () => {
                         !trainingSessionsPerProject.loading ? (
                           <TrainingSession
                             trainingSessions={
-                              filteredSessions.length > 0
+                              filteredSessions && filteredSessions.length > 0
                                 ? filteredSessions
                                 : trainingSessions
                             }

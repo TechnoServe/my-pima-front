@@ -18,7 +18,7 @@ const Users = ({ users }) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={6}>
-        {!users || users.length === 0 ? (
+        {!users || users.length < 1 ? (
           <Typography variant="h6">No users found</Typography>
         ) : (
           <UsersList users={users} onSelect={handleUserSelect} />

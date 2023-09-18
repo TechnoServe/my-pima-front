@@ -8,6 +8,7 @@ import { Button } from "@mui/material";
 import { FaFileExport } from "react-icons/fa";
 import { ExportToCsv } from "export-to-csv";
 import { downloadExcel } from "react-export-table-to-excel";
+import TimeZone from "../../utils/timezone";
 
 const customStyles = {
   rows: {
@@ -41,7 +42,8 @@ const Table = ({
   tableRowItem,
   allAttendances,
 }) => {
-  const pathName = window.location.pathname.split("/")[1];
+  const pathName = tableRowItem || window.location.pathname.split("/")[2];
+
   const filename =
     pathName === "traingroup"
       ? "mypima_training_group"
@@ -68,7 +70,7 @@ const Table = ({
         : row.attendance_id;
 
     if (tableRowItem !== "farmvisit") {
-      navigate(`/${tableRowItem}/${id}`);
+      navigate(`/in/${tableRowItem}/${id}`);
     }
   };
 
@@ -138,8 +140,6 @@ const Table = ({
           attendance_status === "Present" ? "1" : "0";
       });
 
-      console.log(monthlyAttendanceMap);
-
       // Add monthly columns to the headers
       for (const [monthKey] of monthlyAttendanceMap) {
         partsHeaders.push(monthKey);
@@ -165,7 +165,7 @@ const Table = ({
       showLabels: true,
       useTextFile: false,
       useBom: true,
-      filename: `${filename} ${new Date().toLocaleDateString()}`,
+      filename: `${filename}_${TimeZone()}`,
       headers:
         tableRowItem === "participants"
           ? partsHeaders
@@ -182,8 +182,8 @@ const Table = ({
 
   const handleExcelExport = () => {
     downloadExcel({
-      fileName: `${filename} ${new Date().toLocaleDateString()}`,
-      sheet: filename,
+      fileName: `${filename}_${TimeZone()}`,
+      sheet: `${filename}_${TimeZone()}`,
       tablePayload: {
         header: columns.map((column) => column.name),
         body: data.map(
@@ -203,30 +203,30 @@ const Table = ({
           justifyContent: "flex-end",
         }}
       >
-        {data.length > 0 && filter && (
+        {filter && (
           <FilterContainer
             filter={filter}
             setFilter={setFilter}
             setFilteredGroups={setFilteredGroups}
             setFilteredSessions={setFilteredSessions}
             data={data}
+            tableRowItem={tableRowItem}
           />
         )}
       </div>
 
-      {data.length > 0 && (
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchText}
-            onChange={handleSearch}
-          />
-          <span className="search-icon">
-            <BiSearchAlt />
-          </span>
-        </div>
-      )}
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchText}
+          onChange={handleSearch}
+        />
+        <span className="search-icon">
+          <BiSearchAlt />
+        </span>
+      </div>
+
       <DataTable
         columns={columns}
         data={searchText.length > 0 ? filteredData : data}

@@ -183,8 +183,8 @@ const UsersList = ({ users, onSelect }) => {
             </Card>
           ))
         ) : (
-          <Typography variant="h6" align="center">
-            No user found
+          <Typography variant="em" align="center">
+            Please wait while we fetch users...
           </Typography>
         )}
       </div>

@@ -111,7 +111,13 @@ const Tstabdetail = ({ details }) => {
               <div className="ts__details-container1">
                 <Detailscontent
                   heading={"Validation Status"}
-                  paragraph={details.validation_status || "Not Verified"}
+                  paragraph={
+                    details.is_verified && details.validation_status
+                      ? "Approved"
+                      : details.is_verified && !details.validation_status
+                      ? "Rejected"
+                      : "Not Verified"
+                  }
                 />
                 <div style={{ paddingBottom: "20px" }}></div>
               </div>
@@ -125,7 +131,7 @@ const Tstabdetail = ({ details }) => {
             aria-controls={open ? "demo-customized-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
-            disabled={session_image ? false : true}
+            disabled={details.has_image ? false : true}
             style={{
               backgroundColor: `${
                 session_image
@@ -133,7 +139,7 @@ const Tstabdetail = ({ details }) => {
                   : "rgba(244, 103, 0, 0.5)"
               }`,
               color: "#fff",
-              cursor: `${session_image ? "pointer" : "not-allowed"}`,
+              cursor: `${details.has_image ? "pointer" : "not-allowed"}`,
             }}
           >
             {loading ? (

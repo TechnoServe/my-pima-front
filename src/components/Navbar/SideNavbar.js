@@ -8,7 +8,7 @@ import {
   MdManageAccounts,
 } from "react-icons/md";
 import { HiOutlineTruck, HiMenuAlt2 } from "react-icons/hi";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import Logo from "../Logo";
 
@@ -16,49 +16,50 @@ import Logo from "../Logo";
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
+  const navigate = useNavigate();
   const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
 
   const menuItem = [
     {
-      path: "/dashboard",
+      path: "/in/dashboard",
       name: "Dashboard",
       icon: <MdOutlineDashboardCustomize />,
     },
     {
-      path: "/traingroup",
+      path: "/in/traingroup",
       name: "Training Groups",
       icon: <MdOutlineGroups />,
     },
     {
-      path: "/trainsession",
+      path: "/in/trainsession",
       name: "Training Sessions",
       icon: <MdOutlineCalendarToday />,
     },
     {
-      path: "/participants",
+      path: "/in/participants",
       name: "Participants",
       icon: <MdOutlinePersonSearch />,
     },
     // {
-    //   path: "/farmvisit",
+    //   path: "/in/farmvisit",
     //   name: "Farm Visits",
     //   icon: <HiOutlineTruck />,
     // },
     {
-      path: "/manage",
+      path: "/in/manage",
       name: "Management",
       icon: <MdManageAccounts />,
     },
   ];
   const bottomitem = [
     {
-      path: "/profile",
+      path: "/in/profile",
       name: userDetails && (userDetails.username || "N/A"),
       email: userDetails && (userDetails.email || "N/A"),
       icon: <MdOutlinePersonSearch />,
     },
     {
-      path: "/logout",
+      path: "/in/logout",
       name: "Logout",
       icon: <MdLogout />,
     },
@@ -69,7 +70,8 @@ const Sidebar = ({ children }) => {
 
     window.localStorage.removeItem("my-pima-token");
     window.localStorage.removeItem("myPimaUserData");
-    window.location.href = "/login";
+
+    navigate("/login");
   };
 
   return (

@@ -79,6 +79,20 @@ const TrainingSession = ({
       grow: 1,
     },
     {
+      id: "has_image",
+      name: "Has Image?",
+      selector: (row) => (
+        <div>
+          {row.has_image ? (
+            <Chip label={"Yes"} color="success" variant="outlined" />
+          ) : (
+            <Chip label={"No"} color="error" variant="outlined" />
+          )}
+        </div>
+      ),
+      sortable: true,
+    },
+    {
       id: "is_verified",
       name: "Is Session Verified?",
       selector: (row) => (
@@ -95,15 +109,30 @@ const TrainingSession = ({
     {
       id: "validation_status",
       name: "Validation Status",
+      grow: 2,
       selector: (row) => (
         <div>
-          {!row.validation_status ||
-          row.validation_status === "not_verified" ? (
-            <Chip label={"Not Verified"} color="secondary" variant="outlined" />
-          ) : row.validation_status === "verified" ? (
-            <Chip label={"Verified"} color="success" variant="outlined" />
+          {!row.is_verified ? (
+            <Chip
+              label={"Not Verified"}
+              color="secondary"
+              variant="outlined"
+              title={"Not Verified"}
+            />
+          ) : row.is_verified && row.validation_status ? (
+            <Chip
+              label={"Verified"}
+              color="success"
+              variant="outlined"
+              title={"Verified"}
+            />
           ) : (
-            <Chip label={"Rejected"} color="error" variant="outlined" />
+            <Chip
+              label={"Rejected"}
+              color="error"
+              variant="outlined"
+              title={"Rejected"}
+            />
           )}
         </div>
       ),
@@ -131,6 +160,7 @@ const TrainingSession = ({
         ts_status: trainingSession.ts_status,
         total_males: trainingSession.total_males,
         total_females: trainingSession.total_females,
+        has_image: trainingSession.has_image,
         is_verified: trainingSession.is_verified,
         validation_status: trainingSession.validation_status,
         session_date: trainingSession.session_date,

@@ -83,7 +83,7 @@ const TrainingGroup = ({
           <Statsframe
             statistics={projectStats}
             totalParticipants={participants.length}
-            totalGroups={orgTrainingGroups.length}
+            trainingGroups={trainingGroups}
           />
           <Table
             columns={columns}

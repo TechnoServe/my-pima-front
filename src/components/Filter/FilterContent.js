@@ -6,6 +6,7 @@ import {
   Divider,
   IconButton,
   DialogActions,
+  Typography,
 } from "@mui/material";
 import {
   MdClose,
@@ -34,6 +35,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 const FilterContent = ({
   open,
   handleClose,
+  handleReset,
   filter,
   setFilter,
   setFilteredGroups,
@@ -45,13 +47,13 @@ const FilterContent = ({
   // get url
   const location = useLocation();
 
+  const pathname = location.pathname.split("/")[2];
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
   const handleSearch = () => {
-    setFilteredGroups && setFilteredGroups([]);
-    setFilteredSessions && setFilteredSessions([]);
     handleClose();
 
     if (filter.farmerTrainer) {
@@ -83,18 +85,20 @@ const FilterContent = ({
       );
       return;
     }
-  };
 
-  const handleReset = () => {
-    setFilter({
-      businessAdvisor: "",
-      farmerTrainer: "",
-      moduleName: "",
-      sessionDate: "",
-    });
+    if (filter.sessionApproval) {
+      setFilteredSessions(
+        data.filter((session) =>
+          filter.sessionApproval === "pending"
+            ? !session.is_verified && !session.validation_status
+            : filter.sessionApproval === "approved"
+            ? session.is_verified && session.validation_status
+            : session.is_verified && !session.validation_status
+        )
+      );
 
-    setFilteredGroups && setFilteredGroups([]);
-    setFilteredSessions && setFilteredSessions([]);
+      return;
+    }
   };
 
   return (
@@ -119,69 +123,140 @@ const FilterContent = ({
             <MdClose />
           </IconButton>
           <div>
-            <span
-              style={{ fontSize: "12px", color: "#2b2b2b", marginRight: "5px" }}
+            <Typography
+              sx={{
+                fontSize: "16px",
+                color: "#2b2b2b",
+                marginRight: "5px",
+                fontWeight: "bold",
+              }}
             >
-              Selected filters :
-            </span>
+              Selected filters:
+            </Typography>
             {
               // display selected filters here, get non-empty values from filter object
               filter && filter.businessAdvisor && (
-                <Chip
-                  label={filter.businessAdvisor}
-                  defaultValue={filter.businessAdvisor}
-                  size="small"
-                  onDelete={() => {
-                    setFilter({
-                      businessAdvisor: "",
-                      farmerTrainer: "",
-                      trainingGroup: "",
-                    });
-                  }}
-                />
+                <>
+                  <Typography
+                    sx={{
+                      fontSize: "12px",
+                      color: "#2b2b2b",
+                      marginRight: "5px",
+                    }}
+                  >
+                    Business Advisor:
+                  </Typography>
+                  <Chip
+                    label={filter.businessAdvisor}
+                    defaultValue={filter.businessAdvisor}
+                    size="small"
+                    onDelete={() => {
+                      setFilter({
+                        businessAdvisor: "",
+                        farmerTrainer: "",
+                      });
+                    }}
+                  />
+                </>
               )
             }
             {
               // display selected filters here, get non-empty values from filter object
               filter && filter.farmerTrainer && (
-                <Chip
-                  label={filter.farmerTrainer}
-                  size="small"
-                  onDelete={() => {
-                    setFilter((prevState) => ({
-                      ...prevState,
-                      farmerTrainer: "",
-                      trainingGroup: "",
-                    }));
-                  }}
-                />
+                <>
+                  <Typography
+                    sx={{
+                      fontSize: "12px",
+                      color: "#2b2b2b",
+                      marginRight: "5px",
+                    }}
+                  >
+                    Farmer Trainer:
+                  </Typography>
+                  <Chip
+                    label={filter.farmerTrainer}
+                    size="small"
+                    onDelete={() => {
+                      setFilter((prevState) => ({
+                        ...prevState,
+                        farmerTrainer: "",
+                      }));
+                    }}
+                  />
+                </>
               )
             }
 
             {filter && filter.moduleName && (
-              <Chip
-                label={filter.moduleName}
-                size="small"
-                onDelete={() => {
-                  setFilter((prevState) => ({
-                    ...prevState,
-                    moduleName: "",
-                  }));
-                }}
-              />
+              <>
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    color: "#2b2b2b",
+                    marginRight: "5px",
+                  }}
+                >
+                  Module Name:
+                </Typography>
+                <Chip
+                  label={filter.moduleName}
+                  size="small"
+                  onDelete={() => {
+                    setFilter((prevState) => ({
+                      ...prevState,
+                      moduleName: "",
+                    }));
+                  }}
+                />
+              </>
             )}
 
             {filter && filter.sessionDate && (
-              <Chip
-                label={filter.sessionDate}
-                size="small"
-                onDelete={() => {
-                  setFilter((prevState) => ({
-                    ...prevState,
-                    sessionDate: "",
-                  }));
-                }}
-              />
+              <>
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    color: "#2b2b2b",
+                    marginRight: "5px",
+                  }}
+                >
+                  Session Date:
+                </Typography>
+                <Chip
+                  label={filter.sessionDate}
+                  size="small"
+                  onDelete={() => {
+                    setFilter((prevState) => ({
+                      ...prevState,
+                      sessionDate: "",
+                    }));
+                  }}
+                />
+              </>
+            )}
+
+            {filter && filter.sessionApproval && (
+              <>
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    color: "#2b2b2b",
+                    marginRight: "5px",
+                  }}
+                >
+                  Status:
+                </Typography>
+                <Chip
+                  label={filter.sessionApproval}
+                  size="small"
+                  onDelete={() => {
+                    setFilter((prevState) => ({
+                      ...prevState,
+                      sessionApproval: "",
+                    }));
+                  }}
+                />
+              </>
             )}
 
             {
@@ -190,7 +265,8 @@ const FilterContent = ({
                 filter.businessAdvisor === "" &&
                 filter.farmerTrainer === "" &&
                 filter.moduleName === "" &&
-                filter.sessionDate === "" && (
+                filter.sessionDate === "" &&
+                filter.sessionApproval === "" && (
                   <em style={{ fontSize: "11px", color: "#969696" }}>
                     Nothing yet
                   </em>
@@ -214,7 +290,7 @@ const FilterContent = ({
                 className="filter__options"
                 style={{ display: "flex", gap: "20px" }}
               >
-                {location.pathname === "/traingroup" ? (
+                {pathname === "traingroup" ? (
                   <Chip
                     variant="outlined"
                     label="Business Advisor"
@@ -269,13 +345,11 @@ const FilterContent = ({
                   />
                 )}
                 {activeTab === "sessionDate" && (
-                  <DateFilter
-                    setFilter={setFilter}
-                    setFilteredSessions={setFilteredSessions}
-                    data={data}
-                  />
+                  <DateFilter setFilter={setFilter} />
                 )}
-                {activeTab === "status" && <StatusFilter />}
+                {activeTab === "status" && (
+                  <StatusFilter setFilter={setFilter} />
+                )}
               </div>
             </div>
           </DialogContent>

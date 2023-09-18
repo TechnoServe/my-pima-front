@@ -2,12 +2,11 @@ import "./loginform.css";
 import Logo from "../../../components/Logo";
 import React, { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import PimaImage from "../assets/heroimg.png";
 import { BeatLoader } from "react-spinners";
 import { useAuth } from "../../../context/useAuth";
 import { GoogleLogin } from "@react-oauth/google";
 import { Toaster, toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -42,7 +41,7 @@ const LoginForm = () => {
       .then((res) => {
         if (res.data.saveMailLogin.status === 200) {
           setLoading(false);
-          navigate("/dashboard");
+          navigate("/in/dashboard");
         } else {
           toast.error(res.data.saveMailLogin.message);
         }
@@ -60,7 +59,7 @@ const LoginForm = () => {
       .googleLogin(response.credential)
       .then((res) => {
         if (res.data.saveGoogleLogin.status === 200) {
-          navigate("/dashboard");
+          navigate("/in/dashboard");
         } else {
           toast.error(res.data.saveGoogleLogin.message);
         }
@@ -79,7 +78,11 @@ const LoginForm = () => {
       </div>
       <div className="form__container">
         <div className="heroimage">
-          <img src={PimaImage} alt="hero" className="hero" />
+          <img
+            src={process.env.PUBLIC_URL + "/heroimg.png"}
+            alt="hero"
+            className="hero"
+          />
         </div>
         <div className="form__starts">
           <h2 className="form__login">Login</h2>
@@ -136,22 +139,42 @@ const LoginForm = () => {
                   name="remember"
                   id="remember"
                   className="form__checkbox box"
+                  checked={true}
+                  disabled={true}
                 />
                 <label htmlFor="remember" className="form__checkbox text">
                   Remember me
                 </label>
               </div>
 
-              <a href="/" className="form__fp">
+              <Link to={"/forgot"} className="form__fp">
                 Forgot Password?
-              </a>
+              </Link>
             </div>
             <div className="form__auth">
               <button
                 type="submit"
                 className="form__btn"
                 onClick={handleLogin}
-                disabled={loading}
+                disabled={
+                  loading ||
+                  email.trim().length < 1 ||
+                  password.trim().length < 1
+                }
+                style={{
+                  cursor:
+                    loading ||
+                    email.trim().length < 1 ||
+                    password.trim().length < 1
+                      ? "not-allowed"
+                      : "",
+                  backgroundColor:
+                    loading ||
+                    email.trim().length < 1 ||
+                    password.trim().length < 1
+                      ? "#ccc"
+                      : "#087c8f",
+                }}
               >
                 {loading ? (
                   <BeatLoader color="#fff" loading={true} size={10} />
@@ -189,9 +212,9 @@ const LoginForm = () => {
               </div>
             </div>
           </form>
-          <Toaster position="top-right" />
         </div>
       </div>
+      <Toaster position="top-right" />
     </div>
   );
 };

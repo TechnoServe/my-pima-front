@@ -56,10 +56,71 @@ const Tstabtable = ({ trainingSessions }) => {
       sortable: true,
     },
     {
+      id: "has_image",
+      name: "Has Image?",
+      selector: (row) => (
+        <div>
+          {row.has_image ? (
+            <Chip label={"Yes"} color="success" variant="outlined" />
+          ) : (
+            <Chip label={"No"} color="error" variant="outlined" />
+          )}
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      id: "is_verified",
+      name: "Is Session Verified?",
+      selector: (row) => (
+        <div>
+          {row.is_verified ? (
+            <Chip label={"Yes"} color="success" variant="outlined" />
+          ) : (
+            <Chip label={"No"} color="error" variant="outlined" />
+          )}
+        </div>
+      ),
+      sortable: true,
+    },
+    {
+      id: "validation_status",
+      name: "Validation Status",
+      grow: 2,
+      selector: (row) => (
+        <div>
+          {!row.is_verified ? (
+            <Chip
+              label={"Not Verified"}
+              color="secondary"
+              variant="outlined"
+              title={"Not Verified"}
+            />
+          ) : row.is_verified && row.validation_status ? (
+            <Chip
+              label={"Verified"}
+              color="success"
+              variant="outlined"
+              title={"Verified"}
+            />
+          ) : (
+            <Chip
+              label={"Rejected"}
+              color="error"
+              variant="outlined"
+              title={"Rejected"}
+            />
+          )}
+        </div>
+      ),
+      sortable: true,
+    },
+    {
       id: "session_date",
       name: "Session Date",
       selector: (row) => row.session_date,
       sortable: true,
+      grow: 2,
     },
   ];
 
@@ -72,10 +133,13 @@ const Tstabtable = ({ trainingSessions }) => {
         ts_name: trainingSession.ts_name,
         ts_module: trainingSession.ts_module,
         tns_id: trainingSession.tns_id || "N/A",
-        farmer_trainer: trainingSession.farmer_trainer || 'N/A',
+        farmer_trainer: trainingSession.farmer_trainer || "N/A",
         ts_status: trainingSession.ts_status,
         total_males: trainingSession.total_males,
         total_females: trainingSession.total_females,
+        has_image: trainingSession.has_image,
+        is_verified: trainingSession.is_verified,
+        validation_status: trainingSession.validation_status,
         session_date: trainingSession.session_date || "N/A",
       }))
     : [];

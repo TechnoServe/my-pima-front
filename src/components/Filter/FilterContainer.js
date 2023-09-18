@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { HiFilter } from "react-icons/hi";
 import { styled } from "@mui/material/styles";
@@ -23,15 +23,35 @@ const FilterContainer = ({
   setFilteredGroups,
   setFilteredSessions,
   data,
+  tableRowItem,
 }) => {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleReset = () => {
+    setFilter({
+      businessAdvisor: "",
+      farmerTrainer: "",
+      moduleName: "",
+      sessionDate: "",
+      sessionApproval: "",
+    });
+
+    setFilteredGroups && setFilteredGroups([]);
+    setFilteredSessions && setFilteredSessions([]);
+  };
+
+  useEffect(() => {
+    // if tableRowItem changes, reset filter
+    handleReset();
+  }, [tableRowItem]);
 
   return (
     <>
@@ -51,6 +71,7 @@ const FilterContainer = ({
         <FilterContent
           open={open}
           handleClose={handleClose}
+          handleReset={handleReset}
           filter={filter}
           setFilter={setFilter}
           setFilteredGroups={setFilteredGroups}

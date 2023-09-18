@@ -39,7 +39,7 @@ const AuthProvider = ({ children }) => {
 
           if (response.data.verifyToken.status === 200) {
             navigate(
-              location.pathname === "/login" ? "/dashboard" : location.pathname
+              location.pathname === "/login" ? "/in/dashboard" : location.pathname
             );
           } else {
             navigate("/login");
@@ -84,7 +84,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("my-pima-token", token);
         setUser(userData);
 
-        navigate("/account");
+        navigate("/in/dashboard");
       }
 
       return response;
@@ -112,7 +112,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("my-pima-token", token);
         setUser(userData);
 
-        navigate("/dashboard");
+        navigate("/in/dashboard");
       }
 
       return response;

@@ -15,11 +15,7 @@ const Styles = {
   maxWidth: "80%",
 };
 
-const Tgdetail = ({
-  trainingGroups,
-  trainingSessions,
-  participants,
-}) => {
+const Tgdetail = ({ trainingGroups, trainingSessions, participants }) => {
   const breadCrumbs = "Training group";
 
   const [farmVisitsPerGroup, setFarmVisitsPerGroup] = useState([]); // eslint-disable-line no-unused-vars

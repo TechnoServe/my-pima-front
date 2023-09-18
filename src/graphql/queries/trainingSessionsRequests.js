@@ -15,6 +15,7 @@ const GET_TRAINING_SESSIONS_PER_PROJECT = gql`
         ts_status
         total_males
         total_females
+        has_image
         is_verified
         validation_status
         session_date
@@ -36,6 +37,7 @@ const GET_TRAINING_SESSIONS_PER_GROUP = gql`
         ts_status
         total_males
         total_females
+        has_image
         is_verified
         validation_status
         session_date

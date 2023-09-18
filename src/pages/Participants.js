@@ -43,12 +43,7 @@ const Participants = ({
     {
       id: "training_group",
       name: "Training Group",
-      selector: (row) =>
-        trainingGroups
-          ? trainingGroups.find((tg) => tg.tg_id === row.tg_id)
-            ? trainingGroups.find((tg) => tg.tg_id === row.tg_id).tg_name
-            : "N/A"
-          : "N/A",
+      selector: (row) => row.training_group,
       sortable: true,
     },
     {
@@ -108,7 +103,10 @@ const Participants = ({
         gender: participant.gender,
         location: participant.location,
         tns_id: participant.tns_id,
-        training_group: participant.training_group,
+        training_group: trainingGroups
+          ? trainingGroups.find((tg) => tg.tg_id === participant.training_group)
+              .tg_name
+          : "N/A",
         household_id: participant.household_id,
         primary_household_member: participant.primary_household_member,
         status: participant.status,

@@ -132,6 +132,8 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
       .then((res) => {
         setUploadResult(res.data.uploadParticipants);
         setIsProcessing(false);
+
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
