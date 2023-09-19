@@ -38,8 +38,11 @@ const AuthProvider = ({ children }) => {
           });
 
           if (response.data.verifyToken.status === 200) {
+            setUser(JSON.parse(localStorage.getItem("myPimaUserData")));
             navigate(
-              location.pathname === "/login" ? "/in/dashboard" : location.pathname
+              location.pathname === "/login"
+                ? "/in/dashboard"
+                : location.pathname
             );
           } else {
             navigate("/login");

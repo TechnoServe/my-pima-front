@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "./SideNavbar";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Dashboard from "../../pages/Dashboard";
 import Profile from "../../pages/Profile";
 import TrainingGroup from "../../pages/TrainingGroup";
@@ -14,7 +14,7 @@ import {
   GET_ASSIGNED_PROJECTS,
   GET_PROJECT_STATISTICS,
 } from "../../graphql/queries/projectsRequests";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { Toaster, toast } from "react-hot-toast";
 import { GET_TRAINING_GROUPS_PER_PROJECT } from "../../graphql/queries/trainingGroupsRequests";
 import Tgdetail from "../../features/tgdetail/Tgdetail";
@@ -27,10 +27,13 @@ import { GET_FARM_VISITS_PER_PROJECT } from "../../graphql/queries/farmVisitsReq
 import LoaderPage from "../../pages/LoaderPage";
 import Management from "../../pages/Management";
 import { GET_ALL_ATTENDANCES } from "../../graphql/queries/attendancesRequests";
+import { useAuth } from "../../context/useAuth";
 
 const Navbar = () => {
   // get current path
+  const auth = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [allProjects, setAllProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [trainingGroups, setTrainingGroups] = useState([]);
@@ -43,11 +46,9 @@ const Navbar = () => {
     total_fts: 0,
   });
 
-  const { data, error, loading } = useQuery(GET_ASSIGNED_PROJECTS, {
-    variables: {
-      userId: JSON.parse(localStorage.getItem("myPimaUserData")).id,
-    },
-  });
+  const [getProjectsAssigned, { data, error, loading }] = useLazyQuery(
+    GET_ASSIGNED_PROJECTS
+  );
   const [selectedProject, setSelectedProject] = useState("");
   const favProject = localStorage.getItem("fav_project");
 
@@ -103,23 +104,47 @@ const Navbar = () => {
   }, [getAllProjects]);
 
   useEffect(() => {
-    if (data) {
-      setProjects(data.getProjectsAssigned.projects);
+    if (auth.user && auth.user.id) {
+      loadProjects(auth.user.id)
+        .then(() => {
+          setProjects(data.getProjectsAssigned.projects);
 
-      data.getProjectsAssigned.projects.length > 0 &&
-        setSelectedProject(
-          data.getProjectsAssigned.projects.find(
-            (project) => project.sf_project_id === favProject
-          )
-            ? favProject
-            : data.getProjectsAssigned.projects[0].sf_project_id
-        );
+          if (data && data.getProjectsAssigned.projects.length > 0) {
+            localStorage.setItem(
+              "fav_project",
+              data.getProjectsAssigned.projects.find(
+                (project) => project.sf_project_id === favProject
+              )
+                ? favProject
+                : data.getProjectsAssigned.projects[0].sf_project_id
+            );
+
+            setSelectedProject(
+              data.getProjectsAssigned.projects.find(
+                (project) => project.sf_project_id === favProject
+              )
+                ? favProject
+                : data.getProjectsAssigned.projects[0].sf_project_id
+            );
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      navigate("/login");
     }
 
     if (error) {
       toast.error(error.message);
     }
-  }, [data, error, favProject]);
+  }, [auth.user, data, error, favProject]);
+
+  const loadProjects = async (userId) => {
+    await getProjectsAssigned({
+      variables: { userId: userId },
+    });
+  };
 
   useEffect(() => {
     if (trainingGroupsPerProject.data) {
