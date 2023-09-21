@@ -125,7 +125,7 @@ const AssignModal = ({ open, handleClose, title, data, selectedProject }) => {
       const { data } = await addProjectRole({
         variables: {
           userId: selectedUser,
-          projectId: selectedProject.project_id,
+          projectId: selectedProject,
           roleId: selectedRole,
         },
       });

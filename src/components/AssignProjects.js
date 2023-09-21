@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -33,15 +33,17 @@ const AssignProjects = ({ allProjects }) => {
         projectId: project.project_id,
       },
     });
+  };
 
+  useEffect(() => {
     if (data && data.getProjectRolesByProjectId) {
       const { project_role } = data.getProjectRolesByProjectId;
       setList(project_role);
-      setTitle(project.project_name);
-      setSelectedProject(project);
+      setTitle(project_role[0].project.project_name);
+      setSelectedProject(project_role[0].project.project_id);
       setOpen(true);
     }
-  };
+  }, [data]);
 
   return (
     <>
