@@ -58,22 +58,22 @@ const Partstableview = ({
             aria-label="basic tabs example"
             textColor="primary"
           >
-            <Tab label="TS Attendance History" {...a11yProps(0)} />
-            <Tab label="Farm Visit History" {...a11yProps(1)} />
+            <Tab label="Farm Visit History" {...a11yProps(0)} />
+            <Tab label="TS Attendance History" {...a11yProps(1)} />
           </Tabs>
         </Box>
 
         <CustomTabPanel value={value} index={0}>
-          <Attendtable
-            trainingSessions={trainingSessions}
-            participant={participant}
-          />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
           <FVTable
             trainingSessions={trainingSessions}
             participant={participant}
             farmVisitsPerPart={farmVisitsPerPart}
+          />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          <Attendtable
+            trainingSessions={trainingSessions}
+            participant={participant}
           />
         </CustomTabPanel>
       </Box>
