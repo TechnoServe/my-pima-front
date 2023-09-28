@@ -49,113 +49,132 @@ const FVQAModal = ({ open, handleClose, fvId }) => {
             }}
           />
         ) : getFarmVisitQAs.data?.getFVQAsByFarmVisits.status === 200 ? (
-          getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.questions.map(
-            (item, index) => (
-              <Accordion
-                style={{
-                  marginBottom: "1rem",
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<BsFillCaretDownFill />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "1rem",
+              }}
+            >
+              <Typography variant="subtitle1" color="text.secondary">
+                Best Practice Adopted?
+              </Typography>
+              <Chip
+                label={
+                  getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs
+                    .best_practice_adopted
+                }
+                variant="contained"
+                color="primary"
+              />
+            </div>
+            {getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.questions.map(
+              (item, index) => (
+                <Accordion
+                  style={{
+                    marginBottom: "1rem",
+                  }}
                 >
-                  <Typography>
-                    {`(${index + 1}) ${item}`}
-                    {getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.answers[
+                  <AccordionSummary
+                    expandIcon={<BsFillCaretDownFill />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography>
+                      {`(${index + 1}) ${item}`}
+                      {getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.answers[
+                        index
+                      ] &&
+                        /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/.test(
+                          getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs
+                            .answers[index]
+                        ) && (
+                          <Chip
+                            label="Image"
+                            variant="outlined"
+                            size="10"
+                            color="secondary"
+                            style={{
+                              marginLeft: "1rem",
+                            }}
+                          />
+                        )}
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    {!getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.answers[
                       index
-                    ] &&
-                      /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/.test(
+                    ] ? (
+                      "N/A"
+                    ) : /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/.test(
                         getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.answers[
                           index
                         ]
-                      ) && (
-                        <Chip
-                          label="Image"
-                          variant="outlined"
-                          size="10"
-                          color="secondary"
-                          style={{
-                            marginLeft: "1rem",
-                          }}
-                        />
-                      )}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {!getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.answers[
-                    index
-                  ] ? (
-                    "N/A"
-                  ) : /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/.test(
-                      getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.answers[
-                        index
-                      ]
-                    ) ? (
-                    <Box
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <img
-                        src={`data:image/png;base64,${getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.answers[index]}`}
-                        alt="img"
-                        style={{
-                          width: "100%",
-                          height: "auto",
-                        }}
-                      />
-                      <div
+                      ) ? (
+                      <Box
                         style={{
                           display: "flex",
-                          justifyContent: "space-between",
-                          width: "100%",
-                          marginTop: "1rem",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
                         }}
                       >
-                        <Button
-                          variant="contained"
-                          color="success"
-                          onClick={() =>
-                            handleApproveImage(
-                              getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs
-                                .answers[index]
-                            )
-                          }
+                        <img
+                          src={`data:image/png;base64,${getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.answers[index]}`}
+                          alt="img"
+                          style={{
+                            width: "100%",
+                            height: "auto",
+                          }}
+                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            width: "100%",
+                            marginTop: "1rem",
+                          }}
                         >
-                          <AiOutlineCheck />
-                          Approve
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          onClick={() =>
-                            handleRejectImage(
-                              getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs
-                                .answers[index]
-                            )
-                          }
-                        >
-                          <AiOutlineClose />
-                          Reject
-                        </Button>
-                      </div>
-                    </Box>
-                  ) : (
-                    <Typography variant="subtitle2">
-                      {getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs.answers[
-                        index
-                      ] ?? "N/A"}
-                    </Typography>
-                  )}
-                </AccordionDetails>
-              </Accordion>
-            )
-          )
+                          <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() =>
+                              handleApproveImage(
+                                getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs
+                                  .answers[index]
+                              )
+                            }
+                          >
+                            <AiOutlineCheck />
+                            Approve
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() =>
+                              handleRejectImage(
+                                getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs
+                                  .answers[index]
+                              )
+                            }
+                          >
+                            <AiOutlineClose />
+                            Reject
+                          </Button>
+                        </div>
+                      </Box>
+                    ) : (
+                      <Typography variant="subtitle2">
+                        {getFarmVisitQAs.data.getFVQAsByFarmVisits.fvQAs
+                          .answers[index] ?? "N/A"}
+                      </Typography>
+                    )}
+                  </AccordionDetails>
+                </Accordion>
+              )
+            )}
+          </>
         ) : (
           <Typography variant="body1" color="text.secondary">
             No Questions and Answers found for this Farm Visit
