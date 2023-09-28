@@ -9,6 +9,7 @@ import { FaFileExport } from "react-icons/fa";
 import { ExportToCsv } from "export-to-csv";
 import { downloadExcel } from "react-export-table-to-excel";
 import TimeZone from "../../utils/timezone";
+import FVQAModal from "../Modals/FVQAModal";
 
 const customStyles = {
   rows: {
@@ -72,10 +73,43 @@ const Table = ({
     if (tableRowItem !== "farmvisit") {
       navigate(`/in/${tableRowItem}/${id}`);
     }
+
+    if (tableRowItem === "farmvisit") {
+      setFvId(row.fv_id);
+      handleOpenModal();
+    }
   };
 
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [fvId, setFvId] = useState(null);
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  // Sample data for questions and answers
+  const qa_data = [
+    {
+      id: 1,
+      userAvatar: "user1.jpg",
+      question: "What is your name?",
+      answerType: "text",
+      answer: "My name is John Doe",
+    },
+    {
+      id: 2,
+      userAvatar: "user2.jpg",
+      question: "Can you show me a picture of your dog?",
+      answerType: "image",
+      answer: "dog.jpg",
+    },
+  ];
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -272,6 +306,8 @@ const Table = ({
           )
         }
       />
+
+      <FVQAModal open={modalOpen} handleClose={handleCloseModal} fvId={fvId} />
     </div>
   );
 };

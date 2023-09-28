@@ -63,8 +63,26 @@ const GET_FARM_VISITS_PER_PART = gql`
   }
 `;
 
+const GET_FARM_VISIT_QAs = gql`
+  query FvQAs($fvId: String!) {
+    getFVQAsByFarmVisits(fv_id: $fvId) {
+      message
+      status
+      fvQAs {
+        bp_id
+        fv_id
+        practice_name
+        questions
+        answers
+        best_practice_adopted
+      }
+    }
+  }
+`;
+
 export {
   GET_FARM_VISITS_PER_PROJECT,
   GET_FARM_VISITS_PER_TG,
   GET_FARM_VISITS_PER_PART,
+  GET_FARM_VISIT_QAs,
 };
