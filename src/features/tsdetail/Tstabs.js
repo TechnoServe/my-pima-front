@@ -4,6 +4,7 @@ import { Typography, Tabs, Tab, Box } from "@mui/material";
 import Tstabdetail from "./Tstabdetail";
 import { a11yProps } from "../tgdetail/Tgtabs";
 import TsBestPractices from "./TsBestPractices";
+import FvTabTable from "../tgdetail/fvtabtable";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -31,7 +32,7 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-const Tstabs = ({ details }) => {
+const Tstabs = ({ details, farmVisits }) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -42,13 +43,10 @@ const Tstabs = ({ details }) => {
     <div>
       <Box sx={{ width: "100%", marginTop: "20px" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="session tabs"
-          >
+          <Tabs value={value} onChange={handleChange} aria-label="session tabs">
             <Tab label="Details" {...a11yProps(0)} />
-            <Tab label="Best Practices" {...a11yProps(1)} />
+            <Tab label="Farm Visits" {...a11yProps(1)} />
+            <Tab label="Best Practices" {...a11yProps(2)} />
           </Tabs>
         </Box>
 
@@ -57,6 +55,10 @@ const Tstabs = ({ details }) => {
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>
+          <FvTabTable farmVisits={farmVisits} />
+        </CustomTabPanel>
+
+        <CustomTabPanel value={value} index={2}>
           <TsBestPractices details={details} />
         </CustomTabPanel>
       </Box>

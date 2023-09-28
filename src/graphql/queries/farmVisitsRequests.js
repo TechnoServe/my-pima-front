@@ -42,6 +42,27 @@ const GET_FARM_VISITS_PER_TG = gql`
   }
 `;
 
+const GET_FARM_VISITS_PER_TS = gql`
+  query GetFarmVisitsBySession($tsId: String!) {
+    getFarmVisitsBySession(ts_id: $tsId) {
+      message
+      status
+      farmVisits {
+        fv_id
+        fv_name
+        training_group
+        training_session
+        tns_id
+        farm_visited
+        household_id
+        farmer_trainer
+        has_training
+        date_visited
+      }
+    }
+  }
+`;
+
 const GET_FARM_VISITS_PER_PART = gql`
   query GetFarmVisitsByParticipant($partId: String!) {
     getFarmVisitsByParticipant(part_id: $partId) {
@@ -83,6 +104,7 @@ const GET_FARM_VISIT_QAs = gql`
 export {
   GET_FARM_VISITS_PER_PROJECT,
   GET_FARM_VISITS_PER_TG,
+  GET_FARM_VISITS_PER_TS,
   GET_FARM_VISITS_PER_PART,
   GET_FARM_VISIT_QAs,
 };

@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumbs";
 import Tstabs from "./Tstabs";
+import { useQuery } from "@apollo/client";
+import { GET_FARM_VISITS_PER_TS } from "../../graphql/queries/farmVisitsRequests";
 
 const Styles = {
   marginTop: "15px",
@@ -13,13 +15,27 @@ const Styles = {
 const Tsdetail = ({ trainingSessions }) => {
   const breadCrumbs = "Training session";
 
+  const [farmVisitsPerSession, setFarmVisitsPerSession] = useState([]); // eslint-disable-line no-unused-vars
+
   // get params from url
   const params = useParams();
   const { id } = params;
 
+  const getAllFarmVisitsByTS = useQuery(GET_FARM_VISITS_PER_TS, {
+    variables: { tsId: id },
+  });
+
   const selectedTrainingSession =
     trainingSessions && trainingSessions.find((group) => group.ts_id === id);
   const breadCrumbsLinkTo = "trainsession";
+
+  useEffect(() => {
+    if (getAllFarmVisitsByTS.data) {
+      const farmVisits =
+        getAllFarmVisitsByTS.data.getFarmVisitsBySession.farmVisits;
+      setFarmVisitsPerSession(farmVisits);
+    }
+  }, [getAllFarmVisitsByTS.data]);
 
   return (
     <div>
@@ -40,7 +56,10 @@ const Tsdetail = ({ trainingSessions }) => {
             </p>
           </div>
 
-          <Tstabs details={selectedTrainingSession} />
+          <Tstabs
+            details={selectedTrainingSession}
+            farmVisits={farmVisitsPerSession}
+          />
         </>
       )}
     </div>
