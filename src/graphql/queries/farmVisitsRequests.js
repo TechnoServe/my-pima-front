@@ -85,20 +85,21 @@ const GET_FARM_VISITS_PER_PART = gql`
 `;
 
 const GET_FARM_VISIT_QAs = gql`
-  query FvQAs($fvId: String!) {
-    getFVQAsByFarmVisits(fv_id: $fvId) {
-      message
-      status
-      fvQAs {
-        bp_id
-        fv_id
+query GetFVQAsByFarmVisits($fvId: String!) {
+  getFVQAsByFarmVisits(fv_id: $fvId) {
+    message
+    status
+    fvQAs {
+      bp_id
+      fv_id
+      qas {
         practice_name
         questions
         answers
-        best_practice_adopted
       }
     }
   }
+}
 `;
 
 export {

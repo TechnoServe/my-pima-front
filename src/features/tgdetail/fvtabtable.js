@@ -2,7 +2,7 @@ import React from "react";
 import { Chip } from "@mui/material";
 import Table from "../../components/Table/Table";
 
-const FvTabTable = ({ farmVisits }) => {
+const FvTabTable = ({ details, farmVisits }) => {
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
@@ -89,7 +89,12 @@ const FvTabTable = ({ farmVisits }) => {
 
   return (
     <div>
-      <Table columns={columns} data={rows} tableRowItem={tableRowItem} />
+      <Table
+        columns={columns}
+        data={rows}
+        tableRowItem={tableRowItem}
+        details={details}
+      />
     </div>
   );
 };

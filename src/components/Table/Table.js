@@ -42,8 +42,11 @@ const Table = ({
   setFilteredSessions,
   tableRowItem,
   allAttendances,
+  details,
 }) => {
   const pathName = tableRowItem || window.location.pathname.split("/")[2];
+
+  const [rowDetails, setRowDetails] = useState(null);
 
   const filename =
     pathName === "traingroup"
@@ -59,6 +62,8 @@ const Table = ({
   const navigate = useNavigate();
 
   const handleRowClick = (row) => {
+    setRowDetails(row);
+
     const id =
       tableRowItem === "trainsession"
         ? row.ts_id
@@ -92,24 +97,6 @@ const Table = ({
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-
-  // Sample data for questions and answers
-  const qa_data = [
-    {
-      id: 1,
-      userAvatar: "user1.jpg",
-      question: "What is your name?",
-      answerType: "text",
-      answer: "My name is John Doe",
-    },
-    {
-      id: 2,
-      userAvatar: "user2.jpg",
-      question: "Can you show me a picture of your dog?",
-      answerType: "image",
-      answer: "dog.jpg",
-    },
-  ];
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -307,7 +294,13 @@ const Table = ({
         }
       />
 
-      <FVQAModal open={modalOpen} handleClose={handleCloseModal} fvId={fvId} />
+      <FVQAModal
+        open={modalOpen}
+        handleClose={handleCloseModal}
+        fvId={fvId}
+        details={details}
+        rowDetails={rowDetails}
+      />
     </div>
   );
 };
