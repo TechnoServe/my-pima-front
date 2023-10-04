@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,10 +16,14 @@ import {
   ListItemText,
 } from "@mui/material";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
-import { useQuery } from "@apollo/client";
-import { GET_FARM_VISIT_QAs } from "../../graphql/queries/farmVisitsRequests";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  GET_FARM_VISIT_QAs,
+  UPDATE_QA_IMAGE,
+} from "../../graphql/queries/farmVisitsRequests";
 import { BeatLoader } from "react-spinners";
 import { BsFillCaretDownFill } from "react-icons/bs";
+import toast from "react-hot-toast";
 
 const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
   const [approvedImages, setApprovedImages] = useState([]);
@@ -29,6 +33,8 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
     variables: { fvId: fvId },
   });
 
+  const [updateQAImage] = useMutation(UPDATE_QA_IMAGE);
+
   const handleApproveImage = (imageURL) => {
     setApprovedImages((prevImages) => [...prevImages, imageURL]);
   };
@@ -36,6 +42,30 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
   const handleRejectImage = (imageURL) => {
     setRejectedImages((prevImages) => [...prevImages, imageURL]);
   };
+
+  const handleImageStatus = async (bpId, practiceName, status) => {
+    // if practiceName is more than one word, remove the spaces
+
+    const practiceNameNoSpace = practiceName.replace(/\s/g, "");
+
+    await updateQAImage({
+      variables: {
+        bpId: bpId,
+        fieldName: practiceNameNoSpace,
+        imageStatus: status,
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (updateQAImage.data?.updateFVQAImageStatus.status === 200) {
+      toast.success("Image Status Updated Successfully");
+    } else if (updateQAImage.data?.updateFVQAImageStatus.status === 400) {
+      toast.error("Image Status Update Failed");
+    } else if (updateQAImage.data?.updateFVQAImageStatus.status === 500) {
+      toast.error("Server Error");
+    }
+  }, [updateQAImage.data]);
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -136,96 +166,141 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                   <Chip label={qa.practice_name} color="primary" />
                 </div>
                 {qa.questions.length > 0 ? (
-                  qa.questions.map((item, index) => (
-                    <Accordion
-                      style={{
-                        marginBottom: "1rem",
-                      }}
-                      key={index}
-                    >
-                      <AccordionSummary
-                        expandIcon={<BsFillCaretDownFill />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                      >
-                        <Typography>
-                          {`(${index + 1}) ${item}`}
-                          {qa.answers[index] &&
-                            /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/.test(
-                              qa.answers[index]
-                            ) && (
-                              <Chip
-                                label="Image"
-                                variant="outlined"
-                                size="10"
-                                color="secondary"
-                                style={{
-                                  marginLeft: "1rem",
-                                }}
-                              />
-                            )}
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {!qa.answers[index] ? (
-                          "N/A"
-                        ) : /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/.test(
-                            qa.answers[index]
-                          ) ? (
-                          <Box
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
+                  qa.questions.map(
+                    (item, index) =>
+                      item !== "Status of the photo" && (
+                        <Accordion
+                          style={{
+                            marginBottom: "1rem",
+                          }}
+                          key={index}
+                        >
+                          <AccordionSummary
+                            expandIcon={<BsFillCaretDownFill />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
                           >
-                            <img
-                              src={`data:image/png;base64,${qa.answers[index]}`}
-                              alt="img"
-                              style={{
-                                width: "100%",
-                                height: "auto",
-                              }}
-                            />
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                width: "100%",
-                                marginTop: "1rem",
-                              }}
-                            >
-                              <Button
-                                variant="contained"
-                                color="success"
-                                onClick={() =>
-                                  handleApproveImage(qa.answers[index])
-                                }
+                            <Typography>
+                              {`(${index + 1}) ${item}`}
+                              {qa.answers[index] &&
+                                /^(data:image\/[a-zA-Z+]+;base64,)[\w/+=]+$/.test(
+                                  qa.answers[index]
+                                ) && (
+                                  <Chip
+                                    label="Image"
+                                    variant="outlined"
+                                    size="10"
+                                    color="secondary"
+                                    style={{
+                                      marginLeft: "1rem",
+                                    }}
+                                  />
+                                )}
+                              {
+                                // if image is approved or rejected, show chip
+                                qa.answers[index + 1] === "approved" ? (
+                                  <Chip
+                                    label="Approved"
+                                    variant="outlined"
+                                    size="10"
+                                    color="success"
+                                    style={{
+                                      marginLeft: "1rem",
+                                    }}
+                                  />
+                                ) : qa.answers[index + 1] === "rejected" ? (
+                                  <Chip
+                                    label="Rejected"
+                                    variant="outlined"
+                                    size="10"
+                                    color="error"
+                                    style={{
+                                      marginLeft: "1rem",
+                                    }}
+                                  />
+                                ) : null
+                              }
+                            </Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            {!qa.answers[index] ? (
+                              "N/A"
+                            ) : /^(data:image\/[a-zA-Z+]+;base64,)[\w/+=]+$/.test(
+                                qa.answers[index]
+                              ) ? (
+                              <Box
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                }}
                               >
-                                <AiOutlineCheck />
-                                Approve
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="error"
-                                onClick={() =>
-                                  handleRejectImage(qa.answers[index])
+                                <img
+                                  src={qa.answers[index]}
+                                  alt="img"
+                                  style={{
+                                    width: "100%",
+                                    height: "auto",
+                                  }}
+                                />
+                                {
+                                  // if image is approved or rejected, don't show the buttons
+                                  !(
+                                    qa.answers[index + 1] === "approved" ||
+                                    qa.answers[index + 1] === "rejected"
+                                  ) && (
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        width: "100%",
+                                        marginTop: "1rem",
+                                      }}
+                                    >
+                                      <Button
+                                        variant="contained"
+                                        color="success"
+                                        onClick={() =>
+                                          handleImageStatus(
+                                            getFarmVisitQAs.data
+                                              .getFVQAsByFarmVisits.fvQAs.bp_id,
+                                            qa.practice_name,
+                                            "approved"
+                                          )
+                                        }
+                                      >
+                                        <AiOutlineCheck />
+                                        Approve
+                                      </Button>
+                                      <Button
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() =>
+                                          handleImageStatus(
+                                            getFarmVisitQAs.data
+                                              .getFVQAsByFarmVisits.fvQAs.bp_id,
+                                            qa.practice_name,
+                                            "rejected"
+                                          )
+                                        }
+                                      >
+                                        <AiOutlineClose />
+                                        Reject
+                                      </Button>
+                                    </div>
+                                  )
                                 }
-                              >
-                                <AiOutlineClose />
-                                Reject
-                              </Button>
-                            </div>
-                          </Box>
-                        ) : (
-                          <Typography variant="subtitle2">
-                            {qa.answers[index] ?? "N/A"}
-                          </Typography>
-                        )}
-                      </AccordionDetails>
-                    </Accordion>
-                  ))
+                              </Box>
+                            ) : (
+                              <Typography variant="subtitle2">
+                                {qa.answers[index] ?? "N/A"}
+                              </Typography>
+                            )}
+                          </AccordionDetails>
+                        </Accordion>
+                      )
+                  )
                 ) : (
                   <Typography
                     variant="caption"

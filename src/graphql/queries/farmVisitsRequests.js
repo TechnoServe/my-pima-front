@@ -85,21 +85,38 @@ const GET_FARM_VISITS_PER_PART = gql`
 `;
 
 const GET_FARM_VISIT_QAs = gql`
-query GetFVQAsByFarmVisits($fvId: String!) {
-  getFVQAsByFarmVisits(fv_id: $fvId) {
-    message
-    status
-    fvQAs {
-      bp_id
-      fv_id
-      qas {
-        practice_name
-        questions
-        answers
+  query GetFVQAsByFarmVisits($fvId: String!) {
+    getFVQAsByFarmVisits(fv_id: $fvId) {
+      message
+      status
+      fvQAs {
+        bp_id
+        fv_id
+        qas {
+          practice_name
+          questions
+          answers
+        }
       }
     }
   }
-}
+`;
+
+const UPDATE_QA_IMAGE = gql`
+  mutation UpdateFVQAImageStatus(
+    $bpId: String!
+    $fieldName: FieldNames!
+    $imageStatus: Status!
+  ) {
+    updateFVQAImageStatus(
+      bp_id: $bpId
+      field_name: $fieldName
+      image_status: $imageStatus
+    ) {
+      message
+      status
+    }
+  }
 `;
 
 export {
@@ -108,4 +125,5 @@ export {
   GET_FARM_VISITS_PER_TS,
   GET_FARM_VISITS_PER_PART,
   GET_FARM_VISIT_QAs,
+  UPDATE_QA_IMAGE,
 };
