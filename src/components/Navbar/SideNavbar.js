@@ -40,11 +40,11 @@ const Sidebar = ({ children }) => {
       name: "Participants",
       icon: <MdOutlinePersonSearch />,
     },
-    // {
-    //   path: "/in/farmvisit",
-    //   name: "Farm Visits",
-    //   icon: <HiOutlineTruck />,
-    // },
+    {
+      path: "/in/farmvisit",
+      name: "Farm Visits",
+      icon: <HiOutlineTruck />,
+    },
     {
       path: "/in/manage",
       name: "Management",
