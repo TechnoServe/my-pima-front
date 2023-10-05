@@ -8,6 +8,8 @@ import ProjectTimeline from "../components/ProjectTimeline/ProjectTimeline";
 import { NavLink } from "react-router-dom";
 import ListUpModal from "../components/Modals/ListUpModal";
 import { useState } from "react";
+import { Grid } from "@mui/material";
+import RecentTrainingSessions from "../components/RecentTrainingSessions";
 
 const Dashboard = ({
   trainingGroups,
@@ -93,50 +95,58 @@ const Dashboard = ({
     <div>
       <h1 className="module__heading">Your Dashboard</h1>
 
-      <div
-        style={{
-          width: "100%",
-          marginBottom: "50px",
-          display: "flex",
-          flexWrap: "wrap",
-        }}
-      >
-        {statsData.map((data, index) => (
-          <div key={index}>
-            <NavLink
-              to={data.path ? data.path : null}
-              key={index}
-              onClick={(e) => (data.path ? null : openList(e, data.name))}
-            >
-              <Card
-                heading={data.heading}
-                figures={data.figures}
-                icon={data.icon}
-                color={data.color}
-              />
-            </NavLink>
+      <Grid container direction="row">
+        <Grid item xs={12} md={9}>
+          <div
+            style={{
+              width: "100%",
+              marginBottom: "50px",
+              display: "flex",
+              flexWrap: "wrap",
+            }}
+          >
+            {statsData.map((data, index) => (
+              <div key={index}>
+                <NavLink
+                  to={data.path ? data.path : null}
+                  key={index}
+                  onClick={(e) => (data.path ? null : openList(e, data.name))}
+                >
+                  <Card
+                    heading={data.heading}
+                    figures={data.figures}
+                    icon={data.icon}
+                    color={data.color}
+                  />
+                </NavLink>
+              </div>
+            ))}{" "}
           </div>
-        ))}{" "}
-      </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          marginTop: "20px",
-          position: "relative",
-        }}
-      >
-        <h2
-          style={{
-            width: "100%",
-            marginBottom: "30px",
-          }}
-        >
-          Project Timeline
-        </h2>
-        <ProjectTimeline events={eventData} />
-      </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              marginTop: "20px",
+              position: "relative",
+            }}
+          >
+            <h2
+              style={{
+                width: "100%",
+                marginBottom: "30px",
+              }}
+            >
+              Project Timeline
+            </h2>
+            <ProjectTimeline events={eventData} />
+          </div>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          {/* card containing list of training sessions of current month */}
+          <RecentTrainingSessions trainingSessions={trainingSessions} />
+        </Grid>
+      </Grid>
 
       <ListUpModal
         open={trainingGroups.length > 0 ? open : false}
