@@ -16,8 +16,8 @@ const GET_TRAINING_SESSIONS_PER_PROJECT = gql`
         total_males
         total_females
         has_image
+        session_image_status
         is_verified
-        validation_status
         session_date
       }
     }
@@ -38,8 +38,8 @@ const GET_TRAINING_SESSIONS_PER_GROUP = gql`
         total_males
         total_females
         has_image
+        session_image_status
         is_verified
-        validation_status
         session_date
       }
     }

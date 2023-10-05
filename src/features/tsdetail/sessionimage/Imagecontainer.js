@@ -62,14 +62,14 @@ const Imagecontainer = ({
     setIsExpanded((prev) => !prev);
   };
 
-  const handleSessionValidation = async (id, validation_status) => {
+  const handleSessionValidation = async (id, session_image_status) => {
     setIsLoading(true);
 
     try {
       await validateSession({
         variables: {
           tsId: id,
-          status: validation_status,
+          status: session_image_status,
         },
       });
 
@@ -116,7 +116,7 @@ const Imagecontainer = ({
         <DialogContent>
           <div style={{ position: "relative" }}>
             <img
-              src={`data:image/jpeg;base64,${sessionImageUrl}`}
+              src={sessionImageUrl}
               alt="session_pic"
               style={{
                 width: "100%",
@@ -158,18 +158,29 @@ const Imagecontainer = ({
           {!isVerified && (
             <>
               <StyledButton2
-                onClick={() => handleSessionValidation(id, "rejected")}
+                onClick={() => handleSessionValidation(id, "invalid")}
                 variant="outlined"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <BeatLoader size={8} color={"#fff"} loading={isLoading} />
                 ) : (
-                  "Reject"
+                  "Invalid"
+                )}
+              </StyledButton2>
+              <StyledButton2
+                onClick={() => handleSessionValidation(id, "unclear")}
+                variant="outlined"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <BeatLoader size={8} color={"#fff"} loading={isLoading} />
+                ) : (
+                  "UnClear"
                 )}
               </StyledButton2>
               <StyledButton
-                onClick={() => handleSessionValidation(id, "verified")}
+                onClick={() => handleSessionValidation(id, "approved")}
                 disabled={isLoading}
               >
                 {isLoading ? (

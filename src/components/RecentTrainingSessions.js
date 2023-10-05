@@ -26,7 +26,7 @@ const RecentTrainingSessions = ({ trainingSessions }) => {
                     (session) =>
                       session.session_date &&
                       new Date(session.session_date).getMonth() ===
-                        new Date().getMonth()
+                        new Date().getMonth() - 1
                   ).length
                 : 0
               : 0}{" "}
@@ -42,7 +42,7 @@ const RecentTrainingSessions = ({ trainingSessions }) => {
                   (session) =>
                     session.session_date &&
                     new Date(session.session_date).getMonth() ===
-                      new Date().getMonth()
+                      new Date().getMonth() - 1
                 )
                 .map((session, index) => (
                   <ListItem

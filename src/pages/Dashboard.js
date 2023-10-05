@@ -9,7 +9,6 @@ import { NavLink } from "react-router-dom";
 import ListUpModal from "../components/Modals/ListUpModal";
 import { useState } from "react";
 import { Grid } from "@mui/material";
-import RecentTrainingSessions from "../components/RecentTrainingSessions";
 
 const Dashboard = ({
   trainingGroups,
@@ -96,7 +95,7 @@ const Dashboard = ({
       <h1 className="module__heading">Your Dashboard</h1>
 
       <Grid container direction="row">
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12}>
           <div
             style={{
               width: "100%",
@@ -141,10 +140,6 @@ const Dashboard = ({
             </h2>
             <ProjectTimeline events={eventData} />
           </div>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          {/* card containing list of training sessions of current month */}
-          <RecentTrainingSessions trainingSessions={trainingSessions} />
         </Grid>
       </Grid>
 

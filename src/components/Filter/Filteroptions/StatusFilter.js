@@ -26,15 +26,30 @@ const StatusFilter = ({ setFilter }) => {
       <FormControlLabel
         control={
           <Switch
-            value="pending"
-            checked={selectedOption === "pending"}
+            value="invalid"
+            checked={selectedOption === "invalid"}
             onChange={handleToggleDropdown}
             size="small"
-            disabled={selectedOption && selectedOption !== "pending"}
+            disabled={selectedOption && selectedOption !== "invalid"}
           />
         }
         labelPlacement="start"
-        label="Pending Approval Session"
+        label="Invalid Images"
+        sx={{ margin: "0", marginTop: "20px" }}
+      />
+
+      <FormControlLabel
+        control={
+          <Switch
+            value="unclear"
+            checked={selectedOption === "unclear"}
+            onChange={handleToggleDropdown}
+            size="small"
+            disabled={selectedOption && selectedOption !== "unclear"}
+          />
+        }
+        labelPlacement="start"
+        label="UnClear Images"
         sx={{ margin: "0", marginTop: "20px" }}
       />
 
@@ -49,22 +64,7 @@ const StatusFilter = ({ setFilter }) => {
           />
         }
         labelPlacement="start"
-        label="Approved Session"
-        sx={{ margin: "0", marginTop: "20px" }}
-      />
-
-      <FormControlLabel
-        control={
-          <Switch
-            value="rejected"
-            checked={selectedOption === "rejected"}
-            onChange={handleToggleDropdown}
-            size="small"
-            disabled={selectedOption && selectedOption !== "rejected"}
-          />
-        }
-        labelPlacement="start"
-        label="Rejected Session"
+        label="Approved Images"
         sx={{ margin: "0", marginTop: "20px" }}
       />
     </div>

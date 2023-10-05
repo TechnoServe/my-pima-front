@@ -107,31 +107,24 @@ const TrainingSession = ({
       sortable: true,
     },
     {
-      id: "validation_status",
-      name: "Validation Status",
+      id: "session_image_status",
+      name: "Session Image Status",
       grow: 2,
       selector: (row) => (
         <div>
           {!row.is_verified ? (
             <Chip
-              label={"Not Verified"}
+              label={"not_verified"}
               color="secondary"
               variant="outlined"
-              title={"Not Verified"}
-            />
-          ) : row.is_verified && row.validation_status ? (
-            <Chip
-              label={"Verified"}
-              color="success"
-              variant="outlined"
-              title={"Verified"}
+              title={"not_verified"}
             />
           ) : (
             <Chip
-              label={"Rejected"}
-              color="error"
+              label={row.session_image_status}
+              color="success"
               variant="outlined"
-              title={"Rejected"}
+              title={row.session_image_status}
             />
           )}
         </div>
@@ -162,7 +155,7 @@ const TrainingSession = ({
         total_females: trainingSession.total_females,
         has_image: trainingSession.has_image,
         is_verified: trainingSession.is_verified,
-        validation_status: trainingSession.validation_status,
+        session_image_status: trainingSession.session_image_status,
         session_date: trainingSession.session_date,
       }))
     : [];

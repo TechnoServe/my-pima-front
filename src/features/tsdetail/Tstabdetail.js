@@ -110,14 +110,8 @@ const Tstabdetail = ({ details }) => {
               </div>
               <div className="ts__details-container1">
                 <Detailscontent
-                  heading={"Validation Status"}
-                  paragraph={
-                    details.is_verified && details.validation_status
-                      ? "Approved"
-                      : details.is_verified && !details.validation_status
-                      ? "Rejected"
-                      : "Not Verified"
-                  }
+                  heading={"Session Image Status"}
+                  paragraph={details.session_image_status}
                 />
                 <div style={{ paddingBottom: "20px" }}></div>
               </div>
@@ -158,7 +152,7 @@ const Tstabdetail = ({ details }) => {
               handleClose={handleClose}
               id={details.ts_id}
               isVerified={details.is_verified}
-              validationStatus={details.validation_status}
+              imageStatus={details.session_image_status}
               sessionImageUrl={session_image}
             />
           )}

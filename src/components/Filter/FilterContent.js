@@ -88,12 +88,8 @@ const FilterContent = ({
 
     if (filter.sessionApproval) {
       setFilteredSessions(
-        data.filter((session) =>
-          filter.sessionApproval === "pending"
-            ? !session.is_verified && !session.validation_status
-            : filter.sessionApproval === "approved"
-            ? session.is_verified && session.validation_status
-            : session.is_verified && !session.validation_status
+        data.filter(
+          (session) => session.session_image_status === filter.sessionApproval
         )
       );
 
