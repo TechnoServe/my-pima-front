@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -26,22 +26,11 @@ import { BsFillCaretDownFill } from "react-icons/bs";
 import toast from "react-hot-toast";
 
 const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
-  const [approvedImages, setApprovedImages] = useState([]);
-  const [rejectedImages, setRejectedImages] = useState([]);
-
   const getFarmVisitQAs = useQuery(GET_FARM_VISIT_QAs, {
     variables: { fvId: fvId },
   });
 
   const [updateQAImage] = useMutation(UPDATE_QA_IMAGE);
-
-  const handleApproveImage = (imageURL) => {
-    setApprovedImages((prevImages) => [...prevImages, imageURL]);
-  };
-
-  const handleRejectImage = (imageURL) => {
-    setRejectedImages((prevImages) => [...prevImages, imageURL]);
-  };
 
   const handleImageStatus = async (bpId, practiceName, status) => {
     // if practiceName is more than one word, remove the spaces
