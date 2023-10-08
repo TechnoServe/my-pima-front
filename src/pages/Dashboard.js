@@ -1,24 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "../features/cards/card";
-import { MdEventRepeat, MdGroups } from "react-icons/md";
+import { MdGroups } from "react-icons/md";
+import {VscFileSubmodule} from "react-icons/vsc";
 import { BsPersonBoundingBox } from "react-icons/bs";
 import { GiFarmer } from "react-icons/gi";
 import { FaTripadvisor } from "react-icons/fa";
-import ProjectTimeline from "../components/ProjectTimeline/ProjectTimeline";
 import { NavLink } from "react-router-dom";
 import ListUpModal from "../components/Modals/ListUpModal";
 import { useState } from "react";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
+import { Chrono } from "react-chrono";
+import { useQuery } from "@apollo/client";
+import { GET_TRAINING_MODULES_PER_PROJECT } from "../graphql/queries/trainingModulesRequests";
 
 const Dashboard = ({
   trainingGroups,
-  trainingSessions,
-  participants,
   projectStats,
+  selectedProject,
 }) => {
   const [open, setOpen] = useState(false);
   const [list, setList] = useState([]);
   const [title, setTitle] = useState("");
+  const [modules, setModules] = useState([]);
+
+  const getProjectModules = useQuery(GET_TRAINING_MODULES_PER_PROJECT, {
+    variables: { projectId: selectedProject },
+  });
 
   const statsData = [
     {
@@ -30,10 +37,30 @@ const Dashboard = ({
       path: "/in/traingroup",
     },
     {
-      name: "total_training_sessions",
-      heading: "Total Training Sessions",
-      figures: trainingSessions ? trainingSessions.length : 0,
-      icon: <MdEventRepeat />,
+      name: "total_training_modules",
+      heading: "Total Training Modules",
+      figures:
+        getProjectModules.data &&
+        getProjectModules.data.getTrainingModulesByProject &&
+        getProjectModules.data.getTrainingModulesByProject.status === 200
+          ? getProjectModules.data.getTrainingModulesByProject.training_modules
+              .length
+          : 0,
+      icon: <VscFileSubmodule />,
+      color: "#25245D",
+    },
+    {
+      name: "total_completed_training_modules",
+      heading: "Completed Modules",
+      figures:
+        getProjectModules.data &&
+        getProjectModules.data.getTrainingModulesByProject &&
+        getProjectModules.data.getTrainingModulesByProject.status === 200
+          ? getProjectModules.data.getTrainingModulesByProject.training_modules.map(
+              (module) => !module.tm_is_current
+            ).length
+          : 0,
+      icon: <VscFileSubmodule />,
       color: "#25245D",
       path: "/in/trainsession",
     },
@@ -63,13 +90,25 @@ const Dashboard = ({
     },
   ];
 
-  const eventData = [
-    { date: "2023-08-01", title: "Start of Project" },
-    { date: "2023-08-05", title: "Event 2" },
-    { date: "2023-08-11", title: "Event 3" },
-    { date: "2023-09-05", title: "Event 4" },
-    { date: "2023-11-15", title: "End of Project" },
-  ];
+  useEffect(() => {
+    if (
+      getProjectModules.data &&
+      getProjectModules.data.getTrainingModulesByProject &&
+      getProjectModules.data.getTrainingModulesByProject.status === 200
+    ) {
+      setModules(
+        getProjectModules.data.getTrainingModulesByProject.training_modules.map(
+          (t_module) => {
+            return {
+              title: t_module.tm_date || "No date",
+              cardTitle: t_module.tm_title,
+              cardSubtitle: `Module Number: ${t_module.tm_module_number}`,
+            };
+          }
+        )
+      );
+    }
+  }, [getProjectModules.data]);
 
   const openList = (e, name) => {
     e.preventDefault();
@@ -130,15 +169,42 @@ const Dashboard = ({
               position: "relative",
             }}
           >
-            <h2
+            <h4
               style={{
                 width: "100%",
                 marginBottom: "30px",
               }}
             >
-              Project Timeline
-            </h2>
-            <ProjectTimeline events={eventData} />
+              Project Modules Timeline
+            </h4>
+            {modules.length > 0 ? (
+              <div style={{ widht: "100%", height: "500px" }}>
+                <Chrono
+                  items={modules}
+                  mode="HORIZONTAL"
+                  allowDynamicUpdate={true}
+                  cardWidth={300}
+                  cardHeight={150}
+                  contentDetailsHeight={250}
+                  activeItemIndex={modules.length - 1}
+                  focusActiveItemOnLoad={true}
+                  cardPositionHorizontal="TOP"
+                  theme={{
+                    primary: "#087C8F",
+                    secondary: "#087C8F",
+                    cardBgColor: "#fff",
+                    cardForeColor: "#7D7F88",
+                    titleColor: "#7D7F88",
+                    titleColorActive: "#fff",
+                    subtitleColor: "#fff",
+                  }}
+                />
+              </div>
+            ) : (
+              <Typography variant="body1" color="textSecondary" align="center">
+                No modules found
+              </Typography>
+            )}
           </div>
         </Grid>
       </Grid>

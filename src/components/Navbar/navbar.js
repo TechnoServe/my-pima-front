@@ -283,6 +283,7 @@ const Navbar = () => {
                           trainingSessions={trainingSessions}
                           participants={participants}
                           projectStats={projectStats}
+                          selectedProject={selectedProject}
                         />
                       }
                     />
@@ -294,6 +295,7 @@ const Navbar = () => {
                           trainingSessions={trainingSessions}
                           participants={participants}
                           projectStats={projectStats}
+                          selectedProject={selectedProject}
                         />
                       }
                     />
