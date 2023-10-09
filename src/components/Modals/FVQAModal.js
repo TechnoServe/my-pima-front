@@ -24,8 +24,11 @@ import {
 import { BeatLoader } from "react-spinners";
 import { BsFillCaretDownFill } from "react-icons/bs";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
+  const navigate = useNavigate();
+
   const getFarmVisitQAs = useQuery(GET_FARM_VISIT_QAs, {
     variables: { fvId: fvId },
   });
@@ -54,6 +57,8 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
     } else if (updateQAImage.data?.updateFVQAImageStatus.status === 500) {
       toast.error("Server Error");
     }
+
+    navigate("/in/farmvisit");
   }, [updateQAImage.data]);
 
   return (
@@ -197,12 +202,22 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                                       marginLeft: "1rem",
                                     }}
                                   />
-                                ) : qa.answers[index + 1] === "rejected" ? (
+                                ) : qa.answers[index + 1] === "invalid" ? (
                                   <Chip
-                                    label="Rejected"
+                                    label="Invalid"
                                     variant="outlined"
                                     size="10"
                                     color="error"
+                                    style={{
+                                      marginLeft: "1rem",
+                                    }}
+                                  />
+                                ) : qa.answers[index + 1] === "unclear" ? (
+                                  <Chip
+                                    label="Unclear"
+                                    variant="outlined"
+                                    size="10"
+                                    color="warning"
                                     style={{
                                       marginLeft: "1rem",
                                     }}
@@ -237,7 +252,8 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                                   // if image is approved or rejected, don't show the buttons
                                   !(
                                     qa.answers[index + 1] === "approved" ||
-                                    qa.answers[index + 1] === "rejected"
+                                    qa.answers[index + 1] === "invalid" ||
+                                    qa.answers[index + 1] === "unclear"
                                   ) && (
                                     <div
                                       style={{
@@ -270,12 +286,27 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                                             getFarmVisitQAs.data
                                               .getFVQAsByFarmVisits.fvQAs.bp_id,
                                             qa.practice_name,
-                                            "rejected"
+                                            "invalid"
                                           )
                                         }
                                       >
                                         <AiOutlineClose />
-                                        Reject
+                                        Invalid
+                                      </Button>
+                                      <Button
+                                        variant="contained"
+                                        color="warning"
+                                        onClick={() =>
+                                          handleImageStatus(
+                                            getFarmVisitQAs.data
+                                              .getFVQAsByFarmVisits.fvQAs.bp_id,
+                                            qa.practice_name,
+                                            "unclear"
+                                          )
+                                        }
+                                      >
+                                        <AiOutlineClose />
+                                        Unclear
                                       </Button>
                                     </div>
                                   )
