@@ -74,11 +74,12 @@ const AuthProvider = ({ children }) => {
       });
 
       if (response.data.saveMailLogin.status === 200) {
+        console.log(response.data.saveMailLogin);
         const { token } = response.data.saveMailLogin;
 
         const userData = {
           id: response.data.saveMailLogin.user.user_id,
-          role: "admin",
+          role: response.data.saveMailLogin.user.role.role_name,
           username: response.data.saveMailLogin.user.user_name,
           email: response.data.saveMailLogin.user.user_email,
         };
@@ -105,7 +106,7 @@ const AuthProvider = ({ children }) => {
       if (response.data.saveGoogleLogin.status === 200) {
         const userData = {
           id: response.data.saveGoogleLogin.user.user_id,
-          role: "admin",
+          role: response.data.saveGoogleLogin.user.role.role_name,
           username: response.data.saveGoogleLogin.user.user_name,
           email: response.data.saveGoogleLogin.user.user_email,
         };

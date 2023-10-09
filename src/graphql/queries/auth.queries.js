@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 const LOGIN_MUTATION = gql`
   mutation SaveMailLogin($email: String!, $password: String!) {
@@ -9,11 +9,16 @@ const LOGIN_MUTATION = gql`
         user_id
         user_name
         user_email
+        role {
+          role_id
+          role_name
+          permissions
+        }
       }
       token
     }
   }
-`
+`;
 
 const VERIFY_GOOGLE_AUTH_MUTATION = gql`
   mutation VerifyGoogleAuth($credential: String!) {
@@ -24,11 +29,16 @@ const VERIFY_GOOGLE_AUTH_MUTATION = gql`
         user_id
         user_name
         user_email
+        role {
+          role_id
+          role_name
+          permissions
+        }
       }
       token
     }
   }
-`
+`;
 
 const VERIFY_SAVED_TOKEN_MUTATION = gql`
   mutation VerifySavedToken($token: String!) {
@@ -37,6 +47,10 @@ const VERIFY_SAVED_TOKEN_MUTATION = gql`
       status
     }
   }
-`
+`;
 
-export { LOGIN_MUTATION, VERIFY_GOOGLE_AUTH_MUTATION, VERIFY_SAVED_TOKEN_MUTATION }
+export {
+  LOGIN_MUTATION,
+  VERIFY_GOOGLE_AUTH_MUTATION,
+  VERIFY_SAVED_TOKEN_MUTATION,
+};

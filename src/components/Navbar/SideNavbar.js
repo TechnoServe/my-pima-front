@@ -11,6 +11,7 @@ import { HiOutlineTruck, HiMenuAlt2 } from "react-icons/hi";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import Logo from "../Logo";
+import { Chip } from "@mui/material";
 
 /* Component */
 const Sidebar = ({ children }) => {
@@ -56,6 +57,7 @@ const Sidebar = ({ children }) => {
       path: "/in/profile",
       name: userDetails && (userDetails.username || "N/A"),
       email: userDetails && (userDetails.email || "N/A"),
+      role_name: userDetails && (userDetails.role || "N/A"),
       icon: <MdOutlinePersonSearch />,
     },
     {
@@ -117,6 +119,10 @@ const Sidebar = ({ children }) => {
             to={bottomitem[0].path}
             className="link"
             activeclassname="active"
+            onClick={(e) => e.preventDefault()}
+            style={{
+              cursor: "default",
+            }}
           >
             <div>{bottomitem[0].icon}</div>
             <div>
@@ -131,6 +137,33 @@ const Sidebar = ({ children }) => {
                 className="profile__text"
               >
                 {bottomitem[0].email}
+              </div>
+              <div
+                style={{
+                  display: isOpen ? "block" : "none",
+                  marginTop: "10px",
+                }}
+                className="profile__text"
+              >
+                <Chip
+                  label={
+                    bottomitem[0].role_name
+                      ? bottomitem[0].role_name.includes("_")
+                        ? bottomitem[0].role_name
+                            .split("_")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            )
+                            .join(" ")
+                        : bottomitem[0].role_name.charAt(0).toUpperCase() +
+                          bottomitem[0].role_name.slice(1)
+                      : "N/A"
+                  }
+                  variant="contained"
+                  size="small"
+                  color="secondary"
+                />
               </div>
             </div>
           </NavLink>
