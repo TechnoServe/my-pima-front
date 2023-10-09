@@ -43,6 +43,7 @@ const Table = ({
   tableRowItem,
   allAttendances,
   details,
+  selectedProject
 }) => {
   const pathName = tableRowItem || window.location.pathname.split("/")[2];
 
@@ -232,6 +233,7 @@ const Table = ({
             setFilteredSessions={setFilteredSessions}
             data={data}
             tableRowItem={tableRowItem}
+            selectedProject={selectedProject}
           />
         )}
       </div>

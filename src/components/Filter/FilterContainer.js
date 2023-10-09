@@ -24,6 +24,7 @@ const FilterContainer = ({
   setFilteredSessions,
   data,
   tableRowItem,
+  selectedProject
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -77,6 +78,7 @@ const FilterContainer = ({
           setFilteredGroups={setFilteredGroups}
           setFilteredSessions={setFilteredSessions}
           data={data}
+          selectedProject={selectedProject}
         />
       )}
     </>

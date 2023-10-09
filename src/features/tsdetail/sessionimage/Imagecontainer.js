@@ -52,6 +52,7 @@ const Imagecontainer = ({
   sessionImageUrl,
   id,
   isVerified,
+  imageStatus,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -155,7 +156,7 @@ const Imagecontainer = ({
         </DialogContent>
 
         <DialogActions>
-          {!isVerified && (
+          {(!isVerified || imageStatus === "not_verified") && (
             <>
               <StyledButton2
                 onClick={() => handleSessionValidation(id, "invalid")}

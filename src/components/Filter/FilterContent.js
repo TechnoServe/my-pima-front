@@ -41,6 +41,7 @@ const FilterContent = ({
   setFilteredGroups,
   setFilteredSessions,
   data,
+  selectedProject,
 }) => {
   const [activeTab, setActiveTab] = useState("");
 
@@ -338,6 +339,7 @@ const FilterContent = ({
                     setFilter={setFilter}
                     setFilteredSessions={setFilteredSessions}
                     data={data}
+                    selectedProject={selectedProject}
                   />
                 )}
                 {activeTab === "sessionDate" && (

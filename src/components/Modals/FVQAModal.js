@@ -52,13 +52,17 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
   useEffect(() => {
     if (updateQAImage.data?.updateFVQAImageStatus.status === 200) {
       toast.success("Image Status Updated Successfully");
+
+      navigate("/in/farmvisit");
     } else if (updateQAImage.data?.updateFVQAImageStatus.status === 400) {
       toast.error("Image Status Update Failed");
+
+      navigate("/in/farmvisit");
     } else if (updateQAImage.data?.updateFVQAImageStatus.status === 500) {
       toast.error("Server Error");
-    }
 
-    navigate("/in/farmvisit");
+      navigate("/in/farmvisit");
+    }
   }, [updateQAImage.data]);
 
   return (

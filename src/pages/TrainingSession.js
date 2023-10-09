@@ -7,6 +7,7 @@ const TrainingSession = ({
   filter,
   setFilter,
   setFilteredSessions,
+  selectedProject
 }) => {
   const columns = [
     {
@@ -170,6 +171,7 @@ const TrainingSession = ({
         filter={filter}
         setFilter={setFilter}
         setFilteredSessions={setFilteredSessions}
+        selectedProject={selectedProject}
       />
     </div>
   );
