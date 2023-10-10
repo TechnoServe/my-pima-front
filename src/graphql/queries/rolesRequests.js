@@ -16,4 +16,19 @@ const GET_ALL_ROLES = gql`
   }
 `;
 
-export { GET_ALL_ROLES };
+const GET_USER_ROLE = gql`
+  query GetRole($roleId: ID!) {
+    getRole(role_id: $roleId) {
+      message
+      status
+      role {
+        role_id
+        role_desc
+        role_name
+        role_status
+      }
+    }
+  }
+`;
+
+export { GET_ALL_ROLES, GET_USER_ROLE };

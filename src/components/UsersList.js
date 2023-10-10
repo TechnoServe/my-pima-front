@@ -114,6 +114,14 @@ const UsersList = ({ users, onSelect }) => {
                     variant="outlined"
                     sx={{ marginLeft: "10px" }}
                   />
+                  {user.account_status !== "active" && (
+                    <Chip
+                      label={user.account_status}
+                      color={"error"}
+                      variant="contained"
+                      sx={{ marginLeft: "5px" }}
+                    />
+                  )}
                 </Typography>
                 <Box
                   sx={{

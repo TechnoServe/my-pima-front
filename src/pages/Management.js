@@ -76,7 +76,7 @@ export default function Management({ allProjects }) {
         <Permissions />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <Users users={users} />
+        <Users users={users} setUsers={setUsers} />
       </CustomTabPanel>
     </Box>
   );

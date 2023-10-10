@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import UsersList from "../components/UsersList";
 import UsersForm from "../components/UsersForm";
 
-const Users = ({ users }) => {
+const Users = ({ users, setUsers }) => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   const handleUserSelect = (user) => {
@@ -11,8 +11,20 @@ const Users = ({ users }) => {
   };
 
   const handleUserSubmit = (user) => {
-    // Implement adding or modifying user logic and update the users state
-    // You can use the setUsers function
+    if (user.user_id) {
+      const updatedUsers = users.map((u) => {
+        if (u.user_id === user.user_id) {
+          return user;
+        }
+
+        return u;
+      });
+
+      setUsers(updatedUsers);
+    } else {
+      const newUsers = [...users, user];
+      setUsers(newUsers);
+    }
   };
 
   return (
