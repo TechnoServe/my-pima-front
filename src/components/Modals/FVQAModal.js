@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 
 const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const getFarmVisitQAs = useQuery(GET_FARM_VISIT_QAs, {
     variables: { fvId: fvId },
@@ -36,6 +37,8 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
   const [updateQAImage] = useMutation(UPDATE_QA_IMAGE);
 
   const handleImageStatus = async (bpId, practiceName, status) => {
+    setIsLoading(true);
+
     // if practiceName is more than one word, remove the spaces
 
     const practiceNameNoSpace = practiceName.replace(/\s/g, "");
@@ -46,24 +49,32 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
         fieldName: practiceNameNoSpace,
         imageStatus: status,
       },
-    });
+    })
+      .then((res) => {
+        if (res.data.updateFVQAImageStatus.status === 200) {
+          toast.success("Image Status Updated Successfully");
+
+          // reload the page after 3 seconds
+          setTimeout(() => {
+            setIsLoading(false);
+
+            window.location.reload();
+          }, 3000);
+        } else {
+          toast.error("Something went wrong");
+          setIsLoading(false);
+        }
+
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+
+        toast.error("Something went wrong");
+
+        setIsLoading(false);
+      });
   };
-
-  useEffect(() => {
-    if (updateQAImage.data?.updateFVQAImageStatus.status === 200) {
-      toast.success("Image Status Updated Successfully");
-
-      navigate("/in/farmvisit");
-    } else if (updateQAImage.data?.updateFVQAImageStatus.status === 400) {
-      toast.error("Image Status Update Failed");
-
-      navigate("/in/farmvisit");
-    } else if (updateQAImage.data?.updateFVQAImageStatus.status === 500) {
-      toast.error("Server Error");
-
-      navigate("/in/farmvisit");
-    }
-  }, [updateQAImage.data]);
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -278,9 +289,20 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                                             "approved"
                                           )
                                         }
+                                        disabled={isLoading}
                                       >
-                                        <AiOutlineCheck />
-                                        Approve
+                                        {isLoading ? (
+                                          <BeatLoader
+                                            size={8}
+                                            color={"#fff"}
+                                            loading={isLoading}
+                                          />
+                                        ) : (
+                                          <>
+                                            <AiOutlineCheck />
+                                            Approve
+                                          </>
+                                        )}
                                       </Button>
                                       <Button
                                         variant="contained"
@@ -293,9 +315,20 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                                             "invalid"
                                           )
                                         }
+                                        disabled={isLoading}
                                       >
-                                        <AiOutlineClose />
-                                        Invalid
+                                        {isLoading ? (
+                                          <BeatLoader
+                                            size={8}
+                                            color={"#fff"}
+                                            loading={isLoading}
+                                          />
+                                        ) : (
+                                          <>
+                                            <AiOutlineClose />
+                                            Invalid
+                                          </>
+                                        )}
                                       </Button>
                                       <Button
                                         variant="contained"
@@ -308,9 +341,20 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                                             "unclear"
                                           )
                                         }
+                                        disabled={isLoading}
                                       >
-                                        <AiOutlineClose />
-                                        Unclear
+                                        {isLoading ? (
+                                          <BeatLoader
+                                            size={8}
+                                            color={"#fff"}
+                                            loading={isLoading}
+                                          />
+                                        ) : (
+                                          <>
+                                            <AiOutlineClose />
+                                            Unclear
+                                          </>
+                                        )}
                                       </Button>
                                     </div>
                                   )
