@@ -6,6 +6,8 @@ import Users from "./Users";
 import Permissions from "./Permissions";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_USERS } from "../graphql/queries/usersRequests";
+import { GET_ALL_PERMISSIONS } from "../graphql/queries/permissionsRequests";
+import { GET_ALL_ROLES } from "../graphql/queries/rolesRequests";
 
 export function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -43,14 +45,32 @@ export function a11yProps(index) {
 export default function Management({ allProjects }) {
   const [value, setValue] = useState(0);
   const [users, setUsers] = useState([]);
+  const [permissions, setPermissions] = useState([]);
+  const [roles, setRoles] = useState([]);
 
   const getAllUsers = useQuery(GET_ALL_USERS);
+
+  const getAllPermissions = useQuery(GET_ALL_PERMISSIONS);
+
+  const getAllRoles = useQuery(GET_ALL_ROLES);
 
   useEffect(() => {
     if (getAllUsers.data) {
       setUsers(getAllUsers.data.getUsers.users);
     }
   }, [getAllUsers.data]);
+
+  useEffect(() => {
+    if (getAllPermissions.data) {
+      setPermissions(getAllPermissions.data.getPermissions.permissions);
+    }
+  }, [getAllPermissions.data]);
+
+  useEffect(() => {
+    if (getAllRoles.data) {
+      setRoles(getAllRoles.data.getRoles.roles);
+    }
+  }, [getAllRoles.data]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -73,7 +93,11 @@ export default function Management({ allProjects }) {
         <AssignProjects allProjects={allProjects} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <Permissions />
+        <Permissions
+          permissions={permissions}
+          roles={roles}
+          setRoles={setRoles}
+        />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <Users users={users} setUsers={setUsers} />

@@ -4,13 +4,7 @@ import RolesList from "../components/RolesList";
 import PermissionsList from "../components/PermissionsList";
 import { Grid } from "@mui/material";
 
-const roles = [
-  { name: "Admin", id: "admin" },
-  { name: "User", id: "user" },
-  // Add more roles as needed
-];
-
-const Permissions = () => {
+const Permissions = ({ permissions, roles, setRoles }) => {
   const [selectedRole, setSelectedRole] = useState(roles[0]);
 
   const handleRoleSelect = (role) => {
@@ -23,7 +17,12 @@ const Permissions = () => {
         <RolesList roles={roles} onSelectRole={handleRoleSelect} />
       </Grid>
       <Grid item xs={9}>
-        <PermissionsList role={selectedRole} />
+        <PermissionsList
+          roles={roles}
+          setRoles={setRoles}
+          role={selectedRole}
+          permissions={permissions}
+        />
       </Grid>
     </Grid>
   );

@@ -7,7 +7,7 @@ const RolesList = ({ roles, onSelectRole }) => {
 
   const handleRoleChange = (event, newValue) => {
     setSelectedRole(newValue);
-    onSelectRole(roles[newValue]); // Pass the selected role to the parent component
+    onSelectRole(roles[newValue]);
   };
 
   return (
@@ -18,7 +18,17 @@ const RolesList = ({ roles, onSelectRole }) => {
       onChange={handleRoleChange}
     >
       {roles.map((role, index) => (
-        <Tab key={index} label={role.name} />
+        <Tab
+          key={index}
+          label={role.role_name
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase())}
+          style={{
+            alignItems: "flex-start",
+            fontSize: ".8rem",
+          }}
+          title={role.role_desc}
+        />
       ))}
     </Tabs>
   );
