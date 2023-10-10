@@ -47,6 +47,7 @@ export default function Management({ allProjects }) {
   const [users, setUsers] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [roles, setRoles] = useState([]);
+  const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
 
   const getAllUsers = useQuery(GET_ALL_USERS);
 
@@ -77,31 +78,40 @@ export default function Management({ allProjects }) {
   };
 
   return (
-    <Box sx={{ width: "100%", marginTop: "20px" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="management tabs"
-        >
-          <Tab label="Assign Projects" {...a11yProps(0)} />
-          <Tab label="Assign Permissions" {...a11yProps(1)} />
-          <Tab label="Users" {...a11yProps(2)} />
-        </Tabs>
-      </Box>
-      <CustomTabPanel value={value} index={0}>
-        <AssignProjects allProjects={allProjects} />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <Permissions
-          permissions={permissions}
-          roles={roles}
-          setRoles={setRoles}
-        />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <Users users={users} setUsers={setUsers} />
-      </CustomTabPanel>
-    </Box>
+    <>
+      {userDetails.role !== "super_admin" &&
+      userDetails.role !== "ci_leadership" ? (
+        <Typography variant="h4" component="h2" sx={{ marginTop: "20px" }}>
+          You are not authorized to access this page.
+        </Typography>
+      ) : (
+        <Box sx={{ width: "100%", marginTop: "20px" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="management tabs"
+            >
+              <Tab label="Assign Projects" {...a11yProps(0)} />
+              <Tab label="Assign Permissions" {...a11yProps(1)} />
+              <Tab label="Users" {...a11yProps(2)} />
+            </Tabs>
+          </Box>
+          <CustomTabPanel value={value} index={0}>
+            <AssignProjects allProjects={allProjects} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            <Permissions
+              permissions={permissions}
+              roles={roles}
+              setRoles={setRoles}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={2}>
+            <Users users={users} setUsers={setUsers} />
+          </CustomTabPanel>
+        </Box>
+      )}
+    </>
   );
 }

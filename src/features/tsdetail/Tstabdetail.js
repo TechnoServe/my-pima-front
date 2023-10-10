@@ -21,7 +21,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const Tstabdetail = ({ details }) => {
+const Tstabdetail = ({ details, selectedProject }) => {
   const [open, setOpen] = useState(false);
   const [session_image, setSession_image] = useState(null);
   const { data, loading } = useQuery(GET_TRAINING_SESSION_IMAGE, {
@@ -154,6 +154,7 @@ const Tstabdetail = ({ details }) => {
               isVerified={details.is_verified}
               imageStatus={details.session_image_status}
               sessionImageUrl={session_image}
+              selectedProject={selectedProject}
             />
           )}
         </div>

@@ -9,8 +9,11 @@ import {
 import { MdClose, MdFullscreen, MdFullscreenExit } from "react-icons/md";
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
-import { useMutation } from "@apollo/client";
-import { VALIDATE_TRAINING_SESSION } from "../../../graphql/queries/trainingSessionsRequests";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  GET_TRAINING_SESSIONS_PER_PROJECT,
+  VALIDATE_TRAINING_SESSION,
+} from "../../../graphql/queries/trainingSessionsRequests";
 import { BeatLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
 
@@ -53,11 +56,20 @@ const Imagecontainer = ({
   id,
   isVerified,
   imageStatus,
+  selectedProject,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
 
   const [validateSession] = useMutation(VALIDATE_TRAINING_SESSION);
+
+  const trainingSessionsPerProject = useQuery(
+    GET_TRAINING_SESSIONS_PER_PROJECT,
+    {
+      variables: { sfProjectId: selectedProject },
+    }
+  );
 
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
@@ -74,13 +86,17 @@ const Imagecontainer = ({
         },
       });
 
-      toast.success("Session validated successfully");
+      // refetch training sessions
+      trainingSessionsPerProject
+        .refetch()
+        .then(() => {
+          toast.success("Session validated successfully");
+        })
+        .catch((error) => {
+          console.log(error);
 
-      // reload the page after 3 seconds
-      setTimeout(() => {
-        setIsLoading(false);
-        window.location.reload();
-      }, 3000);
+          toast.error("Error validating session");
+        });
     } catch (error) {
       console.log(error);
 
@@ -156,42 +172,48 @@ const Imagecontainer = ({
         </DialogContent>
 
         <DialogActions>
-          {(!isVerified || imageStatus === "not_verified") && (
-            <>
-              <StyledButton2
-                onClick={() => handleSessionValidation(id, "invalid")}
-                variant="outlined"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <BeatLoader size={8} color={"#fff"} loading={isLoading} />
-                ) : (
-                  "Invalid"
-                )}
-              </StyledButton2>
-              <StyledButton2
-                onClick={() => handleSessionValidation(id, "unclear")}
-                variant="outlined"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <BeatLoader size={8} color={"#fff"} loading={isLoading} />
-                ) : (
-                  "UnClear"
-                )}
-              </StyledButton2>
-              <StyledButton
-                onClick={() => handleSessionValidation(id, "approved")}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <BeatLoader size={8} color={"#fff"} loading={isLoading} />
-                ) : (
-                  "Approve"
-                )}
-              </StyledButton>
-            </>
-          )}
+          {(userDetails?.role === "super_admin" ||
+            userDetails?.role === "ci_leadership" ||
+            userDetails?.role === "senior_business_advisor" ||
+            userDetails?.role === "business_advisor" ||
+            userDetails?.role === "project_manager" ||
+            userDetails?.role === "farmer_trainer") &&
+            (!isVerified || imageStatus === "not_verified") && (
+              <>
+                <StyledButton2
+                  onClick={() => handleSessionValidation(id, "invalid")}
+                  variant="outlined"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <BeatLoader size={8} color={"#fff"} loading={isLoading} />
+                  ) : (
+                    "Invalid"
+                  )}
+                </StyledButton2>
+                <StyledButton2
+                  onClick={() => handleSessionValidation(id, "unclear")}
+                  variant="outlined"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <BeatLoader size={8} color={"#fff"} loading={isLoading} />
+                  ) : (
+                    "UnClear"
+                  )}
+                </StyledButton2>
+                <StyledButton
+                  onClick={() => handleSessionValidation(id, "approved")}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <BeatLoader size={8} color={"#fff"} loading={isLoading} />
+                  ) : (
+                    "Approve"
+                  )}
+                </StyledButton>
+              </>
+            )}
         </DialogActions>
       </Dialog>
     </>

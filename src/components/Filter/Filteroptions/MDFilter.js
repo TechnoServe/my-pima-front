@@ -16,23 +16,29 @@ const MDFilter = ({ setFilter, data, selectedProject }) => {
       getProjectModules.data.getTrainingModulesByProject &&
       getProjectModules.data.getTrainingModulesByProject.status === 200
     ) {
-      setSelectedModule(
+      if (
         getProjectModules.data.getTrainingModulesByProject.training_modules
-          .filter((module) =>
-            data.map((d) => d.ts_module).includes(module.tm_title)
-          )
-          .sort((a, b) => new Date(b.tm_date) - new Date(a.tm_date))[0].tm_title
-      );
-
-      setFilter({
-        moduleName:
+          .length === 0
+      ) {
+        setSelectedModule(
           getProjectModules.data.getTrainingModulesByProject.training_modules
             .filter((module) =>
               data.map((d) => d.ts_module).includes(module.tm_title)
             )
             .sort((a, b) => new Date(b.tm_date) - new Date(a.tm_date))[0]
-            .tm_title,
-      });
+            .tm_title
+        );
+
+        setFilter({
+          moduleName:
+            getProjectModules.data.getTrainingModulesByProject.training_modules
+              .filter((module) =>
+                data.map((d) => d.ts_module).includes(module.tm_title)
+              )
+              .sort((a, b) => new Date(b.tm_date) - new Date(a.tm_date))[0]
+              .tm_title,
+        });
+      }
     }
   }, [selectedProject]);
 

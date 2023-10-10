@@ -115,20 +115,29 @@ const Participants = ({
       }))
     : [];
 
+  const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
+
   return (
     <div>
       <div className="flex__heading">
         <h1 className="module__heading">Participants View</h1>{" "}
-        <FaCloudUploadAlt
-          title="Upload New Participants"
-          style={{
-            fontSize: "30px",
-            cursor: "pointer",
-            marginLeft: "10px",
-            fill: "#00A5A3",
-          }}
-          onClick={() => setOpen(true)}
-        />{" "}
+        {(userDetails?.role === "super_admin" ||
+          userDetails?.role === "ci_leadership" ||
+          userDetails?.role === "senior_business_advisor" ||
+          userDetails?.role === "business_advisor" ||
+          userDetails?.role === "project_manager" ||
+          userDetails?.role === "farmer_trainer") && (
+          <FaCloudUploadAlt
+            title="Upload New Participants"
+            style={{
+              fontSize: "30px",
+              cursor: "pointer",
+              marginLeft: "10px",
+              fill: "#00A5A3",
+            }}
+            onClick={() => setOpen(true)}
+          />
+        )}{" "}
       </div>
       {participants.length > 0 ? (
         <Table
@@ -150,6 +159,7 @@ const Participants = ({
           projects.find((project) => project.sf_project_id === selectedProject)
             .project_name
         }
+        sfProjectId={selectedProject}
       />
     </div>
   );

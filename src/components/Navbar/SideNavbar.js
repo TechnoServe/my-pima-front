@@ -50,6 +50,10 @@ const Sidebar = ({ children }) => {
       path: "/in/manage",
       name: "Management",
       icon: <MdManageAccounts />,
+      isPrivate:
+        userDetails &&
+        (userDetails.role === "super_admin" ||
+          userDetails.role === "ci_leadership"),
     },
   ];
   const bottomitem = [
@@ -102,17 +106,19 @@ const Sidebar = ({ children }) => {
           </div>
         </div>
         <div className="mid__section">
-          {menuItem.map((item, index) => (
-            <NavLink to={item.path} key={index} className="link">
-              <div className="icon">{item.icon}</div>
-              <div
-                style={{ display: isOpen ? "block" : "none" }}
-                className="link_text"
-              >
-                {item.name}
-              </div>
-            </NavLink>
-          ))}
+          {menuItem
+            .filter((item) => item.isPrivate === undefined || item.isPrivate)
+            .map((item, index) => (
+              <NavLink to={item.path} key={index} className="link">
+                <div className="icon">{item.icon}</div>
+                <div
+                  style={{ display: isOpen ? "block" : "none" }}
+                  className="link_text"
+                >
+                  {item.name}
+                </div>
+              </NavLink>
+            ))}
         </div>
         <div className="bottom__section">
           <NavLink

@@ -31,7 +31,7 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-const Tstabs = ({ details, farmVisits }) => {
+const Tstabs = ({ details, farmVisits, selectedProject }) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -49,7 +49,7 @@ const Tstabs = ({ details, farmVisits }) => {
         </Box>
 
         <CustomTabPanel value={value} index={0}>
-          <Tstabdetail details={details} />
+          <Tstabdetail details={details} selectedProject={selectedProject} />
         </CustomTabPanel>
 
         <CustomTabPanel value={value} index={1}>

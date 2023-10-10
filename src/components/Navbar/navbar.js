@@ -370,7 +370,12 @@ const Navbar = () => {
                     />
                     <Route
                       path="/trainsession/:id"
-                      element={<Tsdetail trainingSessions={trainingSessions} />}
+                      element={
+                        <Tsdetail
+                          trainingSessions={trainingSessions}
+                          selectedProject={selectedProject}
+                        />
+                      }
                     />
                     <Route
                       path="/participants"

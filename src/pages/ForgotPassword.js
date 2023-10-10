@@ -21,20 +21,6 @@ const ForgotPassword = () => {
     }
 
     setLoading(true);
-    // await auth
-    //   .login(email, password)
-    //   .then((res) => {
-    //     if (res.data.saveMailLogin.status === 200) {
-    //       setLoading(false);
-    //       navigate("/in/dashboard");
-    //     } else {
-    //       toast.error(res.data.saveMailLogin.message);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     toast.error("Something Went Wrong!!!");
-    //   });
 
     setLoading(false);
   };

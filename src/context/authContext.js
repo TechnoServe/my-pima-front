@@ -74,7 +74,6 @@ const AuthProvider = ({ children }) => {
       });
 
       if (response.data.saveMailLogin.status === 200) {
-        console.log(response.data.saveMailLogin);
         const { token } = response.data.saveMailLogin;
 
         const userData = {

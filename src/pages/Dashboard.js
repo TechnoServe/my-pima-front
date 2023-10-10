@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Card from "../features/cards/card";
 import { MdGroups } from "react-icons/md";
-import {VscFileSubmodule} from "react-icons/vsc";
+import { VscFileSubmodule } from "react-icons/vsc";
 import { BsPersonBoundingBox } from "react-icons/bs";
 import { GiFarmer } from "react-icons/gi";
 import { FaTripadvisor } from "react-icons/fa";
@@ -13,11 +13,7 @@ import { Chrono } from "react-chrono";
 import { useQuery } from "@apollo/client";
 import { GET_TRAINING_MODULES_PER_PROJECT } from "../graphql/queries/trainingModulesRequests";
 
-const Dashboard = ({
-  trainingGroups,
-  projectStats,
-  selectedProject,
-}) => {
+const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
   const [open, setOpen] = useState(false);
   const [list, setList] = useState([]);
   const [title, setTitle] = useState("");
@@ -101,8 +97,11 @@ const Dashboard = ({
           (t_module) => {
             return {
               title: t_module.tm_date || "No date",
-              cardTitle: t_module.tm_title,
+              cardTitle: t_module.tm_is_current
+                ? `${t_module.tm_title} (Current)`
+                : t_module.tm_title,
               cardSubtitle: `Module Number: ${t_module.tm_module_number}`,
+              isCurrent: t_module.tm_is_current,
             };
           }
         )
@@ -186,7 +185,11 @@ const Dashboard = ({
                   cardWidth={300}
                   cardHeight={150}
                   contentDetailsHeight={250}
-                  activeItemIndex={modules.length - 1}
+                  activeItemIndex={
+                    modules.findIndex((module) => module.isCurrent) !== -1
+                      ? modules.findIndex((module) => module.isCurrent)
+                      : modules.length - 1
+                  }
                   focusActiveItemOnLoad={true}
                   cardPositionHorizontal="TOP"
                   theme={{

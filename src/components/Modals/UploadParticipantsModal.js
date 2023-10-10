@@ -14,10 +14,18 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { BiErrorAlt } from "react-icons/bi";
 import { useEffect } from "react";
-import { useMutation } from "@apollo/client";
-import { UPLOAD_PARTICIPANTS } from "../../graphql/queries/participantsRequests";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  GET_PARTICIPANTS_PER_PROJECT,
+  UPLOAD_PARTICIPANTS,
+} from "../../graphql/queries/participantsRequests";
 
-const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
+const UploadParticipantsModal = ({
+  open,
+  setOpen,
+  navigatedProject,
+  sfProjectId,
+}) => {
   const requiredColumns = [
     "Name",
     "Last Name",
@@ -44,6 +52,10 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const [uploadParticipants] = useMutation(UPLOAD_PARTICIPANTS);
+
+  const participantsPerProject = useQuery(GET_PARTICIPANTS_PER_PROJECT, {
+    variables: { projectId: sfProjectId },
+  });
 
   const handleChange = (file) => {
     setFile(file);
@@ -129,11 +141,17 @@ const UploadParticipantsModal = ({ open, setOpen, navigatedProject }) => {
         partsFile: newFile,
       },
     })
-      .then((res) => {
-        setUploadResult(res.data.uploadParticipants);
-        setIsProcessing(false);
-
-        window.location.reload();
+      .then(async (res) => {
+        // refetch participants per project
+        await participantsPerProject
+          .refetch()
+          .then(() => {
+            setUploadResult(res.data.uploadParticipants);
+            setIsProcessing(false);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);

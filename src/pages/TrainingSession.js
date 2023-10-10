@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Chip } from "@mui/material";
 import Table from "../components/Table/Table";
+import { useQuery } from "@apollo/client";
+import { GET_TRAINING_MODULES_PER_PROJECT } from "../graphql/queries/trainingModulesRequests";
 
 const TrainingSession = ({
   trainingSessions,
   filter,
   setFilter,
   setFilteredSessions,
-  selectedProject
+  selectedProject,
 }) => {
   const columns = [
     {
@@ -140,6 +142,7 @@ const TrainingSession = ({
       grow: 2,
     },
   ];
+
   const tableRowItem = "trainsession";
 
   const rows = trainingSessions
@@ -160,6 +163,42 @@ const TrainingSession = ({
         session_date: trainingSession.session_date,
       }))
     : [];
+
+  const getProjectModules = useQuery(GET_TRAINING_MODULES_PER_PROJECT, {
+    variables: { projectId: selectedProject },
+  });
+
+  useEffect(() => {
+    if (
+      getProjectModules.data &&
+      getProjectModules.data.getTrainingModulesByProject &&
+      getProjectModules.data.getTrainingModulesByProject.status === 200 &&
+      trainingSessions &&
+      trainingSessions.length > 0
+    ) {
+      if (
+        getProjectModules.data.getTrainingModulesByProject.training_modules.filter(
+          (module) =>
+            trainingSessions.map((d) => d.ts_module).includes(module.tm_title)
+        ).length > 0
+      ) {
+        setFilteredSessions(
+          trainingSessions.filter(
+            (session) =>
+              session.ts_module ===
+              getProjectModules.data.getTrainingModulesByProject.training_modules
+                .filter((module) =>
+                  trainingSessions
+                    .map((d) => d.ts_module)
+                    .includes(module.tm_title)
+                )
+                .sort((a, b) => new Date(b.tm_date) - new Date(a.tm_date))[0]
+                .tm_title
+          )
+        );
+      }
+    }
+  }, [selectedProject]);
 
   return (
     <div>

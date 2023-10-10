@@ -12,10 +12,10 @@ const Styles = {
   fontSize: "12px",
   maxWidth: "80%",
 };
-const Tsdetail = ({ trainingSessions }) => {
+const Tsdetail = ({ trainingSessions, selectedProject }) => {
   const breadCrumbs = "Training session";
 
-  const [farmVisitsPerSession, setFarmVisitsPerSession] = useState([]); // eslint-disable-line no-unused-vars
+  const [farmVisitsPerSession, setFarmVisitsPerSession] = useState([]);
 
   // get params from url
   const params = useParams();
@@ -59,6 +59,7 @@ const Tsdetail = ({ trainingSessions }) => {
           <Tstabs
             details={selectedTrainingSession}
             farmVisits={farmVisitsPerSession}
+            selectedProject={selectedProject}
           />
         </>
       )}
