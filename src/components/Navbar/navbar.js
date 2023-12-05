@@ -69,7 +69,9 @@ const Navbar = () => {
     variables: { projectId: selectedProject },
   });
 
-  const getAllAttendances = useQuery(GET_ALL_ATTENDANCES);
+  const getAllAttendances = useQuery(GET_ALL_ATTENDANCES, {
+    variables: { projectId: selectedProject },
+  });
 
   const farmVisitsPerProject = useQuery(GET_FARM_VISITS_PER_PROJECT, {
     variables: { projectId: selectedProject },

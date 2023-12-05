@@ -134,6 +134,8 @@ const Table = ({
     ];
 
     if (tableRowItem === "participants") {
+
+      alert("participants");
       // Create a map to store monthly attendance data
       const monthlyAttendanceMap = new Map();
 
@@ -146,10 +148,10 @@ const Table = ({
 
       // Iterate through the attendance data to calculate monthly attendance
       filteredAttendances.forEach((attendance) => {
-        const { attendance_date, attendance_status, participant_id } =
+        const {attendance_status, participant_id, module_number, module_name } =
           attendance;
-        const [year, month] = attendance_date.split("-");
-        const key = `${year}-${month}`;
+        // const [year, month] = attendance_date.split("-");
+        const key = `${module_number}-${module_name}`;
 
         // Initialize the monthly attendance object if it doesn't exist
         if (!monthlyAttendanceMap.has(key)) {
@@ -177,6 +179,10 @@ const Table = ({
       });
 
       data = csvRows;
+
+      console.log("CSV Participants export")
+
+      console.log(data);
     }
 
     // Combine header and rows to form the CSV content

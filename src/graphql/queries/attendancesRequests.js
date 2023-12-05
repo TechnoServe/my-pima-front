@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 const GET_ALL_ATTENDANCES = gql`
-  query GetAttendances {
-    getAttendances {
+  query GetAttendances($projectId: String!) {
+    getAttendances(project_id: $projectId) {
       message
       status
       attendance {
@@ -12,6 +12,8 @@ const GET_ALL_ATTENDANCES = gql`
         attendance_date
         attendance_status
         session_id
+        module_name
+        module_number
       }
     }
   }
