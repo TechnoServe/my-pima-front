@@ -99,16 +99,24 @@ const Participants = ({
     ? participants.map((participant, index) => ({
         num: index + 1,
         p_id: participant.p_id,
-        full_name: participant.full_name,
+        first_name: participant.first_name,
+        middle_name: participant.middle_name,
+        last_name: participant.last_name,
         gender: participant.gender,
+        age: participant.age,
+        coffee_tree_numbers: participant.coffee_tree_numbers,
+        coop_membership_number: "",
+        farmer_sf_id: participant.p_id,
+        hh_number: participant.hh_number,
+        sf_household_id: participant.household_id,
+        ffg_id: participant.ffg_id,
         location: participant.location,
         tns_id: participant.tns_id,
         training_group: trainingGroups
           ? trainingGroups.find((tg) => tg.tg_id === participant.training_group)
               .tg_name
           : "N/A",
-        household_id: participant.household_id,
-        primary_household_member: participant.primary_household_member,
+        farmer_number: participant.primary_household_member,
         status: participant.status,
         farmer_trainer: participant.farmer_trainer,
         business_advisor: participant.business_advisor,

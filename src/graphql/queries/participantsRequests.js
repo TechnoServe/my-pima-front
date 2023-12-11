@@ -7,8 +7,14 @@ const GET_PARTICIPANTS_PER_PROJECT = gql`
       status
       participants {
         p_id
-        full_name
+        first_name
+        middle_name
+        last_name
         gender
+        age
+        coffee_tree_numbers
+        hh_number
+        ffg_id
         location
         tns_id
         status

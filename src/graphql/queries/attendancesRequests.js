@@ -14,6 +14,7 @@ const GET_ALL_ATTENDANCES = gql`
         session_id
         module_name
         module_number
+        module_id
       }
     }
   }

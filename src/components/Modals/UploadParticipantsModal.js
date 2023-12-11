@@ -277,43 +277,8 @@ const UploadParticipantsModal = ({
               />
             </div>
           </Box>
-        ) : // check if project in file matches project in view and show error
-        !distinctProjects.includes(navigatedProject) ? (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-            className="file-info"
-          >
-            <Typography
-              variant="body1"
-              sx={{
-                fontStyle: "italic",
-              }}
-            >
-              <BiErrorAlt
-                style={{
-                  fontSize: "3rem",
-                  color: "#B90101",
-                }}
-              />
-              The project(s) in the file does not match the project you are
-              currently navigating. Please upload a file with the correct
-              project.
-            </Typography>
-            <div className="upload_actions">
-              <AiOutlineCloseCircle
-                onClick={() => {
-                  setFileInfo(null);
-                }}
-                className="back__icon"
-                title="Back to Upload New File"
-              />
-            </div>
-          </Box>
-        ) : (
+        ) : 
+        (
           <Box
             sx={{
               display: "flex",
@@ -373,7 +338,7 @@ const UploadParticipantsModal = ({
                 }
               </em>
             </Typography>
-            {distinctProjects.length > 1 && (
+            {distinctProjects.length > 0 && (
               <Typography variant="body4" sx={{ marginBottom: "10px" }}>
                 Only records for{" "}
                 <em>
@@ -433,7 +398,165 @@ const UploadParticipantsModal = ({
               )}
             </div>
           </Box>
-        )}
+        )
+        // check if project in file matches project in view and show error
+        // !distinctProjects.includes(navigatedProject) ? (
+        //   <Box
+        //     sx={{
+        //       display: "flex",
+        //       flexDirection: "column",
+        //       alignItems: "center",
+        //     }}
+        //     className="file-info"
+        //   >
+        //     <Typography
+        //       variant="body1"
+        //       sx={{
+        //         fontStyle: "italic",
+        //       }}
+        //     >
+        //       <BiErrorAlt
+        //         style={{
+        //           fontSize: "3rem",
+        //           color: "#B90101",
+        //         }}
+        //       />
+        //       The project(s) in the file does not match the project you are
+        //       currently navigating. Please upload a file with the correct
+        //       project.
+        //     </Typography>
+        //     <div className="upload_actions">
+        //       <AiOutlineCloseCircle
+        //         onClick={() => {
+        //           setFileInfo(null);
+        //         }}
+        //         className="back__icon"
+        //         title="Back to Upload New File"
+        //       />
+        //     </div>
+        //   </Box>
+        // ) : (
+        //   <Box
+        //     sx={{
+        //       display: "flex",
+        //       flexDirection: "column",
+        //       alignItems: "center",
+        //     }}
+        //     className="file-info"
+        //   >
+        //     <Typography variant="body2">
+        //       <em
+        //         style={{
+        //           fontWeight: "bold",
+        //         }}
+        //       >
+        //         Name:
+        //       </em>{" "}
+        //       <em>{fileInfo.filename}</em>
+        //     </Typography>
+        //     <Typography variant="body2">
+        //       <em
+        //         style={{
+        //           fontWeight: "bold",
+        //         }}
+        //       >
+        //         Size:
+        //       </em>{" "}
+        //       <em>
+        //         {fileInfo.size > 1000000
+        //           ? `${Math.round((fileInfo.size / 1000000) * 100) / 100} MB`
+        //           : `${Math.round((fileInfo.size / 1000) * 100) / 100} KB`}
+        //       </em>
+        //     </Typography>
+        //     <Typography variant="body2">
+        //       <em
+        //         style={{
+        //           fontWeight: "bold",
+        //         }}
+        //       >
+        //         Type:
+        //       </em>{" "}
+        //       <em>{fileInfo.type}</em>
+        //     </Typography>
+        //     <Typography variant="body2">
+        //       <em
+        //         style={{
+        //           fontWeight: "bold",
+        //         }}
+        //       >
+        //         Total Records:
+        //       </em>{" "}
+        //       <em>
+        //         {
+        //           // format number with commas
+        //           (fileInfo.data.length - 2)
+        //             .toString()
+        //             .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        //         }
+        //       </em>
+        //     </Typography>
+        //     {distinctProjects.length > 1 && (
+        //       <Typography variant="body4" sx={{ marginBottom: "10px" }}>
+        //         Only records for{" "}
+        //         <em>
+        //           <b>
+        //             {navigatedProject}{" "}
+        //             {`(
+        //               ${
+        //                 fileInfo.data.filter((row) => {
+        //                   const rowProject =
+        //                     row[loadedColumns.indexOf("Project")];
+
+        //                   return rowProject === navigatedProject;
+        //                 }).length
+        //               } records)`}
+        //           </b>
+        //         </em>{" "}
+        //         will be processed from this file.
+        //       </Typography>
+        //     )}
+        //     {/* add button to get back to upload new file */}
+        //     <div className="upload_actions">
+        //       {isProcessing ? (
+        //         <Typography
+        //           variant="body2"
+        //           sx={{
+        //             marginBottom: "10px",
+        //             width: "100%",
+        //             textAlign: "center",
+        //           }}
+        //         >
+        //           <em
+        //             style={{
+        //               fontWeight: "bold",
+        //               color: "#6C757D",
+        //             }}
+        //           >
+        //             Data are being processed, wait...
+        //           </em>
+        //         </Typography>
+        //       ) : (
+        //         <>
+        //           <AiOutlineCloseCircle
+        //             onClick={() => {
+        //               if (!isProcessing) {
+        //                 setFileInfo(null);
+        //               }
+        //             }}
+        //             className="back__icon"
+        //             title="Back to Upload New File"
+        //           />
+        //           <FaCloudUploadAlt
+        //             title="Proceed Records Processing"
+        //             className="upload__icon"
+        //             onClick={handleUpload}
+        //           />
+        //         </>
+        //       )}
+        //     </div>
+        //   </Box>
+        // )}
+        }
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} disabled={isProcessing}>

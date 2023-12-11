@@ -121,13 +121,20 @@ const Table = ({
     // Create an array of headers for the CSV file
     const partsHeaders = [
       "num",
-      "full_name",
+      "first_name",
+      "last_name",
       "gender",
+      "age",
+      "coffee_tree_numbers",
+      "coop_membership_number",
       "location",
+      "farmer_sf_id",
       "tns_id",
+      "hh_number",
+      "sf_household_id",
+      "farmer_number",
+      "ffg_id",
       "training_group",
-      "household_id",
-      "primary_household_member",
       "status",
       "farmer_trainer",
       "business_advisor",
@@ -135,7 +142,6 @@ const Table = ({
 
     if (tableRowItem === "participants") {
 
-      alert("participants");
       // Create a map to store monthly attendance data
       const monthlyAttendanceMap = new Map();
 
@@ -148,10 +154,10 @@ const Table = ({
 
       // Iterate through the attendance data to calculate monthly attendance
       filteredAttendances.forEach((attendance) => {
-        const {attendance_status, participant_id, module_number, module_name } =
+        const {attendance_status, participant_id, module_number, module_name, module_id } =
           attendance;
         // const [year, month] = attendance_date.split("-");
-        const key = `${module_number}-${module_name}`;
+        const key = `${module_number}-${module_name}-${module_id}`;
 
         // Initialize the monthly attendance object if it doesn't exist
         if (!monthlyAttendanceMap.has(key)) {
