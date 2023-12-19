@@ -24,6 +24,7 @@ const GET_PARTICIPANTS_PER_PROJECT = gql`
         training_group
         household_id
         primary_household_member
+        create_in_commcare
       }
     }
   }
@@ -78,9 +79,19 @@ const UPLOAD_PARTICIPANTS = gql`
   }
 `;
 
+const SYNC_PARTICIPANTS_WITH_COMMCARE = gql`
+  mutation SyncParticipantsWithCOMMCARE($projectId: String!) {
+    syncParticipantsWithCOMMCARE(project_id: $projectId) {
+      message
+      status
+    }
+  }
+`;
+
 export {
   GET_PARTICIPANTS_PER_PROJECT,
   GET_PARTICIPANTS_PER_TG,
   GET_ATTENDANCE_PER_PARTICIPANT,
   UPLOAD_PARTICIPANTS,
+  SYNC_PARTICIPANTS_WITH_COMMCARE
 };

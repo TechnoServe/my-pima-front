@@ -121,7 +121,9 @@ const Table = ({
     // Create an array of headers for the CSV file
     const partsHeaders = [
       "num",
+      "Project",
       "first_name",
+      "middle_name",
       "last_name",
       "gender",
       "age",
@@ -138,6 +140,7 @@ const Table = ({
       "status",
       "farmer_trainer",
       "business_advisor",
+      "create_in_commCare"
     ];
 
     if (tableRowItem === "participants") {

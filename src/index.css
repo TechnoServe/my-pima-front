@@ -84,3 +84,25 @@ body {
 .upload__icon {
   fill: #087c8f;
 }
+
+
+.active-participants-dialog {
+  background-color: #FFCCCC; /* Green background */
+  color: #087c8f; /* White text */
+  padding: 3%; /* Padding */
+  text-align: center; /* Center text */
+  border-radius: 10px; /* Rounded corners */
+  margin: 5% auto;
+  width: 50%
+}
+
+.take-action-button {
+  background-color: #087c8f; /* Blue background */
+  color: white; /* White text */
+  border: none; /* No border */
+  padding: 10px 20px; /* Padding */
+  font-size: 16px; /* Font size */
+  cursor: pointer; /* Pointer cursor */
+  border-radius: 5px; /* Rounded corners */
+  margin-top: 10px; /* Top margin */
+}

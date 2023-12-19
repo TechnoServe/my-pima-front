@@ -3,7 +3,12 @@ import { Chip } from "@mui/material";
 import Table from "../components/Table/Table";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import UploadParticipantsModal from "../components/Modals/UploadParticipantsModal";
-import { useState } from "react";
+import {
+  GET_PARTICIPANTS_PER_PROJECT,
+  SYNC_PARTICIPANTS_WITH_COMMCARE
+} from "../graphql/queries/participantsRequests";
+import { useState, useEffect } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 
 const Participants = ({
   participants,
@@ -13,13 +18,21 @@ const Participants = ({
   projects,
 }) => {
   const [open, setOpen] = useState(false);
+  const [sendToCcCount, setSendToCcCount] = useState();
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const [SyncParticipants] = useMutation(SYNC_PARTICIPANTS_WITH_COMMCARE);
+
+  const participantsPerProject = useQuery(GET_PARTICIPANTS_PER_PROJECT, {
+    variables: { projectId: selectedProject },
+  });
 
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
       id: "full_name",
       name: "Full Name",
-      selector: (row) => row.full_name,
+      selector: (row) => row.first_name +  ' ' + row.last_name ,
       sortable: true,
     },
     {
@@ -48,8 +61,8 @@ const Participants = ({
     },
     {
       id: "household_id",
-      name: "HouseHold",
-      selector: (row) => row.household_id,
+      name: "HH Number",
+      selector: (row) => row.hh_number,
       sortable: true,
     },
     {
@@ -98,6 +111,7 @@ const Participants = ({
   const rows = participants
     ? participants.map((participant, index) => ({
         num: index + 1,
+        Project: projects.find((project) => project.sf_project_id === selectedProject).project_name,
         p_id: participant.p_id,
         first_name: participant.first_name,
         middle_name: participant.middle_name,
@@ -120,13 +134,62 @@ const Participants = ({
         status: participant.status,
         farmer_trainer: participant.farmer_trainer,
         business_advisor: participant.business_advisor,
+        create_in_commCare: participant.create_in_commCare
       }))
     : [];
 
   const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
 
+  useEffect(() => {
+    // Calculate the count of active participants
+    const sendToCcCount = participants.filter(
+      (participant) => participant.create_in_commcare === "false"
+    );
+    setSendToCcCount(sendToCcCount.length);
+  }, [participants]);
+
+  const handleTakeAction = async () => {
+    alert("Sync to Salesforce");
+    setIsSyncing(true);
+
+    await SyncParticipants({
+      variables: {
+        projectId: selectedProject,
+      },
+    })
+      .then(async (res) => {
+        // refetch participants per project
+        await participantsPerProject
+          .refetch()
+          .then(() => {
+            // setUploadResult(res.data.uploadParticipants);
+            setIsSyncing(false);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+
+        setIsSyncing(false);
+      });
+  }
+
   return (
     <div>
+      {/* Display the dialog box for active participants */}
+      {sendToCcCount > 0 && (
+        <div className="active-participants-dialog">
+          <p>
+          You currently have <strong>{sendToCcCount}</strong> participants who have not been sent to CommCare. Please download the participant list, review the database, and ensure all information is verified before syncing with CommCare.
+          </p>
+          <button className="take-action-button" onClick={() => handleTakeAction()} disabled={isSyncing}>
+            {isSyncing? 'Processing...' : 'Send to Commcare'}
+          </button>
+        </div>
+      )}
+
       <div className="flex__heading">
         <h1 className="module__heading">Participants View</h1>{" "}
         {(userDetails?.role === "super_admin" ||

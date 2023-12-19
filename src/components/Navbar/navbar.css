@@ -126,3 +126,38 @@ main {
     padding-bottom: 0;
   }
 }
+
+
+/* Add these styles for sub-nav */
+.subNav {
+  margin-top: 10px; /* Adjust as needed */
+}
+
+.subLink {
+  display: flex;
+  color: #fff;
+  margin: 10px;
+  padding: 5px;
+  gap: 10px;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+  margin-left: 20%; /* Adjust as needed */
+}
+
+.subLink:hover {
+  background: rgba(241, 245, 249, 0.17);
+  color: rgba(43, 43, 43, 1);
+}
+
+.subLink .active {
+  background-color: #f1f5f9;
+  color: #2b2b2b !important;
+}
+
+.subIcon {
+  font-size: 14px; /* Adjust as needed */
+}
+
+.subLink_text {
+  font-size: 12px;
+}
