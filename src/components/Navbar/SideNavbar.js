@@ -39,19 +39,7 @@ const Sidebar = ({ children }) => {
     {
       path: "/in/participants",
       name: "Participants",
-      icon: <MdOutlinePersonSearch />,
-      subNav: [
-        {
-          path: "/in/participants/send-to-cc",
-          name: "Send To CC",
-          icon: <MdOutlinePersonSearch />,
-        },
-        // {
-        //   path: "/in/participants/sub-item-2",
-        //   name: "Sub Item 2",
-        //   icon: <MdOutlinePersonSearch />,
-        // },
-      ],
+      icon: <MdOutlinePersonSearch />
     },
     {
       path: "/in/farmvisit",
@@ -132,22 +120,6 @@ const Sidebar = ({ children }) => {
                     {item.name}
                   </div>
                 </NavLink>
-
-                {/* Render sub-nav items if available */}
-                {item.subNav && isOpen && (
-                  <div className="subNav">
-                    {item.subNav.map((subNavItem, subIndex) => (
-                      <NavLink
-                        key={subIndex}
-                        to={subNavItem.path}
-                        className="subLink"
-                      >
-                        <div className="icon">{subNavItem.icon}</div>
-                        <div className="link_text">{subNavItem.name}</div>
-                      </NavLink>
-                    ))}
-                  </div>
-                )}
               </div>
             ))}
         </div>

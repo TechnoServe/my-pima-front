@@ -13,6 +13,7 @@ const GET_PARTICIPANTS_PER_PROJECT = gql`
         gender
         age
         coffee_tree_numbers
+        coop_membership_number
         hh_number
         ffg_id
         location

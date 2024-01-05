@@ -114,12 +114,12 @@ const Participants = ({
         Project: projects.find((project) => project.sf_project_id === selectedProject).project_name,
         p_id: participant.p_id,
         first_name: participant.first_name,
-        middle_name: participant.middle_name,
-        last_name: participant.last_name,
+        middle_name: participant.middle_name? participant.middle_name: "",
+        last_name: participant.last_name? participant.last_name: "",
         gender: participant.gender,
         age: participant.age,
         coffee_tree_numbers: participant.coffee_tree_numbers,
-        coop_membership_number: "",
+        coop_membership_number: participant.coop_membership_number? participant.coop_membership_number: "",
         farmer_sf_id: participant.p_id,
         hh_number: participant.hh_number,
         sf_household_id: participant.household_id,
@@ -134,7 +134,7 @@ const Participants = ({
         status: participant.status,
         farmer_trainer: participant.farmer_trainer,
         business_advisor: participant.business_advisor,
-        create_in_commCare: participant.create_in_commCare
+        create_in_commcare: participant.create_in_commcare
       }))
     : [];
 
@@ -149,7 +149,6 @@ const Participants = ({
   }, [participants]);
 
   const handleTakeAction = async () => {
-    alert("Sync to Salesforce");
     setIsSyncing(true);
 
     await SyncParticipants({

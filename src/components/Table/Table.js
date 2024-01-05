@@ -140,7 +140,7 @@ const Table = ({
       "status",
       "farmer_trainer",
       "business_advisor",
-      "create_in_commCare"
+      "create_in_commcare"
     ];
 
     if (tableRowItem === "participants") {
