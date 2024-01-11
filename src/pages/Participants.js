@@ -108,8 +108,8 @@ const Participants = ({
   ];
   const tableRowItem = "participants";
 
-  console.log(participants.slice(0, 5));
-  console.log(trainingGroups.slice(0, 5));
+  console.log("participants", participants.length);
+  console.log("groups", trainingGroups.length);
 
   const rows = participants
     ? participants.map((participant, index) => ({
@@ -135,10 +135,10 @@ const Participants = ({
         location: participant.location,
         tns_id: participant.tns_id,
         training_group:
-          trainingGroups.length > 0
+          trainingGroups && trainingGroups.length > 0
             ? trainingGroups.find(
                 (tg) => tg.tg_id === participant.training_group
-              ).tg_name
+              )?.tg_name || "N/A"
             : "N/A",
         farmer_number: participant.primary_household_member,
         status: participant.status,
