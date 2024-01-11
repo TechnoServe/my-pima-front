@@ -128,6 +128,7 @@ const Table = ({
       "gender",
       "age",
       "coffee_tree_numbers",
+      "phone_number",
       "coop_membership_number",
       "location",
       "farmer_sf_id",

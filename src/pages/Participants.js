@@ -108,6 +108,9 @@ const Participants = ({
   ];
   const tableRowItem = "participants";
 
+  console.log(participants.slice(0, 5));
+  console.log(trainingGroups.slice(0, 5));
+
   const rows = participants
     ? participants.map((participant, index) => ({
         num: index + 1,
@@ -120,6 +123,7 @@ const Participants = ({
         age: participant.age,
         coffee_tree_numbers: participant.coffee_tree_numbers,
         coop_membership_number: participant.coop_membership_number? participant.coop_membership_number: "",
+        phone_number: participant.phone_number,
         farmer_sf_id: participant.p_id,
         hh_number: participant.hh_number,
         sf_household_id: participant.household_id,

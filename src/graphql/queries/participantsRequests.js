@@ -14,6 +14,7 @@ const GET_PARTICIPANTS_PER_PROJECT = gql`
         age
         coffee_tree_numbers
         coop_membership_number
+        phone_number
         hh_number
         ffg_id
         location
