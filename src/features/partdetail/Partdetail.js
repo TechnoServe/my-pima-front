@@ -26,6 +26,8 @@ const Partdetail = ({ participants }) => {
   const selectedParticipant =
     participants && participants.find((participant) => participant.p_id === id);
 
+  console.log("selected participant", selectedParticipant);
+
   useEffect(() => {
     if (getAllFarmVisitsByPart.data) {
       const farmVisits =

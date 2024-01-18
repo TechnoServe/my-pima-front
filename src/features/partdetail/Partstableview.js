@@ -36,6 +36,8 @@ const Partstableview = ({
   participant,
   farmVisitsPerPart,
 }) => {
+
+  console.log(farmVisitsPerPart);
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);

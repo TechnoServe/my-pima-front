@@ -2,7 +2,7 @@ import React from "react";
 import { Chip } from "@mui/material";
 import Table from "../../../components/Table/Table";
 
-const FvTabTable = ({ farmVisits }) => {
+const FvTabTable = ({ farmVisitsPerPart }) => {
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
@@ -71,8 +71,8 @@ const FvTabTable = ({ farmVisits }) => {
 
   const tableRowItem = "farmvisit";
 
-  const rows = farmVisits
-    ? farmVisits.map((fv, index) => ({
+  const rows = farmVisitsPerPart
+    ? farmVisitsPerPart.map((fv, index) => ({
         num: index + 1,
         fv_id: fv.fv_id,
         fv_name: fv.fv_name,

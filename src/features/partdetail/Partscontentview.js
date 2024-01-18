@@ -31,6 +31,7 @@ const Partscontentview = ({ participant }) => {
 
         <div className='parts__details' style={{ marginTop: ' 40px' }}>
           <div>
+            <Detailscontent heading={'Full Names'} paragraph={`${participant.first_name} ${participant.middle_name !== "null"?participant.middle_name:""} ${participant.last_name}`} />
             <Detailscontent heading={'Location'} paragraph={participant.location} />
             <Detailscontent heading={'Farmer Trainer'} paragraph={participant.farmer_trainer} />
             <Detailscontent heading={'Business Advisor'} paragraph={participant.business_advisor} />
