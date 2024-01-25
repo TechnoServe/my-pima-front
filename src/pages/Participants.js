@@ -71,9 +71,9 @@ const Participants = ({
       selector: (row) => (
         <div>
           {row.farmer_number === "1" ? (
-            <Chip label={"Yes"} color="success" variant="outlined" />
+            <Chip label={"1"} color="success" variant="outlined" />
           ) : (
-            <Chip label={"No"} color="error" variant="outlined" />
+            <Chip label={"2"} color="error" variant="outlined" />
           )}
         </div>
       ),
@@ -197,9 +197,8 @@ const Participants = ({
         {(userDetails?.role === "super_admin" ||
           userDetails?.role === "ci_leadership" ||
           userDetails?.role === "senior_business_advisor" ||
-          userDetails?.role === "business_advisor" ||
           userDetails?.role === "project_manager" ||
-          userDetails?.role === "farmer_trainer") && (
+          userDetails?.role === "mel_analyst") && (
           <FaCloudUploadAlt
             title="Upload New Participants"
             style={{
