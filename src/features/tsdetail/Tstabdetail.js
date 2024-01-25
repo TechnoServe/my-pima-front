@@ -114,6 +114,10 @@ const Tstabdetail = ({ details, selectedProject }) => {
                   paragraph={details.session_image_status}
                 />
                 <div style={{ paddingBottom: "20px" }}></div>
+                <Detailscontent
+                  heading={"Session Date"}
+                  paragraph={details.session_date}
+                />
               </div>
             </div>
           </div>

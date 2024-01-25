@@ -20,15 +20,8 @@ const TrainingSession = ({
       grow: 1,
     },
     {
-      id: "ts_name",
-      name: "Session Name",
-      selector: (row) => row.ts_name,
-      sortable: true,
-      grow: 2,
-    },
-    {
       id: "ts_module",
-      name: "Module Name",
+      name: "Session Name",
       selector: (row) => row.ts_module,
       sortable: true,
       grow: 2,
@@ -42,7 +35,7 @@ const TrainingSession = ({
     },
     {
       id: "tns_id",
-      name: "TNS Id",
+      name: "TNS ID",
       selector: (row) => row.tns_id,
       sortable: true,
     },
@@ -52,20 +45,6 @@ const TrainingSession = ({
       selector: (row) => row.farmer_trainer,
       sortable: true,
       grow: 2,
-    },
-    {
-      id: "ts_status",
-      name: "Status",
-      selector: (row) => (
-        <div>
-          {row.ts_status === "Active" ? (
-            <Chip label={"Active"} color="success" variant="outlined" />
-          ) : (
-            <Chip label={"Inactive"} color="error" variant="outlined" />
-          )}
-        </div>
-      ),
-      sortable: true,
     },
     {
       id: "total_males",

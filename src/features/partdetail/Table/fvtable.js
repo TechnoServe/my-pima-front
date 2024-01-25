@@ -5,27 +5,27 @@ import Table from "../../../components/Table/Table";
 const FvTabTable = ({ farmVisitsPerPart }) => {
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
-    {
-      id: "fv_name",
-      name: "Farm Visit Name",
-      selector: (row) => row.fv_name,
-      sortable: true,
-    },
+    // {
+    //   id: "fv_name",
+    //   name: "Farm Visit Name",
+    //   selector: (row) => row.fv_name,
+    //   sortable: true,
+    // },
     {
       id: "training_group",
       name: "Training Group",
       selector: (row) => row.training_group,
       sortable: true,
     },
-    {
-      id: "training_session",
-      name: "Training Session",
-      selector: (row) => row.training_session,
-      sortable: true,
-    },
+    // {
+    //   id: "training_session",
+    //   name: "Training Session",
+    //   selector: (row) => row.training_session,
+    //   sortable: true,
+    // },
     {
       id: "tns_id",
-      name: "TNS Id",
+      name: "TNS ID",
       selector: (row) => row.tns_id,
       sortable: true,
     },
@@ -35,30 +35,16 @@ const FvTabTable = ({ farmVisitsPerPart }) => {
       selector: (row) => row.farm_visited,
       sortable: true,
     },
-    {
-      id: "household_id",
-      name: "Household Id",
-      selector: (row) => row.household_id,
-      sortable: true,
-    },
+    // {
+    //   id: "household_id",
+    //   name: "Household Id",
+    //   selector: (row) => row.household_id,
+    //   sortable: true,
+    // },
     {
       id: "farmer_trainer",
       name: "Farmer Trainer",
       selector: (row) => row.farmer_trainer,
-      sortable: true,
-    },
-    {
-      id: "has_training",
-      name: "Has Training",
-      selector: (row) => (
-        <div>
-          {row.has_training === "Yes" ? (
-            <Chip label="Yes" color="success" />
-          ) : (
-            <Chip label="No" color="error" />
-          )}
-        </div>
-      ),
       sortable: true,
     },
     {

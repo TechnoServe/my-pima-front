@@ -10,7 +10,7 @@ const Tgtabdetail = ({ details }) => {
         <div className='details__title'>{details.tg_name}</div>
         <div style={{ padding: '10px', paddingLeft: '20px' }}>
           <Detailscontent
-            heading={'Number of Participants'}
+            heading={'# of Registered Farmers'}
             paragraph={details.total_participants !== null ? details.total_participants : 'N/A'}
           />
 

@@ -199,7 +199,7 @@ const Imagecontainer = ({
                   {isLoading ? (
                     <BeatLoader size={8} color={"#fff"} loading={isLoading} />
                   ) : (
-                    "UnClear"
+                    "Unclear"
                   )}
                 </StyledButton2>
                 <StyledButton

@@ -308,7 +308,7 @@ const FilterContent = ({
                     />
                     <Chip
                       variant="outlined"
-                      label="Status"
+                      label="Verification Status"
                       icon={<MdPending size={15} />}
                       color={activeTab === "status" ? "primary" : "default"}
                       onClick={() => handleTabChange("status")}

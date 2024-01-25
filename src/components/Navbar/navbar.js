@@ -222,10 +222,10 @@ const Navbar = () => {
       }}
     >
       {trainingGroupsPerProject.loading ||
-      trainingSessionsPerProject.loading ||
-      participantsPerProject.loading ||
-      getAllAttendances.loading ||
-      farmVisitsPerProject.loading ? (
+      trainingSessionsPerProject.loading ? (
+        // participantsPerProject.loading ||
+        //getAllAttendances.loading ||
+        //farmVisitsPerProject.loading ? (
         <div
           style={{
             width: "100%",

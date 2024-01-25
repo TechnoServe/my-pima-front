@@ -297,7 +297,7 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                                           handleImageStatus(
                                             getFarmVisitQAs.data
                                               .getFVQAsByFarmVisits.fvQAs.bp_id,
-                                            qa.practice_name,
+                                            qa.practice_name_id,
                                             "approved"
                                           )
                                         }
@@ -323,7 +323,7 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                                           handleImageStatus(
                                             getFarmVisitQAs.data
                                               .getFVQAsByFarmVisits.fvQAs.bp_id,
-                                            qa.practice_name,
+                                            qa.practice_name_id,
                                             "invalid"
                                           )
                                         }
@@ -349,7 +349,7 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                                           handleImageStatus(
                                             getFarmVisitQAs.data
                                               .getFVQAsByFarmVisits.fvQAs.bp_id,
-                                            qa.practice_name,
+                                            qa.practice_name_id,
                                             "unclear"
                                           )
                                         }
@@ -373,8 +373,8 @@ const FVQAModal = ({ open, handleClose, fvId, rowDetails }) => {
                               }
                             </Box>
                           ) : (
-                            <Typography variant="subtitle2">
-                              {qa.answers[index] ?? "N/A"}
+                            <Typography variant="subtitle2" >
+                              <div dangerouslySetInnerHTML={{ __html: qa.answers[index] ?? "N/A" }} />
                             </Typography>
                           )}
                         </AccordionDetails>

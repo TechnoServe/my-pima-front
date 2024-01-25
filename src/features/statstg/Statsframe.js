@@ -6,13 +6,13 @@ import { BsPersonBoundingBox } from "react-icons/bs";
 const Statsframe = ({ statistics, trainingGroups }) => {
   const statsData = [
     {
-      heading: "Total Training Groups",
+      heading: "Total FFGs",
       figures: trainingGroups.length,
       icon: <MdGroups />,
       color: "#25245D",
     },
     {
-      heading: "Total Participants",
+      heading: "Registered Farmers",
       figures: trainingGroups
         .map((group) => group.total_participants)
         .reduce((a, b) => a + b, 0),
@@ -20,7 +20,7 @@ const Statsframe = ({ statistics, trainingGroups }) => {
       color: "#087C8F",
     },
     {
-      heading: "Active BA's",
+      heading: "Agronomy Advisors",
       figures: statistics.total_bas,
       icon: <MdBarChart />,
       color: "#F46700",

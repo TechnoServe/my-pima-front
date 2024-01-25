@@ -26,6 +26,21 @@ const StatusFilter = ({ setFilter }) => {
       <FormControlLabel
         control={
           <Switch
+            value=""
+            checked={selectedOption === ""}
+            onChange={handleToggleDropdown}
+            size="small"
+            disabled={selectedOption && selectedOption !== ""}
+          />
+        }
+        labelPlacement="start"
+        label="Not Verified"
+        sx={{ margin: "0", marginTop: "20px" }}
+      />
+
+      <FormControlLabel
+        control={
+          <Switch
             value="invalid"
             checked={selectedOption === "invalid"}
             onChange={handleToggleDropdown}

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumbs";
 import Tstabs from "./Tstabs";
-import { useQuery } from "@apollo/client";
-import { GET_FARM_VISITS_PER_TS } from "../../graphql/queries/farmVisitsRequests";
+// import { useQuery } from "@apollo/client";
+// import { GET_FARM_VISITS_PER_TS } from "../../graphql/queries/farmVisitsRequests";
 
 const Styles = {
   marginTop: "15px",
@@ -15,27 +15,27 @@ const Styles = {
 const Tsdetail = ({ trainingSessions, selectedProject }) => {
   const breadCrumbs = "Training session";
 
-  const [farmVisitsPerSession, setFarmVisitsPerSession] = useState([]);
+  // const [farmVisitsPerSession, setFarmVisitsPerSession] = useState([]);
 
   // get params from url
   const params = useParams();
   const { id } = params;
 
-  const getAllFarmVisitsByTS = useQuery(GET_FARM_VISITS_PER_TS, {
-    variables: { tsId: id },
-  });
+  // const getAllFarmVisitsByTS = useQuery(GET_FARM_VISITS_PER_TS, {
+  //   variables: { tsId: id },
+  // });
 
   const selectedTrainingSession =
     trainingSessions && trainingSessions.find((group) => group.ts_id === id);
   const breadCrumbsLinkTo = "trainsession";
 
-  useEffect(() => {
-    if (getAllFarmVisitsByTS.data) {
-      const farmVisits =
-        getAllFarmVisitsByTS.data.getFarmVisitsBySession.farmVisits;
-      setFarmVisitsPerSession(farmVisits);
-    }
-  }, [getAllFarmVisitsByTS.data]);
+  // useEffect(() => {
+  //   if (getAllFarmVisitsByTS.data) {
+  //     const farmVisits =
+  //       getAllFarmVisitsByTS.data.getFarmVisitsBySession.farmVisits;
+  //     setFarmVisitsPerSession(farmVisits);
+  //   }
+  // }, [getAllFarmVisitsByTS.data]);
 
   return (
     <div>
@@ -58,7 +58,7 @@ const Tsdetail = ({ trainingSessions, selectedProject }) => {
 
           <Tstabs
             details={selectedTrainingSession}
-            farmVisits={farmVisitsPerSession}
+            //farmVisits={farmVisitsPerSession}
             selectedProject={selectedProject}
           />
         </>

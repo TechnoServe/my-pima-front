@@ -93,6 +93,7 @@ const GET_FARM_VISIT_QAs = gql`
         bp_id
         fv_id
         qas {
+          practice_name_id
           practice_name
           questions
           answers

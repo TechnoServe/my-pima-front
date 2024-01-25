@@ -16,7 +16,7 @@ const TrainingGroup = ({
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
       id: "tg_name",
-      name: "Training Group Name",
+      name: "FFG Name",
       selector: (row) => row.tg_name,
       sortable: true,
     },
@@ -28,7 +28,7 @@ const TrainingGroup = ({
     },
     {
       id: "total_participants",
-      name: "No of Participants",
+      name: "No of Registered Farmers",
       selector: (row) => row.total_participants,
       sortable: true,
     },
@@ -43,21 +43,21 @@ const TrainingGroup = ({
       name: "Farmer Trainer",
       selector: (row) => row.farmer_trainer,
       sortable: true,
-    },
-    {
-      id: "status",
-      name: "Status",
-      selector: (row) => (
-        <div>
-          {row.status === "Active" ? (
-            <Chip label={"Active"} color="success" variant="outlined" />
-          ) : (
-            <Chip label={"Inactive"} color="error" variant="outlined" />
-          )}
-        </div>
-      ),
-      sortable: true,
-    },
+    }
+    // {
+    //   id: "status",
+    //   name: "Status",
+    //   selector: (row) => (
+    //     <div>
+    //       {row.status === "Active" ? (
+    //         <Chip label={"Active"} color="success" variant="outlined" />
+    //       ) : (
+    //         <Chip label={"Inactive"} color="error" variant="outlined" />
+    //       )}
+    //     </div>
+    //   ),
+    //   sortable: true,
+    // },
   ];
 
   const rows = trainingGroups
@@ -77,7 +77,7 @@ const TrainingGroup = ({
 
   return (
     <div>
-      <h1 className="module__heading">Training Groups</h1>
+      <h1 className="module__heading">Focal Farmer Groups</h1>
       {trainingGroups.length > 0 ? (
         <div>
           <Statsframe
@@ -96,7 +96,7 @@ const TrainingGroup = ({
         </div>
       ) : (
         <div className="no__data">
-          <em>No Active Group Found</em>
+          <em>No Active Focal Farmer Groups Found</em>
         </div>
       )}
     </div>

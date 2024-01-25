@@ -38,7 +38,7 @@ const Participants = ({
     {
       id: "gender",
       name: "Gender",
-      selector: (row) => row.gender,
+      selector: (row) => row.gender === "m"? "Male": "Female",
       sortable: true,
     },
     {
@@ -49,7 +49,7 @@ const Participants = ({
     },
     {
       id: "tns_id",
-      name: "TNS Id",
+      name: "TNS ID",
       selector: (row) => row.tns_id,
       sortable: true,
     },
@@ -70,24 +70,10 @@ const Participants = ({
       name: "Primary HouseHold Member",
       selector: (row) => (
         <div>
-          {row.primary_household_member === "Yes" ? (
+          {row.farmer_number === "1" ? (
             <Chip label={"Yes"} color="success" variant="outlined" />
           ) : (
             <Chip label={"No"} color="error" variant="outlined" />
-          )}
-        </div>
-      ),
-      sortable: true,
-    },
-    {
-      id: "status",
-      name: "Status",
-      selector: (row) => (
-        <div>
-          {row.status === "Active" ? (
-            <Chip label={"Active"} color="success" variant="outlined" />
-          ) : (
-            <Chip label={"Inactive"} color="error" variant="outlined" />
           )}
         </div>
       ),
@@ -207,7 +193,7 @@ const Participants = ({
       )}
 
       <div className="flex__heading">
-        <h1 className="module__heading">Participants View</h1>{" "}
+        <h1 className="module__heading">Registered Farmers View</h1>{" "}
         {(userDetails?.role === "super_admin" ||
           userDetails?.role === "ci_leadership" ||
           userDetails?.role === "senior_business_advisor" ||
@@ -235,7 +221,7 @@ const Participants = ({
         />
       ) : (
         <div className="no__data">
-          <h1 style={{ fontSize: "20px" }}>No Participant Yet</h1>
+          <h1 style={{ fontSize: "20px" }}>No Registered Farmers Yet</h1>
         </div>
       )}
 

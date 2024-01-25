@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Typography, Tabs, Tab, Box } from "@mui/material";
 import Tstabdetail from "./Tstabdetail";
 import { a11yProps } from "../tgdetail/Tgtabs";
-import FvTabTable from "../tgdetail/fvtabtable";
+// import FvTabTable from "../tgdetail/fvtabtable";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -44,7 +44,7 @@ const Tstabs = ({ details, farmVisits, selectedProject }) => {
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs value={value} onChange={handleChange} aria-label="session tabs">
             <Tab label="Details" {...a11yProps(0)} />
-            <Tab label="Farm Visits" {...a11yProps(1)} />
+            {/* <Tab label="Farm Visits" {...a11yProps(1)} /> */}
           </Tabs>
         </Box>
 
@@ -52,9 +52,9 @@ const Tstabs = ({ details, farmVisits, selectedProject }) => {
           <Tstabdetail details={details} selectedProject={selectedProject} />
         </CustomTabPanel>
 
-        <CustomTabPanel value={value} index={1}>
+        {/* <CustomTabPanel value={value} index={1}>
           <FvTabTable details={details} farmVisits={farmVisits} />
-        </CustomTabPanel>
+        </CustomTabPanel> */}
       </Box>
     </div>
   );

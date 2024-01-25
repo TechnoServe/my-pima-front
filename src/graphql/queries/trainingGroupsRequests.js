@@ -10,6 +10,7 @@ const GET_TRAINING_GROUPS_PER_PROJECT = gql`
         tg_name
         tns_id
         total_participants
+        total_households
         farmer_trainer
         business_advisor
         status

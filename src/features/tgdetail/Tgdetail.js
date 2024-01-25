@@ -53,10 +53,10 @@ const Tgdetail = ({ trainingGroups, trainingSessions, participants }) => {
           <div style={{ marginTop: "10px" }}>
             <h1>{selectedTrainingGroup.tg_name}</h1>
             <p style={Styles}>
-              In the training group details you can access detailed information
-              for a specific training group, explore the training sessions list
+              In the focal farmer group details you can access detailed information
+              for a specific ffg, explore the training sessions list
               associated with the selected group. Review the Farm Visits List
-              associated with the group and export the information displayed on
+              associated with the ffg and export the information displayed on
               this page to Excel or CSV format.
             </p>
           </div>

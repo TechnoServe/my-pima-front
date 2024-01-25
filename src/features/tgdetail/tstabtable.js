@@ -6,20 +6,22 @@ const Tstabtable = ({ trainingSessions }) => {
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
-      id: "ts_name",
-      name: "Session Name",
-      selector: (row) => row.ts_name,
-      sortable: true,
-    },
-    {
       id: "ts_module",
-      name: "Module Name",
+      name: "Session Name",
+      grow: 2,
       selector: (row) => row.ts_module,
       sortable: true,
     },
+    // {
+    //   id: "ts_module",
+    //   name: "Training Month",
+    //   grow: 2,
+    //   selector: (row) => row.ts_module,
+    //   sortable: true,
+    // },
     {
       id: "tns_id",
-      name: "TNS Id",
+      name: "TNS ID",
       selector: (row) => row.tns_id,
       sortable: true,
     },
@@ -27,20 +29,6 @@ const Tstabtable = ({ trainingSessions }) => {
       id: "farmer_trainer",
       name: "Farmer Trainer",
       selector: (row) => row.farmer_trainer,
-      sortable: true,
-    },
-    {
-      id: "ts_status",
-      name: "Status",
-      selector: (row) => (
-        <div>
-          {row.ts_status === "Active" ? (
-            <Chip label={"Active"} color="success" variant="outlined" />
-          ) : (
-            <Chip label={"Inactive"} color="error" variant="outlined" />
-          )}
-        </div>
-      ),
       sortable: true,
     },
     {
@@ -53,20 +41,6 @@ const Tstabtable = ({ trainingSessions }) => {
       id: "total_females",
       name: "FA",
       selector: (row) => row.total_females,
-      sortable: true,
-    },
-    {
-      id: "has_image",
-      name: "Has Image?",
-      selector: (row) => (
-        <div>
-          {row.has_image ? (
-            <Chip label={"Yes"} color="success" variant="outlined" />
-          ) : (
-            <Chip label={"No"} color="error" variant="outlined" />
-          )}
-        </div>
-      ),
       sortable: true,
     },
     {
@@ -120,7 +94,6 @@ const Tstabtable = ({ trainingSessions }) => {
       name: "Session Date",
       selector: (row) => row.session_date,
       sortable: true,
-      grow: 2,
     },
   ];
 

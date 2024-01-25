@@ -59,10 +59,10 @@ export default function Tgtabs({
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label="TG Details" {...a11yProps(0)} />
-          <Tab label="TG sessions" {...a11yProps(1)} />
-          <Tab label="TG Farm Visits" {...a11yProps(2)} />
-          <Tab label="TG Participants" {...a11yProps(2)} />
+          <Tab label="FFG Details" {...a11yProps(0)} />
+          <Tab label="FFG sessions" {...a11yProps(1)} />
+          <Tab label="FFG Farm Visits" {...a11yProps(2)} />
+          <Tab label="FFG Participants" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>

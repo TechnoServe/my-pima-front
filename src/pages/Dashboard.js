@@ -26,7 +26,7 @@ const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
   const statsData = [
     {
       name: "total_training_groups",
-      heading: "Total Training Groups",
+      heading: "Total FFGs",
       figures: trainingGroups.length,
       icon: <MdGroups />,
       color: "#25245D",
@@ -34,7 +34,7 @@ const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
     },
     {
       name: "total_training_modules",
-      heading: "Total Training Modules",
+      heading: "Completed Sessions",
       figures:
         getProjectModules.data &&
         getProjectModules.data.getTrainingModulesByProject &&
@@ -47,7 +47,7 @@ const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
     },
     {
       name: "total_completed_training_modules",
-      heading: "Completed Modules",
+      heading: "Completed Topics",
       figures:
         getProjectModules.data &&
         getProjectModules.data.getTrainingModulesByProject &&
@@ -62,17 +62,34 @@ const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
     },
     {
       name: "total_participants",
-      heading: "Total Participants",
+      heading: "Registered Farmers",
       figures: trainingGroups
         .map((group) => group.total_participants)
-        .reduce((a, b) => a + b, 0),
+        .reduce((a, b) => a + b, 0)
+        .toLocaleString(),
       icon: <BsPersonBoundingBox />,
       color: "#087C8F",
       path: "/in/participants",
     },
     {
+      name: "total_fts",
+      heading: "Registered Households",
+      figures: trainingGroups
+        .map((group) => group.total_households)
+        .reduce((a, b) => a + b, 0).toLocaleString(),
+      icon: <GiFarmer />,
+      color: "#F46700",
+    },
+    {
+      name: "total_fts",
+      heading: "Trained Farmers",
+      figures: "N/A",
+      icon: <GiFarmer />,
+      color: "#F46700",
+    },
+    {
       name: "total_bas",
-      heading: "Active BA's",
+      heading: "Agronomy Advisors",
       figures: projectStats.total_bas,
       icon: <FaTripadvisor />,
       color: "#F46700",
@@ -100,7 +117,7 @@ const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
               cardTitle: t_module.tm_is_current
                 ? `${t_module.tm_title} (Current)`
                 : t_module.tm_title,
-              cardSubtitle: `Module Number: ${t_module.tm_module_number}`,
+              cardSubtitle: `Session Number: ${t_module.tm_module_number}`,
               isCurrent: t_module.tm_is_current,
             };
           }

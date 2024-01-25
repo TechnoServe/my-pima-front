@@ -25,22 +25,8 @@ const PartsTabTable = ({ participants }) => {
     },
     {
       id: "tns_id",
-      name: "TNS Id",
+      name: "TNS ID",
       selector: (row) => row.tns_id,
-      sortable: true,
-    },
-    {
-      id: "status",
-      name: "Status",
-      selector: (row) => (
-        <div>
-          {row.status === "Active" ? (
-            <Chip label={"Active"} color="success" variant="outlined" />
-          ) : (
-            <Chip label={"Inactive"} color="error" variant="outlined" />
-          )}
-        </div>
-      ),
       sortable: true,
     },
     {
@@ -62,8 +48,10 @@ const PartsTabTable = ({ participants }) => {
     ? participants.map((participant, index) => ({
         num: index + 1,
         p_id: participant.p_id,
-        full_name: participant.full_name,
-        gender: participant.gender,
+        full_name: `${participant.first_name} ${
+          participant.middle_name !== 'null' ? participant.middle_name : " "
+        } ${participant.last_name}`,
+        gender: participant.gender === "m"? "Male" : "Female",
         location: participant.location,
         tns_id: participant.tns_id,
         status: participant.status,

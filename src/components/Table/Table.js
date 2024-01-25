@@ -43,7 +43,7 @@ const Table = ({
   tableRowItem,
   allAttendances,
   details,
-  selectedProject
+  selectedProject,
 }) => {
   const pathName = tableRowItem || window.location.pathname.split("/")[2];
 
@@ -141,11 +141,10 @@ const Table = ({
       "status",
       "farmer_trainer",
       "business_advisor",
-      "create_in_commcare"
+      "create_in_commcare",
     ];
 
     if (tableRowItem === "participants") {
-
       // Create a map to store monthly attendance data
       const monthlyAttendanceMap = new Map();
 
@@ -158,8 +157,13 @@ const Table = ({
 
       // Iterate through the attendance data to calculate monthly attendance
       filteredAttendances.forEach((attendance) => {
-        const {attendance_status, participant_id, module_number, module_name, module_id } =
-          attendance;
+        const {
+          attendance_status,
+          participant_id,
+          module_number,
+          module_name,
+          module_id,
+        } = attendance;
         // const [year, month] = attendance_date.split("-");
         const key = `${module_number}-${module_name}-${module_id}`;
 
@@ -180,17 +184,32 @@ const Table = ({
       }
 
       // Prepare data for writing to the CSV file
-      const csvRows = data.map((participant) => {
-        const rowData = { ...participant };
-        for (const [monthKey, monthlyAttendance] of monthlyAttendanceMap) {
-          rowData[monthKey] = monthlyAttendance[participant.p_id] || "";
-        }
-        return rowData;
-      });
+      const csvRows =
+        searchText.length > 0
+          ? filteredData.map((participant) => {
+              const rowData = { ...participant };
+              for (const [
+                monthKey,
+                monthlyAttendance,
+              ] of monthlyAttendanceMap) {
+                rowData[monthKey] = monthlyAttendance[participant.p_id] || "";
+              }
+              return rowData;
+            })
+          : data.map((participant) => {
+              const rowData = { ...participant };
+              for (const [
+                monthKey,
+                monthlyAttendance,
+              ] of monthlyAttendanceMap) {
+                rowData[monthKey] = monthlyAttendance[participant.p_id] || "";
+              }
+              return rowData;
+            });
 
       data = csvRows;
 
-      console.log("CSV Participants export")
+      console.log("CSV Participants export");
 
       console.log(data);
     }

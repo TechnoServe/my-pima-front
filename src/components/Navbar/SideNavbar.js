@@ -28,7 +28,7 @@ const Sidebar = ({ children }) => {
     },
     {
       path: "/in/traingroup",
-      name: "Training Groups",
+      name: "Focal Farmer Groups",
       icon: <MdOutlineGroups />,
     },
     {
@@ -38,7 +38,7 @@ const Sidebar = ({ children }) => {
     },
     {
       path: "/in/participants",
-      name: "Participants",
+      name: "Registered Farmers",
       icon: <MdOutlinePersonSearch />
     },
     {
