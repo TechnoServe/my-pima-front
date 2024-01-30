@@ -16,6 +16,8 @@ import { Chip } from "@mui/material";
 /* Component */
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [activeSubMenu, setActiveSubMenu] = useState(null);
+
   const toggle = () => setIsOpen(!isOpen);
   const navigate = useNavigate();
   const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
@@ -35,11 +37,23 @@ const Sidebar = ({ children }) => {
       path: "/in/trainsession",
       name: "Training Sessions",
       icon: <MdOutlineCalendarToday />,
+      subMenu: [
+        {
+          path: "/in/trainsession/",
+          name: "All Sessions",
+          icon: <MdOutlineCalendarToday />,
+        },
+        {
+          path: "/in/trainsession/pending",
+          name: "Image Approvals",
+          icon: <MdOutlineCalendarToday />,
+        }
+      ],
     },
     {
       path: "/in/participants",
       name: "Registered Farmers",
-      icon: <MdOutlinePersonSearch />
+      icon: <MdOutlinePersonSearch />,
     },
     {
       path: "/in/farmvisit",
@@ -105,21 +119,40 @@ const Sidebar = ({ children }) => {
             <HiMenuAlt2 onClick={toggle} color="white" />
           </div>
         </div>
+
         <div className="mid__section">
           {menuItem
             .filter((item) => item.isPrivate === undefined || item.isPrivate)
             .map((item, index) => (
-              <div key={index}>
+              <div key={index} className="menu-item">
                 {/* Render main menu item */}
                 <NavLink to={item.path} className="link">
                   <div className="icon">{item.icon}</div>
-                  <div
-                    style={{ display: isOpen ? "block" : "none" }}
-                    className="link_text"
-                  >
-                    {item.name}
-                  </div>
+                  <div className="link_text">{item.name}</div>
                 </NavLink>
+
+                {/* Render sub-menu items if available */}
+                {item.subMenu && (
+                  <div
+                    className={`sub__menu ${
+                      activeSubMenu === index ? "active" : ""
+                    }`}
+                  >
+                    {item.subMenu.map((subItem, subIndex) => (
+                      <NavLink
+                        key={subIndex}
+                        to={subItem.path}
+                        className="link"
+                        activeClassName="active"
+                        onMouseEnter={() => setActiveSubMenu(index)}
+                        onMouseLeave={() => setActiveSubMenu(null)}
+                      >
+                        <div className="icon">{subItem.icon}</div>
+                        <div className="link_text">{subItem.name}</div>
+                      </NavLink>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
         </div>

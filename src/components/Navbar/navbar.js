@@ -22,6 +22,7 @@ import { Grid } from "@mui/material";
 import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../../graphql/queries/trainingSessionsRequests";
 import Tsdetail from "../../features/tsdetail/Tsdetail";
 import Partdetail from "../../features/partdetail/Partdetail";
+import TSApprove from "../../features/tsapprove/tslist";
 import { GET_PARTICIPANTS_PER_PROJECT } from "../../graphql/queries/participantsRequests";
 import { GET_FARM_VISITS_PER_PROJECT } from "../../graphql/queries/farmVisitsRequests";
 import LoaderPage from "../../pages/LoaderPage";
@@ -348,6 +349,33 @@ const Navbar = () => {
                       element={
                         !trainingSessionsPerProject.loading ? (
                           <TrainingSession
+                            trainingSessions={
+                              filteredSessions && filteredSessions.length > 0
+                                ? filteredSessions
+                                : trainingSessions
+                            }
+                            selectedProject={selectedProject}
+                            filter={filter}
+                            setFilter={setFilter}
+                            setFilteredSessions={setFilteredSessions}
+                          />
+                        ) : (
+                          <BeatLoader
+                            color="#0D3C61"
+                            size={15}
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/trainsession/pending"
+                      element={
+                        !trainingSessionsPerProject.loading ? (
+                          <TSApprove
                             trainingSessions={
                               filteredSessions && filteredSessions.length > 0
                                 ? filteredSessions

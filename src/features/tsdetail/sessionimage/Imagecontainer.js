@@ -57,6 +57,7 @@ const Imagecontainer = ({
   isVerified,
   imageStatus,
   selectedProject,
+  loading,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -108,114 +109,143 @@ const Imagecontainer = ({
 
   return (
     <>
-      <Dialog
-        open={open}
-        keepMounted
-        fullWidth
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <div style={{ margin: "20px" }}>
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: "#2b2b2b",
-            }}
-          >
-            <MdClose />
-          </IconButton>
-          <p>SESSION IMAGE</p>
-        </div>
-
-        <DialogContent>
-          <div style={{ position: "relative" }}>
-            <img
-              src={sessionImageUrl}
-              alt="session_pic"
-              style={{
-                width: "100%",
-                height: "auto",
+      {!loading ? (
+        <Dialog
+          open={open}
+          keepMounted
+          fullWidth
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <div style={{ margin: "20px" }}>
+            <IconButton
+              aria-label="close"
+              onClick={handleClose}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: "#2b2b2b",
               }}
-              onClick={toggleExpand}
-            />
-            {isExpanded ? (
-              <IconButton
-                aria-label="shrink"
-                onClick={toggleExpand}
-                sx={{
-                  position: "absolute",
-                  bottom: 8,
-                  right: 8,
-                  color: "#fff",
-                }}
-              >
-                <MdFullscreenExit />
-              </IconButton>
-            ) : (
-              <IconButton
-                aria-label="expand"
-                onClick={toggleExpand}
-                sx={{
-                  position: "absolute",
-                  bottom: 8,
-                  right: 8,
-                  color: "#fff",
-                }}
-              >
-                <MdFullscreen />
-              </IconButton>
-            )}
+            >
+              <MdClose />
+            </IconButton>
+            <p>SESSION IMAGE</p>
           </div>
-        </DialogContent>
 
-        <DialogActions>
-          {(userDetails?.role === "super_admin" ||
-            userDetails?.role === "ci_leadership" ||
-            userDetails?.role === "senior_business_advisor" ||
-            userDetails?.role === "business_advisor" ||
-            userDetails?.role === "project_manager" ||
-            userDetails?.role === "farmer_trainer") &&
-            (!isVerified || imageStatus === "not_verified") && (
-              <>
-                <StyledButton2
-                  onClick={() => handleSessionValidation(id, "invalid")}
-                  variant="outlined"
-                  disabled={isLoading}
+          <DialogContent>
+            <div style={{ position: "relative" }}>
+              <img
+                src={sessionImageUrl}
+                alt="session_pic"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                }}
+                onClick={toggleExpand}
+              />
+              {isExpanded ? (
+                <IconButton
+                  aria-label="shrink"
+                  onClick={toggleExpand}
+                  sx={{
+                    position: "absolute",
+                    bottom: 8,
+                    right: 8,
+                    color: "#fff",
+                  }}
                 >
-                  {isLoading ? (
-                    <BeatLoader size={8} color={"#fff"} loading={isLoading} />
-                  ) : (
-                    "Invalid"
-                  )}
-                </StyledButton2>
-                <StyledButton2
-                  onClick={() => handleSessionValidation(id, "unclear")}
-                  variant="outlined"
-                  disabled={isLoading}
+                  <MdFullscreenExit />
+                </IconButton>
+              ) : (
+                <IconButton
+                  aria-label="expand"
+                  onClick={toggleExpand}
+                  sx={{
+                    position: "absolute",
+                    bottom: 8,
+                    right: 8,
+                    color: "#fff",
+                  }}
                 >
-                  {isLoading ? (
-                    <BeatLoader size={8} color={"#fff"} loading={isLoading} />
-                  ) : (
-                    "Unclear"
-                  )}
-                </StyledButton2>
-                <StyledButton
-                  onClick={() => handleSessionValidation(id, "approved")}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <BeatLoader size={8} color={"#fff"} loading={isLoading} />
-                  ) : (
-                    "Approve"
-                  )}
-                </StyledButton>
-              </>
-            )}
-        </DialogActions>
-      </Dialog>
+                  <MdFullscreen />
+                </IconButton>
+              )}
+            </div>
+          </DialogContent>
+
+          <DialogActions>
+            {(userDetails?.role === "super_admin" ||
+              userDetails?.role === "ci_leadership" ||
+              userDetails?.role === "senior_business_advisor" ||
+              userDetails?.role === "business_advisor" ||
+              userDetails?.role === "project_manager" ||
+              userDetails?.role === "farmer_trainer") &&
+              (!isVerified || imageStatus === "not_verified") && (
+                <>
+                  <StyledButton2
+                    onClick={() => handleSessionValidation(id, "invalid")}
+                    variant="outlined"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <BeatLoader size={8} color={"#fff"} loading={isLoading} />
+                    ) : (
+                      "Invalid"
+                    )}
+                  </StyledButton2>
+                  <StyledButton2
+                    onClick={() => handleSessionValidation(id, "unclear")}
+                    variant="outlined"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <BeatLoader size={8} color={"#fff"} loading={isLoading} />
+                    ) : (
+                      "Unclear"
+                    )}
+                  </StyledButton2>
+                  <StyledButton
+                    onClick={() => handleSessionValidation(id, "approved")}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <BeatLoader size={8} color={"#fff"} loading={isLoading} />
+                    ) : (
+                      "Approve"
+                    )}
+                  </StyledButton>
+                </>
+              )}
+          </DialogActions>
+        </Dialog>
+      ) : (
+        <Dialog
+          open={open}
+          keepMounted
+          fullWidth
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <div style={{ margin: "20px" }}>
+            <IconButton
+              aria-label="close"
+              onClick={handleClose}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: "#2b2b2b",
+              }}
+            >
+              <MdClose />
+            </IconButton>
+          </div>
+
+          <div>
+            <h3>Loading Image...</h3>
+          </div>
+          
+        </Dialog>
+      )}
     </>
   );
 };

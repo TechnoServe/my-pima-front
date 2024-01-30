@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./table.css";
 import FilterContainer from "../Filter/FilterContainer";
 import { useNavigate } from "react-router-dom";
@@ -7,9 +7,15 @@ import { BiSearchAlt } from "react-icons/bi";
 import { Button } from "@mui/material";
 import { FaFileExport } from "react-icons/fa";
 import { ExportToCsv } from "export-to-csv";
-import { downloadExcel } from "react-export-table-to-excel";
+// import { downloadExcel } from "react-export-table-to-excel";
+import { utils, writeFile } from "xlsx";
+
+import { useQuery } from "@apollo/client";
+
 import TimeZone from "../../utils/timezone";
 import FVQAModal from "../Modals/FVQAModal";
+import Imagecontainer from "../../features/tsdetail/sessionimage/Imagecontainer";
+import { GET_TRAINING_SESSION_IMAGE } from "../../graphql/queries/trainingSessionsRequests";
 
 const customStyles = {
   rows: {
@@ -47,7 +53,16 @@ const Table = ({
 }) => {
   const pathName = tableRowItem || window.location.pathname.split("/")[2];
 
-  const [rowDetails, setRowDetails] = useState(null);
+  const [rowDetails, setRowDetails] = useState({ ts_id: null });
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [session_image, setSession_image] = useState(null);
+  console.log("rowDetails", rowDetails);
+
+  const imageData = useQuery(GET_TRAINING_SESSION_IMAGE, {
+    variables: { tsId: rowDetails && rowDetails.ts_id ? rowDetails.ts_id : "" },
+    skip: !rowDetails,
+  });
 
   const filename =
     pathName === "traingroup"
@@ -62,6 +77,29 @@ const Table = ({
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log("seeting image", imageData);
+    if (
+      !imageData.loading &&
+      imageData &&
+      imageData.data &&
+      imageData.data.trainingSessionImage &&
+      imageData.data.trainingSessionImage.status === 200
+    ) {
+      console.log("IMage set");
+      setLoading(false);
+      setSession_image(
+        imageData.data.trainingSessionImage.trainingSessionImage
+      );
+    }
+  }, [imageData]);
+
+  // useEffect(() => {
+  //   const { imageData, loading } = useQuery(GET_TRAINING_SESSION_IMAGE, {
+  //     variables: { tsId: rowDetails.ts_id },
+  //   });
+  // }, [data, loading]);
+
   const handleRowClick = (row) => {
     setRowDetails(row);
 
@@ -73,17 +111,33 @@ const Table = ({
         : tableRowItem === "participants"
         ? row.p_id
         : tableRowItem === "farmvisit"
-        ? row.fv_id
+        ? row.fv_ids
+        : tableRowItem === "trainsessionapprov"
+        ? row.ts_id
         : row.attendance_id;
 
-    if (tableRowItem !== "farmvisit") {
-      navigate(`/in/${tableRowItem}/${id}`);
+    if (tableRowItem !== "farmvisit" && tableRowItem !== "trainsessionapprov") {
+      navigate(
+        `/in/${
+          tableRowItem === "trainsessionapprov" ? "trainsession" : tableRowItem
+        }/${id}`
+      );
     }
 
     if (tableRowItem === "farmvisit") {
       setFvId(row.fv_id);
       handleOpenModal();
     }
+
+    if (tableRowItem === "trainsessionapprov") {
+      //setFvId(row.fv_id);
+      setOpen(true);
+      setLoading(true);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const [searchText, setSearchText] = useState("");
@@ -214,6 +268,9 @@ const Table = ({
       console.log(data);
     }
 
+    console.log(columns);
+    console.log("data", data);
+
     // Combine header and rows to form the CSV content
     const csvExporter = new ExportToCsv({
       fieldSeparator: ",",
@@ -226,7 +283,7 @@ const Table = ({
       headers:
         tableRowItem === "participants"
           ? partsHeaders
-          : columns.map((column) => column.name),
+          : columns.map((column) => column.id),
     });
 
     csvExporter.generateCsv(
@@ -237,18 +294,74 @@ const Table = ({
     );
   };
 
+  // const handleExcelExport = () => {
+  //   downloadExcel({
+  //     fileName: `${filename}_${TimeZone()}`,
+  //     sheet: `${filename}_${TimeZone()}`,
+  //     tablePayload: {
+  //       header: columns.map((column) => column.id),
+  //       body: data.map(
+  //         ({ tg_id, ts_id, p_id, attendance_id, fv_id, __typename, ...rest }) =>
+  //           rest
+  //       ),
+  //     },
+  //   });
+  // };
+
   const handleExcelExport = () => {
-    downloadExcel({
-      fileName: `${filename}_${TimeZone()}`,
-      sheet: `${filename}_${TimeZone()}`,
-      tablePayload: {
-        header: columns.map((column) => column.name),
-        body: data.map(
-          ({ tg_id, ts_id, p_id, attendance_id, fv_id, __typename, ...rest }) =>
-            rest
-        ),
+    const sheetName = "Sessions Data";
+    const summarySheetName = "Summary by Trainer";
+
+    // Sheet 1: Sessions Data
+    const sessionsData = {
+      header: columns.map((column) => column.id),
+      body: data.map(
+        ({ tg_id, ts_id, p_id, attendance_id, fv_id, __typename, ...rest }) =>
+          Object.values(rest)
+      ),
+    };
+
+    // Sheet 2: Summary by Trainer
+    const trainerSummary = data.reduce(
+      (acc, { farmer_trainer, session_image_status }) => {
+        const key = `${farmer_trainer}_${session_image_status}`;
+
+        // Initialize count if it doesn't exist
+        if (!acc[key]) {
+          acc[key] = { farmer_trainer, session_image_status, count: 0 };
+        }
+
+        // Increment the count for the specific combination
+        acc[key].count += 1;
+
+        return acc;
       },
-    });
+      {}
+    );
+
+    const summaryData = Object.values(trainerSummary);
+
+    const trainerSummaryData = {
+      header: ["farmer_trainer", "session_image_status", "count"],
+      body: summaryData.map((data) => Object.values(data)),
+    };
+
+    // Create a workbook and add sheets
+    const workbook = utils.book_new();
+    const sessionsWorksheet = utils.json_to_sheet(
+      [sessionsData.header, ...sessionsData.body],
+      { skipHeader: true }
+    );
+    const summaryWorksheet = utils.json_to_sheet(
+      [trainerSummaryData.header, ...trainerSummaryData.body],
+      { skipHeader: true }
+    );
+
+    utils.book_append_sheet(workbook, summaryWorksheet, summarySheetName);
+    utils.book_append_sheet(workbook, sessionsWorksheet, sheetName);
+
+    // Save the workbook as an Excel file
+    writeFile(workbook, `${filename}_${TimeZone()}.xlsx`);
   };
 
   return (
@@ -296,21 +409,23 @@ const Table = ({
         actions={
           data.length > 0 && (
             <>
-              <Button
-                variant="outlined"
-                sx={{
-                  color: "#00A5A3",
-                  borderColor: "#00A5A3",
-                }}
-                onClick={handleCSVExport}
-              >
-                <FaFileExport
-                  style={{
-                    marginRight: "5px",
+              {tableRowItem !== "trainsessionapprov" && (
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: "#00A5A3",
+                    borderColor: "#00A5A3",
                   }}
-                />{" "}
-                CSV
-              </Button>
+                  onClick={handleCSVExport}
+                >
+                  <FaFileExport
+                    style={{
+                      marginRight: "5px",
+                    }}
+                  />{" "}
+                  CSV
+                </Button>
+              )}
               <Button
                 variant="outlined"
                 sx={{
@@ -324,7 +439,9 @@ const Table = ({
                     marginRight: "5px",
                   }}
                 />{" "}
-                Excel
+                {tableRowItem !== "trainsessionapprov"
+                  ? "Excel"
+                  : "Download Report"}
               </Button>
             </>
           )
@@ -338,6 +455,19 @@ const Table = ({
         details={details}
         rowDetails={rowDetails}
       />
+
+      {open && (
+        <Imagecontainer
+          open={open}
+          handleClose={handleClose}
+          id={rowDetails.ts_id}
+          isVerified={rowDetails.is_verified}
+          imageStatus={rowDetails.session_image_status}
+          sessionImageUrl={session_image}
+          selectedProject={selectedProject}
+          loading={loading}
+        />
+      )}
     </div>
   );
 };
