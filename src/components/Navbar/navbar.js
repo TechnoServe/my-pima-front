@@ -7,6 +7,8 @@ import TrainingGroup from "../../pages/TrainingGroup";
 import TrainingSession from "../../pages/TrainingSession";
 import Participants from "../../pages/Participants";
 import FarmVisit from "../../pages/FarmVisit";
+import AAPerfomance from "../../pages/AAPerformance";
+import FTPerformance from "../../pages/FTPerformance";
 import { BeatLoader } from "react-spinners";
 import ProjectListDropdown from "../ProjectDrop/ProjectListDropdown";
 import {
@@ -369,6 +371,18 @@ const Navbar = () => {
                             }}
                           />
                         )
+                      }
+                    />
+                    <Route
+                      path="/performance/aa"
+                      element={
+                        <AAPerfomance selectedProject={selectedProject}/>
+                      }
+                    />
+                    <Route
+                      path="/performance/ft"
+                      element={
+                        <FTPerformance selectedProject={selectedProject}/>
                       }
                     />
                     <Route

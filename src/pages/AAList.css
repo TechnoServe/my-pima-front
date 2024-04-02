@@ -1,0 +1,96 @@
+/* AAList.css */
+
+.aa-list-container {
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f7f7f7;
+  width: 80%;
+}
+
+.title {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.select-export-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.select {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.export-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.export-button:hover {
+  background-color: #0056b3;
+}
+
+.graph-container {
+  display: flex; 
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.graph-aa {
+  width: calc(80% - 50px) !important;
+  background-color: #fff !important;
+  border-radius: 5px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  padding: 20px !important; 
+  margin: auto !important;
+}
+
+.graph-title {
+  text-align: center;
+  font-size: 16px;
+  margin: 20px 0;
+}
+
+.loading-message,
+.error-message {
+  text-align: center !important;
+  font-size: 18px;
+  padding: 10px;
+}
+
+.loading-message {
+  color: #007bff; /* Blue color */
+}
+
+.error-message {
+  color: #dc3545; /* Red color */
+}
+
+.recharts-tooltip {
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recharts-tooltip-label {
+  font-weight: bold;
+}
+
+.recharts-tooltip-item {
+  color: #333;
+}
+
+.recharts-tooltip-item-name {
+  color: #777;
+}

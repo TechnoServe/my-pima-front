@@ -5,7 +5,9 @@ import {
   MdOutlineCalendarToday,
   MdOutlinePersonSearch,
   MdLogout,
-  MdManageAccounts,
+  MdManageAccounts, 
+  MdPerson,
+  MdAddChart
 } from "react-icons/md";
 import { HiOutlineTruck, HiMenuAlt2 } from "react-icons/hi";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -59,6 +61,23 @@ const Sidebar = ({ children }) => {
       path: "/in/farmvisit",
       name: "Farm Visits",
       icon: <HiOutlineTruck />,
+    },
+    {
+      path: "",
+      name: "Field Team Performance",
+      icon: <MdAddChart />,
+      subMenu: [
+        {
+          path: "/in/performance/aa",
+          name: "Agronomy Advisors",
+          icon: <MdPerson />,
+        },
+        {
+          path: "/in/performance/ft",
+          name: "Farmer Trainers",
+          icon: <MdPerson />,
+        }
+      ],
     },
     {
       path: "/in/manage",

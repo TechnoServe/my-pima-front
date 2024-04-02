@@ -1,0 +1,135 @@
+/* FTPerformance.css */
+
+.ft-performance-container {
+  padding: 20px;
+  background-color: #f7f7f7;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.select-download-container {
+  display: flex;
+  align-items: center;
+}
+
+.select-container {
+  margin-bottom: 20px;
+}
+
+.select {
+  width: 300px;
+  margin: 0 auto;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.download-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.download-button:hover {
+  background-color: #0056b3;
+}
+
+.section-title {
+  margin-bottom: 20px;
+}
+
+.graph-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.graph {
+  width: calc(50% - 10px) !important; /* Adjust the width as needed */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px 0 20px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px !important;
+}
+
+.graph h4 {
+  margin-bottom: 10px;
+}
+
+.loading-message,
+.error-message {
+  text-align: center !important;
+  font-size: 18px;
+  padding: 10px;
+  width: 100%;
+}
+
+.loading-message {
+  color: #007bff; /* Blue color */
+}
+
+.error-message {
+  color: #dc3545; /* Red color */
+}
+
+.recharts-wrapper {
+  max-width: 100%;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+/* Adjustments for Recharts */
+
+.recharts-cartesian-axis-tick-value {
+  font-size: 12px;
+}
+
+.recharts-legend {
+  font-size: 14px;
+}
+
+.recharts-tooltip {
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recharts-tooltip-label {
+  font-weight: bold;
+}
+
+.recharts-tooltip-item {
+  color: #333;
+}
+
+.recharts-tooltip-item-name {
+  color: #777;
+}
+
+.recharts-cartesian-axis-tick-line {
+  display: none;
+}
+
+.recharts-cartesian-axis-line {
+  stroke: #ccc;
+}
+
+.recharts-cartesian-grid {
+  stroke: #f0f0f0;
+}
+
+.recharts-legend-item-text {
+  fill: #333;
+}
+
+.recharts-legend-item {
+  cursor: pointer;
+}
