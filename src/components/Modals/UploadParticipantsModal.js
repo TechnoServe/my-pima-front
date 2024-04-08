@@ -81,14 +81,13 @@ const UploadParticipantsModal = ({
     const reader = new FileReader();
     reader.onload = (e) => {
       const loadedData = e.target.result.split(/\r\n|\n/);
-      const modifiedData = [];
+      // const modifiedData = [];
       // remove column called "FF NO" if present with its data
       //const ffNoIndex = loadedData[0].split(",").indexOf("FF NO");
       //if (ffNoIndex > -1) {
-      loadedData.forEach((row, index) => {
+      const modifiedData = loadedData.map((row) => {
         const rowArray = row.split(",");
-        // rowArray.splice(ffNoIndex, 1);
-        modifiedData.push(rowArray);
+        return rowArray.map((cell) => cell.replace(/^"(.*)"$/, "$1")); // Remove double quotes from each cell
       });
       //}
 
@@ -112,6 +111,8 @@ const UploadParticipantsModal = ({
 
     if (fileInfo.data && fileInfo.data.length < 2) return;
 
+    console.log(fileInfo.data);
+
     if (loadedColumns) {
       const projectColumn = fileInfo.data.map(
         (row) => row[loadedColumns.indexOf("Project")]
@@ -120,10 +121,24 @@ const UploadParticipantsModal = ({
       // remove Project column header and falsey values
       projectColumn.shift();
 
-      // remove falsy values
-      const filteredProjectColumn = projectColumn.filter((project) => project);
+      const filteredProjectColumn = projectColumn.filter((project) => project); // Filter out any falsy values after removing quotes
+
+      // const filteredProjectColumn = projectColumn
+      //   .map((project) =>
+      //     project && typeof project === "string"
+      //       ? project.replace(/^"(.*)"$/, "$1")
+      //       : null
+      //   ) // Remove double quotes if project is a string
+      //   .filter((project) => project); // Filter out any falsy values after removing quotes
+
+      console.log(filteredProjectColumn);
+      //const filter = filteredProjectColumn.map(project => project.replace(/^"(.*)"$/, '$1'));
 
       setDistinctProjects([...new Set(filteredProjectColumn)]);
+      distinctProjects.forEach((project) =>
+        console.log("distinct" + " " + project)
+      );
+      console.log(navigatedProject);
     }
   }, [fileInfo, loadedColumns]);
 
