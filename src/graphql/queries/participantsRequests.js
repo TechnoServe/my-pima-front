@@ -1,7 +1,54 @@
 import { gql } from "@apollo/client";
 
+const GET_PARTICIPANTS_ATTENDANCE_PER_PROJECT = gql`
+  query GetParticipantsAttendanceByProject($projectId: String!) {
+    getParticipantsByProject(project_id: $projectId) {
+      message
+      status
+      participants {
+        p_id
+        first_name
+        middle_name
+        last_name
+        gender
+        age
+        coffee_tree_numbers
+        coop_membership_number
+        phone_number
+        hh_number
+        ffg_id
+        location
+        tns_id
+        status
+        farmer_trainer
+        business_advisor
+        project_name
+        training_group
+        household_id
+        primary_household_member
+        create_in_commcare
+      }
+    }
+    getAttendances(project_id: $projectId) {
+      message
+      status
+      attendance {
+        attendance_id
+        participant_id
+        attendance_name
+        attendance_date
+        attendance_status
+        session_id
+        module_name
+        module_number
+        module_id
+      }
+    }
+  }
+`;
+
 const GET_PARTICIPANTS_PER_PROJECT = gql`
-  query GetParticipantsByProject($projectId: String!) {
+  query GetParticipantsAttendanceByProject($projectId: String!) {
     getParticipantsByProject(project_id: $projectId) {
       message
       status
@@ -95,5 +142,6 @@ export {
   GET_PARTICIPANTS_PER_TG,
   GET_ATTENDANCE_PER_PARTICIPANT,
   UPLOAD_PARTICIPANTS,
-  SYNC_PARTICIPANTS_WITH_COMMCARE
+  SYNC_PARTICIPANTS_WITH_COMMCARE,
+  GET_PARTICIPANTS_ATTENDANCE_PER_PROJECT,
 };

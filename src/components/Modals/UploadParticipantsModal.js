@@ -182,6 +182,11 @@ const UploadParticipantsModal = ({
           .then(() => {
             setUploadResult(res.data.uploadParticipants);
             setIsProcessing(false);
+            if (uploadResult.status === 200) {
+              setTimeout(() => {
+                window.location.reload();
+              }, 5000); // 3 seconds
+            }
           })
           .catch((err) => {
             console.log(err);
