@@ -176,10 +176,8 @@ const Imagecontainer = ({
           <DialogActions>
             {(userDetails?.role === "super_admin" ||
               userDetails?.role === "ci_leadership" ||
-              userDetails?.role === "senior_business_advisor" ||
-              userDetails?.role === "business_advisor" ||
               userDetails?.role === "project_manager" ||
-              userDetails?.role === "farmer_trainer") &&
+              userDetails?.role === "mel_analyst") &&
               (!isVerified || imageStatus === "not_verified") && (
                 <>
                   <StyledButton2

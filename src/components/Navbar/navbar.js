@@ -253,7 +253,7 @@ const Navbar = () => {
               load1: trainingGroupsPerProject.loading,
               load2: trainingSessionsPerProject.loading,
               load3: participantsPerProject.loading,
-              load4: farmVisitsPerProject.loading,
+              // load4: farmVisitsPerProject.loading,
               load5: getAllAttendances.loading,
             }}
           />
