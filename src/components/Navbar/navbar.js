@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "./SideNavbar";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import Sidebar from "./SideNavbar";
 import Dashboard from "../../pages/Dashboard";
 import Profile from "../../pages/Profile";
 import TrainingGroup from "../../pages/TrainingGroup";
@@ -33,10 +33,10 @@ import { GET_ALL_ATTENDANCES } from "../../graphql/queries/attendancesRequests";
 import { useAuth } from "../../context/useAuth";
 
 const Navbar = () => {
-  // get current path
   const auth = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+
   const [allProjects, setAllProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [trainingGroups, setTrainingGroups] = useState([]);
@@ -52,34 +52,27 @@ const Navbar = () => {
   const [getProjectsAssigned, { data, error, loading }] = useLazyQuery(
     GET_ASSIGNED_PROJECTS
   );
-  const [selectedProject, setSelectedProject] = useState("");
-  const favProject = localStorage.getItem("fav_project");
+  const [selectedProject, setSelectedProject] = useState(
+    localStorage.getItem("fav_project") || ""
+  );
 
   const getAllProjects = useQuery(GET_ALL_PROJECTS);
-
   const trainingGroupsPerProject = useQuery(GET_TRAINING_GROUPS_PER_PROJECT, {
     variables: { projectId: selectedProject },
   });
-
   const trainingSessionsPerProject = useQuery(
     GET_TRAINING_SESSIONS_PER_PROJECT,
-    {
-      variables: { sfProjectId: selectedProject },
-    }
+    { variables: { sfProjectId: selectedProject } }
   );
-
   const participantsPerProject = useQuery(GET_PARTICIPANTS_PER_PROJECT, {
     variables: { projectId: selectedProject },
   });
-
   const getAllAttendances = useQuery(GET_ALL_ATTENDANCES, {
     variables: { projectId: selectedProject },
   });
-
   const farmVisitsPerProject = useQuery(GET_FARM_VISITS_PER_PROJECT, {
     variables: { projectId: selectedProject },
   });
-
   const projectStatistics = useQuery(GET_PROJECT_STATISTICS, {
     variables: { sfProjectId: selectedProject },
   });
@@ -91,18 +84,17 @@ const Navbar = () => {
     sessionDate: "",
     sessionApproval: "",
   });
+
   const [filteredGroups, setFilteredGroups] = useState([]);
   const [filteredSessions, setFilteredSessions] = useState([]);
 
   useEffect(() => {
     if (
-      getAllProjects.data &&
-      getAllProjects.data.getProjects.status === 200 &&
-      getAllProjects.data.getProjects.projects.length > 0
+      getAllProjects.data?.getProjects.status === 200 &&
+      getAllProjects.data?.getProjects.projects.length > 0
     ) {
       setAllProjects(getAllProjects.data.getProjects.projects);
     }
-
     if (getAllProjects.error) {
       toast.error(getAllProjects.error.message);
     }
@@ -112,123 +104,92 @@ const Navbar = () => {
     if (auth.user && auth.user.id) {
       loadProjects(auth.user.id)
         .then(() => {
-          setProjects(data.getProjectsAssigned.projects);
-
-          if (data && data.getProjectsAssigned.projects.length > 0) {
-            localStorage.setItem(
-              "fav_project",
-              data.getProjectsAssigned.projects.find(
-                (project) => project.sf_project_id === favProject
-              )
-                ? favProject
-                : data.getProjectsAssigned.projects[0].sf_project_id
-            );
-
-            setSelectedProject(
-              data.getProjectsAssigned.projects.find(
-                (project) => project.sf_project_id === favProject
-              )
-                ? favProject
-                : data.getProjectsAssigned.projects[0].sf_project_id
-            );
-          }
+          setProjects(data?.getProjectsAssigned.projects || []);
+          setSelectedProject(
+            data?.getProjectsAssigned.projects.find(
+              (project) => project.sf_project_id === selectedProject
+            )?.sf_project_id ||
+              data?.getProjectsAssigned.projects[0]?.sf_project_id ||
+              ""
+          );
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     } else {
       navigate("/login");
     }
-
     if (error) {
       toast.error(error.message);
     }
-  }, [auth.user, data, error, favProject]);
+  }, [auth.user, data, error, selectedProject, navigate]);
 
   const loadProjects = async (userId) => {
-    await getProjectsAssigned({
-      variables: { userId: userId },
-    });
+    await getProjectsAssigned({ variables: { userId: userId } });
   };
 
   useEffect(() => {
     if (trainingGroupsPerProject.data) {
       setTrainingGroups(
-        trainingGroupsPerProject.data.trainingGroupsByProject.trainingGroups
+        trainingGroupsPerProject.data.trainingGroupsByProject.trainingGroups ||
+          []
       );
     }
   }, [trainingGroupsPerProject.data]);
 
   useEffect(() => {
     if (trainingSessionsPerProject.data) {
-      setTrainingSessions(
+      const sessions =
         trainingSessionsPerProject.data.trainingSessionsByProject
-          .trainingSessions
-      );
-
-      setFilteredSessions(
-        trainingSessionsPerProject.data.trainingSessionsByProject
-          .trainingSessions
-      );
+          .trainingSessions || [];
+      setTrainingSessions(sessions);
+      setFilteredSessions(sessions);
     }
   }, [trainingSessionsPerProject.data]);
 
   useEffect(() => {
     if (participantsPerProject.data) {
+      const participantsData =
+        participantsPerProject.data.getParticipantsByProject;
       setParticipants(
-        participantsPerProject.data.getParticipantsByProject.status === 200
-          ? participantsPerProject.data.getParticipantsByProject.participants
-          : []
+        participantsData.status === 200 ? participantsData.participants : []
       );
     }
   }, [participantsPerProject.data]);
 
   useEffect(() => {
     if (getAllAttendances.data) {
+      const attendancesData = getAllAttendances.data.getAttendances;
       setAllAttendances(
-        getAllAttendances.data.getAttendances.status === 200
-          ? getAllAttendances.data.getAttendances.attendance
-          : []
+        attendancesData.status === 200 ? attendancesData.attendance : []
       );
     }
   }, [getAllAttendances.data]);
 
   useEffect(() => {
     if (farmVisitsPerProject.data) {
+      const farmVisitsData = farmVisitsPerProject.data.getFarmVisitsByProject;
       setFarmVisits(
-        farmVisitsPerProject.data.getFarmVisitsByProject.status === 200
-          ? farmVisitsPerProject.data.getFarmVisitsByProject.farmVisits
-          : []
+        farmVisitsData.status === 200 ? farmVisitsData.farmVisits : []
       );
     }
   }, [farmVisitsPerProject.data]);
 
   useEffect(() => {
-    if (
-      projectStatistics.data &&
-      projectStatistics.data.getProjectStatistics.status === 200
-    ) {
+    if (projectStatistics.data?.getProjectStatistics.status === 200) {
+      const statisticsData =
+        projectStatistics.data.getProjectStatistics.statistics;
       setProjectStats({
-        total_bas:
-          projectStatistics.data.getProjectStatistics.statistics.total_bas,
-        total_fts:
-          projectStatistics.data.getProjectStatistics.statistics.total_fts,
+        total_bas: statisticsData.total_bas,
+        total_fts: statisticsData.total_fts,
       });
     }
   }, [projectStatistics.data]);
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-      }}
-    >
+    <div style={{ width: "100%", height: "100vh" }}>
       {trainingGroupsPerProject.loading ||
       trainingSessionsPerProject.loading ? (
-        // participantsPerProject.loading ||
-        //getAllAttendances.loading ||
-        //farmVisitsPerProject.loading ? (
         <div
           style={{
             width: "100%",
@@ -242,19 +203,13 @@ const Navbar = () => {
           <img
             src={process.env.PUBLIC_URL + "/techno-logo-transparent.png"}
             alt="technoServe-logo"
-            style={{
-              width: "200px",
-              height: "auto",
-              marginBottom: "40px",
-            }}
+            style={{ width: "200px", height: "auto", marginBottom: "40px" }}
           />
           <LoaderPage
             loadings={{
               load1: trainingGroupsPerProject.loading,
-              load2: trainingSessionsPerProject.loading,
-              load3: participantsPerProject.loading,
-              // load4: farmVisitsPerProject.loading,
-              load5: getAllAttendances.loading,
+              //load2: trainingSessionsPerProject.loading,
+              // load5: getAllAttendances.loading,
             }}
           />
           <BeatLoader
@@ -278,7 +233,6 @@ const Navbar = () => {
                       setFilteredGroups={setFilteredGroups}
                     />
                   )}
-
                   <Routes>
                     <Route
                       path="/"
@@ -345,7 +299,6 @@ const Navbar = () => {
                         />
                       }
                     />
-
                     <Route
                       path="/trainsession"
                       element={
@@ -376,13 +329,13 @@ const Navbar = () => {
                     <Route
                       path="/performance/aa"
                       element={
-                        <AAPerfomance selectedProject={selectedProject}/>
+                        <AAPerfomance selectedProject={selectedProject} />
                       }
                     />
                     <Route
                       path="/performance/ft"
                       element={
-                        <FTPerformance selectedProject={selectedProject}/>
+                        <FTPerformance selectedProject={selectedProject} />
                       }
                     />
                     <Route
@@ -486,7 +439,6 @@ const Navbar = () => {
               )}
             </>
           ) : (
-            // no projects assigned
             <Grid
               container
               direction="column"
@@ -499,10 +451,7 @@ const Navbar = () => {
                   <BeatLoader
                     color="#0D3C61"
                     size={15}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
+                    style={{ display: "flex", justifyContent: "center" }}
                   />
                 ) : (
                   <em style={{ color: "#0D3C61" }}>No Projects Assigned</em>

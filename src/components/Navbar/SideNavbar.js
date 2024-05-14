@@ -5,9 +5,9 @@ import {
   MdOutlineCalendarToday,
   MdOutlinePersonSearch,
   MdLogout,
-  MdManageAccounts, 
+  MdManageAccounts,
   MdPerson,
-  MdAddChart
+  MdAddChart,
 } from "react-icons/md";
 import { HiOutlineTruck, HiMenuAlt2 } from "react-icons/hi";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [activeSubMenu, setActiveSubMenu] = useState(null);
 
-  const toggle = () => setIsOpen(!isOpen);
+  // const toggle = () => setIsOpen(!isOpen);
   const navigate = useNavigate();
   const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
 
@@ -49,7 +49,7 @@ const Sidebar = ({ children }) => {
           path: "/in/trainsession/pending",
           name: "Image Approvals",
           icon: <MdOutlineCalendarToday />,
-        }
+        },
       ],
     },
     {
@@ -63,7 +63,7 @@ const Sidebar = ({ children }) => {
       icon: <HiOutlineTruck />,
     },
     {
-      path: "",
+      path: "/in/performance",
       name: "Field Team Performance",
       icon: <MdAddChart />,
       subMenu: [
@@ -76,7 +76,7 @@ const Sidebar = ({ children }) => {
           path: "/in/performance/ft",
           name: "Farmer Trainers",
           icon: <MdPerson />,
-        }
+        },
       ],
     },
     {
@@ -123,19 +123,15 @@ const Sidebar = ({ children }) => {
         className="sidebar"
       >
         <div className="top_section">
-          <div style={{ display: isOpen ? "block" : "none" }} className="logo">
-            <Logo />
-          </div>
           <div
             style={{
-              marginLeft: isOpen ? "70px" : "0px",
-              paddingTop: isOpen ? "" : "15px",
-              marginRight: isOpen ? "10px" : "0",
-              transition: "margin 0.3s ease",
+              display: isOpen ? "flex" : "none",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-            className="bars"
+            className="logo"
           >
-            <HiMenuAlt2 onClick={toggle} color="white" />
+            <Logo />
           </div>
         </div>
 
@@ -245,7 +241,7 @@ const Sidebar = ({ children }) => {
           </NavLink>
         </div>
       </div>
-      <main style={{ width: "100%", marginLeft: isOpen ? "220px" : "60px" }}>
+      <main style={{ width: "100%" }}>
         {children}
       </main>
     </div>
