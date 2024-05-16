@@ -20,7 +20,7 @@
   transition: width 0.3s ease; /* Add transition for collapse animation */
   font-family: 'Montserrat', sans-serif; /* Use Montserrat font */
   z-index: 100; /* Ensure sidebar is above other content */;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 /* Main Content Styling */
@@ -29,7 +29,7 @@ main {
   overflow-y: auto;
   width: 80% !important;
   margin-left: 20% !important;
-  border: 10px solid yellow;
+  /* border: 10px solid yellow; */
 }
 
 /* Menu Items Styling */

@@ -209,7 +209,7 @@ const Navbar = () => {
             loadings={{
               load1: trainingGroupsPerProject.loading,
               //load2: trainingSessionsPerProject.loading,
-              // load5: getAllAttendances.loading,
+              load5: getAllAttendances.loading,
             }}
           />
           <BeatLoader
@@ -377,7 +377,7 @@ const Navbar = () => {
                     <Route
                       path="/participants"
                       element={
-                        !participantsPerProject.loading ? (
+                        !participantsPerProject.loading && !getAllAttendances.loading ? (
                           <Participants
                             participants={participants}
                             allAttendances={allAttendances}
