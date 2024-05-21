@@ -25,6 +25,7 @@ import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../../graphql/queries/trainin
 import Tsdetail from "../../features/tsdetail/Tsdetail";
 import Partdetail from "../../features/partdetail/Partdetail";
 import TSApprove from "../../features/tsapprove/tslist";
+import FarmVisitList from "../../features/fvapprove/fvList";
 import { GET_PARTICIPANTS_PER_PROJECT } from "../../graphql/queries/participantsRequests";
 import { GET_FARM_VISITS_PER_PROJECT } from "../../graphql/queries/farmVisitsRequests";
 import LoaderPage from "../../pages/LoaderPage";
@@ -377,7 +378,8 @@ const Navbar = () => {
                     <Route
                       path="/participants"
                       element={
-                        !participantsPerProject.loading && !getAllAttendances.loading ? (
+                        !participantsPerProject.loading &&
+                        !getAllAttendances.loading ? (
                           <Participants
                             participants={participants}
                             allAttendances={allAttendances}
@@ -424,6 +426,26 @@ const Navbar = () => {
                             }}
                           />
                         )
+                      }
+                    />
+                    <Route
+                      path="/farmvisit/verification"
+                      element={
+                        // !farmVisitsPerProject.loading ? (
+                        <FarmVisitList
+                          // farmVisits={farmVisits}
+                          selectedProject={selectedProject}
+                        />
+                        // ) : (
+                        //   <BeatLoader
+                        //     color="#0D3C61"
+                        //     size={15}
+                        //     style={{
+                        //       display: "flex",
+                        //       justifyContent: "center",
+                        //     }}
+                        //   />
+                        // )
                       }
                     />
                     <Route

@@ -61,6 +61,18 @@ const Sidebar = ({ children }) => {
       path: "/in/farmvisit",
       name: "Farm Visits",
       icon: <HiOutlineTruck />,
+      subMenu: [
+        {
+          path: "/in/farmvisit/",
+          name: "Farm Visits",
+          icon: <MdOutlineCalendarToday />,
+        },
+        // {
+        //   path: "/in/farmvisit/verification",
+        //   name: "Farm Visit Verification",
+        //   icon: <MdOutlineCalendarToday />,
+        // },
+      ]
     },
     {
       path: "/in/performance",
