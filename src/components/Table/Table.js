@@ -461,6 +461,7 @@ const Table = ({
           open={open}
           handleClose={handleClose}
           id={rowDetails.ts_id}
+          data={rowDetails}
           isVerified={rowDetails.is_verified}
           imageStatus={rowDetails.session_image_status}
           sessionImageUrl={session_image}

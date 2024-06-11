@@ -29,7 +29,7 @@ const TSApprove = ({
     },
     {
       id: "ts_group",
-      name: "Training Group",
+      name: "FFG",
       selector: (row) => row.ts_group,
       sortable: true,
       grow: 2,
@@ -61,20 +61,20 @@ const TSApprove = ({
       sortable: true,
       grow: 1,
     },
-    {
-      id: "has_image",
-      name: "Has Image?",
-      selector: (row) => (
-        <div>
-          {row.has_image ? (
-            <Chip label={"Yes"} color="success" variant="outlined" />
-          ) : (
-            <Chip label={"No"} color="error" variant="outlined" />
-          )}
-        </div>
-      ),
-      sortable: true,
-    },
+    // {
+    //   id: "has_image",
+    //   name: "Has Image?",
+    //   selector: (row) => (
+    //     <div>
+    //       {row.has_image ? (
+    //         <Chip label={"Yes"} color="success" variant="outlined" />
+    //       ) : (
+    //         <Chip label={"No"} color="error" variant="outlined" />
+    //       )}
+    //     </div>
+    //   ),
+    //   sortable: true,
+    // },
     {
       id: "is_verified",
       name: "Is Session Verified?",
@@ -97,10 +97,11 @@ const TSApprove = ({
         <div>
           {!row.is_verified ? (
             <Chip
-              label={"not_verified"}
-              color="secondary"
-              variant="outlined"
-              title={"not_verified"}
+              label={"Review Image"}
+              color="warning"
+              variant="filled"
+              title={"Review Image"}
+              size={'small'}
             />
           ) : (
             <Chip
@@ -108,6 +109,7 @@ const TSApprove = ({
               color="success"
               variant="outlined"
               title={row.session_image_status}
+              size={'small'}
             />
           )}
         </div>

@@ -120,6 +120,33 @@ const UPDATE_QA_IMAGE = gql`
   }
 `;
 
+const GET_FVQAS_BY_PROJECT_FOR_REVIEW = gql`
+  query getFVQAsByProjectForReview($fvId: String!) {
+    getFVQAsByProjectForReview(project_id: $fvId) {
+      message
+      status
+      farmVisits {
+        fv_id
+        training_group
+        training_session
+        tns_id
+        farm_visited
+        household_id
+        farmer_trainer
+        has_training
+        date_visited
+        qas {
+          practice_name_id
+          practice_name
+          questions
+          answers
+        }
+      }
+    }
+  }
+`;
+
+
 export {
   GET_FARM_VISITS_PER_PROJECT,
   GET_FARM_VISITS_PER_TG,
@@ -127,4 +154,5 @@ export {
   GET_FARM_VISITS_PER_PART,
   GET_FARM_VISIT_QAs,
   UPDATE_QA_IMAGE,
+  GET_FVQAS_BY_PROJECT_FOR_REVIEW
 };

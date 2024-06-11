@@ -25,7 +25,7 @@ import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../../graphql/queries/trainin
 import Tsdetail from "../../features/tsdetail/Tsdetail";
 import Partdetail from "../../features/partdetail/Partdetail";
 import TSApprove from "../../features/tsapprove/tslist";
-import FarmVisitList from "../../features/fvapprove/fvList";
+import FarmVisitList from "../../features/fvapprove/FarmVisitList";
 import { GET_PARTICIPANTS_PER_PROJECT } from "../../graphql/queries/participantsRequests";
 import { GET_FARM_VISITS_PER_PROJECT } from "../../graphql/queries/farmVisitsRequests";
 import LoaderPage from "../../pages/LoaderPage";

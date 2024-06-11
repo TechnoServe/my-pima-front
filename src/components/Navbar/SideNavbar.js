@@ -253,9 +253,7 @@ const Sidebar = ({ children }) => {
           </NavLink>
         </div>
       </div>
-      <main style={{ width: "100%" }}>
-        {children}
-      </main>
+      <main style={{ width: "100%" }}>{children}</main>
     </div>
   );
 };
