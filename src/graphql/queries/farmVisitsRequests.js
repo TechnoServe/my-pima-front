@@ -121,8 +121,16 @@ const UPDATE_QA_IMAGE = gql`
 `;
 
 const GET_FVQAS_BY_PROJECT_FOR_REVIEW = gql`
-  query getFVQAsByProjectForReview($fvId: String!) {
-    getFVQAsByProjectForReview(project_id: $fvId) {
+  query getFVQAsByProjectForReview(
+    $projectId: String!
+    $limit: Int!
+    $offset: Int!
+  ) {
+    getFVQAsByProjectForReview(
+      project_id: $projectId
+      limit: $limit
+      offset: $offset
+    ) {
       message
       status
       farmVisits {
@@ -135,6 +143,7 @@ const GET_FVQAS_BY_PROJECT_FOR_REVIEW = gql`
         farmer_trainer
         has_training
         date_visited
+        status
         qas {
           practice_name_id
           practice_name
@@ -146,6 +155,40 @@ const GET_FVQAS_BY_PROJECT_FOR_REVIEW = gql`
   }
 `;
 
+const GET_FVQAS_BY_PROJECT_IN_EXCEL = gql`
+  query getFVQAsByProjectInExcel($projectId: String!, $practiceName: String!) {
+    getFVQAsByProjectInExcel(
+      project_id: $projectId
+      practice_name: $practiceName
+    ) {
+      message
+      status
+      file
+    }
+  }
+`;
+
+const GET_OVERALL_REPORT = gql`
+  query getFVQAsByProjectInExcel($projectId: String!, $practiceName: String!) {
+    getFVQAsByProjectInExcel(
+      project_id: $projectId
+      practice_name: $practiceName
+    ) {
+      message
+      status
+      file
+    }
+  }
+`;
+
+const UPLOAD_APPROVED_FV = gql`
+  mutation UploadParticipants($partsFile: Upload!) {
+    uploadParticipants(parts_file: $partsFile) {
+      message
+      status
+    }
+  }
+`;
 
 export {
   GET_FARM_VISITS_PER_PROJECT,
@@ -154,5 +197,8 @@ export {
   GET_FARM_VISITS_PER_PART,
   GET_FARM_VISIT_QAs,
   UPDATE_QA_IMAGE,
-  GET_FVQAS_BY_PROJECT_FOR_REVIEW
+  GET_FVQAS_BY_PROJECT_FOR_REVIEW,
+  GET_FVQAS_BY_PROJECT_IN_EXCEL,
+  GET_OVERALL_REPORT,
+  UPLOAD_APPROVED_FV,
 };

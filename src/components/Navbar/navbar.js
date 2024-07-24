@@ -428,7 +428,7 @@ const Navbar = () => {
                         )
                       }
                     />
-                    <Route
+                    {/* <Route
                       path="/farmvisit/verification"
                       element={
                         // !farmVisitsPerProject.loading ? (
@@ -447,7 +447,7 @@ const Navbar = () => {
                         //   />
                         // )
                       }
-                    />
+                    /> */}
                     <Route
                       path="/manage"
                       element={<Management allProjects={allProjects} />}

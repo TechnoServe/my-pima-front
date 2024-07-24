@@ -70,7 +70,7 @@ const Table = ({
       : pathName === "trainsession"
       ? "mypima_training_session"
       : pathName === "participants"
-      ? "mypima_participants"
+      ? "Participants Data"
       : pathName === "farmvisit"
       ? "mypima_farm_visit"
       : "mypima_attendance";
@@ -182,8 +182,12 @@ const Table = ({
       "gender",
       "age",
       "coffee_tree_numbers",
+      "number_of_coffee_plots",
       "phone_number",
-      "coop_membership_number",
+      selectedProject === "a0EOj000002FMGnMAO" ||
+      selectedProject === "a0EOj000002C7ivMAC"
+        ? "national_identification_id"
+        : "coop_membership_number",
       "location",
       "farmer_sf_id",
       "tns_id",
@@ -279,7 +283,7 @@ const Table = ({
       showLabels: true,
       useTextFile: false,
       useBom: true,
-      filename: `${filename}_${TimeZone()}`,
+      filename: `${data[0].Project}_${filename}`,
       headers:
         tableRowItem === "participants"
           ? partsHeaders

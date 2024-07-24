@@ -1,184 +1,135 @@
-import React, { useState, useMemo } from "react";
-import "./fvList.css";
-import imageData from "./exampleImage";
-import VisitItem from "./VisitItem";
-import Pagination from "./Pagination";
-import Modal from "./Modal";
+import React, { useState } from 'react';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { saveAs } from 'file-saver';
+import { GET_FVQAS_BY_PROJECT_IN_EXCEL, GET_OVERALL_REPORT, UPLOAD_APPROVED_FV } from '../../graphql/queries/farmVisitsRequests';
+import './fvList.css';
 
-const FarmVisitList = () => {
-  const [visits] = useState([
-    {
-      fv_id: "a149J000000BQBEQA4",
-      fv_name: "FV-0000047866",
-      training_group: "Qiltu",
-      training_session: "TS-0000155913",
-      tns_id: "N/A",
-      farm_visited: "Maammasami",
-      household_id: "a059J000000SAylQAG",
-      farmer_trainer: "Riyad Siraj",
-      has_training: "No",
-      date_visited: "2023-02-20",
-      status: "Approved",
-      qas: [
-        {
-          practice_name_id: "Compost",
-          practice_name: "Compost",
-          questions: [
-            "Do you have compost manure?",
-            "Take a photo of the compost manure",
-            "Status of the photo",
-          ],
-          answers: [
-            "No",
-            imageData.image, // Use imported base64 image data
-            "not_verified",
-          ],
-        },
-        {
-          practice_name_id: "RecordBook",
-          practice_name: "Record Book",
-          questions: [
-            "Do you have a record book?",
-            "Are there records on the record book?",
-            "Take a photo of the record book",
-            "Status of the photo",
-          ],
-          answers: [
-            "Yes",
-            "No",
-            imageData.image, // Use imported base64 image data
-            "not_verified",
-          ],
-        },
-        // Add more qas objects as needed
-      ],
+const BEST_PRACTICES = [
+  'Compost',
+  'Record Book',
+  '+-',
+  'IPDM',
+  'Nutrition',
+  'Shade Management',
+  'Weeding',
+  'Stumping',
+  'Pruning',
+  'Main Stems',
+];
+
+const DownloadExcel = () => {
+  const [selectedPractice, setSelectedPractice] = useState('');
+  const [fileToUpload, setFileToUpload] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState('');
+  const [fetchExcel, { loading: fetchingExcel, error: fetchError }] = useLazyQuery(GET_FVQAS_BY_PROJECT_IN_EXCEL, {
+    onCompleted: (data) => {
+      if (data.getFVQAsByProjectInExcel.status === 200) {
+        const base64Content = data.getFVQAsByProjectInExcel.file.split(',')[1];
+        const byteCharacters = atob(base64Content);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        saveAs(blob, `${selectedPractice}.xlsx`);
+      } else {
+        alert(data.getFVQAsByProjectInExcel.message);
+      }
     },
-    {
-      fv_id: "a149J000000BQBEQA5",
-      fv_name: "FV-0000047866",
-      training_group: "Qiltu",
-      training_session: "TS-0000155913",
-      tns_id: "N/A",
-      farm_visited: "Maammasami",
-      household_id: "a059J000000SAylQAG",
-      farmer_trainer: "Riyad Siraj",
-      has_training: "No",
-      date_visited: "2023-02-20",
-      status: "Approved",
-      qas: [
-        {
-          practice_name_id: "Compost",
-          practice_name: "Compost",
-          questions: [
-            "Do you have compost manure?",
-            "Take a photo of the compost manure",
-            "Status of the photo",
-          ],
-          answers: [
-            "No",
-            imageData.image, // Use imported base64 image data
-            "not_verified",
-          ],
-        },
-        {
-          practice_name_id: "RecordBook",
-          practice_name: "Record Book",
-          questions: [
-            "Do you have a record book?",
-            "Are there records on the record book?",
-            "Take a photo of the record book",
-            "Status of the photo",
-          ],
-          answers: [
-            "Yes",
-            "No",
-            imageData.image, // Use imported base64 image data
-            "not_verified",
-          ],
-        },
-        // Add more qas objects as needed
-      ],
+  });
+
+  const [fetchOverallReport, { loading: fetchingOverallReport, error: overallReportError }] = useLazyQuery(GET_OVERALL_REPORT, {
+    onCompleted: (data) => {
+      if (data.getOverallReport.status === 200) {
+        const base64Content = data.getOverallReport.file.split(',')[1];
+        const byteCharacters = atob(base64Content);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        saveAs(blob, 'Overall_Report.xlsx');
+      } else {
+        alert(data.getOverallReport.message);
+      } 
     },
-    // Add more visit objects as needed
-  ]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [visitsPerPage] = useState(5);
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [expandedVisit, setExpandedVisit] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  });
 
-  const filteredVisits = useMemo(
-    () =>
-      filterStatus === "all"
-        ? visits
-        : visits.filter((visit) => visit.status === filterStatus),
-    [visits, filterStatus]
-  );
+  const [uploadApprovedFV, { loading: uploading, error: uploadError }] = useMutation(UPLOAD_APPROVED_FV, {
+    onCompleted: (data) => {
+      setUploadStatus(data.uploadApprovedFV.message);
+    },
+  });
 
-  const indexOfLastVisit = currentPage * visitsPerPage;
-  const indexOfFirstVisit = indexOfLastVisit - visitsPerPage;
-  const currentVisits = filteredVisits.slice(
-    indexOfFirstVisit,
-    indexOfLastVisit
-  );
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const toggleExpandVisit = (fv_id) => {
-    setExpandedVisit(expandedVisit === fv_id ? null : fv_id);
+  const handlePracticeSelect = (practiceName) => {
+    setSelectedPractice(practiceName);
+    fetchExcel({ variables: { projectId: 'a0E9J000000NTjpUAG', practiceName } });
   };
 
-  const openModal = (image, question) => {
-    setSelectedImage(image);
-    setSelectedQuestion(question);
+  const handleOverallReportDownload = () => {
+    fetchOverallReport({ variables: { projectId: 'a0E9J000000NTjpUAG' } });
   };
 
-  const closeModal = () => {
-    setSelectedImage(null);
-    setSelectedQuestion(null);
+  const handleFileChange = (event) => {
+    setFileToUpload(event.target.files[0]);
+  };
+
+  const handleFileUpload = () => {
+    if (fileToUpload) {
+      uploadApprovedFV({ variables: { projectId: 'a0E9J000000NTjpUAG', file: fileToUpload } });
+    }
   };
 
   return (
-    <div className="farm-visit-list">
-      <h1>Farm Visits</h1>
-      <div className="filters">
-        {["All", "Approved", "ToApprove"].map((status) => (
-          <button
-            key={status}
-            className={filterStatus === status ? "active" : ""}
-            onClick={() => setFilterStatus(status)}
-          >
-            {status}
-          </button>
-        ))}
+    <div className="download-excel">
+      <h1>Farm Visit Data Management</h1>
+
+      <div className="section">
+        <h2>Select Best Practice to Download</h2>
+        <div className="practice-list">
+          {BEST_PRACTICES.map((practice) => (
+            <button
+              key={practice}
+              className={`practice-button ${selectedPractice === practice ? 'selected' : ''}`}
+              onClick={() => handlePracticeSelect(practice)}
+            >
+              {practice}
+            </button>
+          ))}
+        </div>
+        {fetchingExcel && <div className="spinner"></div>}
+        {fetchError && <p className="error-message">Error: {fetchError.message}</p>}
       </div>
-      <ul className="visit-list">
-        {currentVisits.map((visit) => (
-          <VisitItem
-            key={visit.fv_id}
-            visit={visit}
-            expandedVisit={expandedVisit}
-            toggleExpandVisit={toggleExpandVisit}
-            openModal={openModal}
-          />
-        ))}
-      </ul>
-      <Pagination
-        visitsPerPage={visitsPerPage}
-        totalVisits={filteredVisits.length}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
-      {selectedImage && (
-        <Modal
-          selectedImage={selectedImage}
-          selectedQuestion={selectedQuestion}
-          closeModal={closeModal}
-        />
-      )}
+
+      <div className="section">
+        <h2>Download Overall Report</h2>
+        <button className="overall-report-button" onClick={handleOverallReportDownload}>
+          Download Overall Report
+        </button>
+        {fetchingOverallReport && <div className="spinner"></div>}
+        {overallReportError && <p className="error-message">Error: {overallReportError.message}</p>}
+      </div>
+
+      <div className="section">
+        <h2>Upload Approved Farm Visits</h2>
+        <div className="upload-section">
+          <input type="file" onChange={handleFileChange} />
+          <button className="upload-button" onClick={handleFileUpload}>
+            Upload
+          </button>
+          {uploading && <div className="spinner"></div>}
+          {uploadError && <p className="error-message">Error: {uploadError.message}</p>}
+          {uploadStatus && <p className="upload-status">{uploadStatus}</p>}
+        </div>
+      </div>
     </div>
   );
 };
 
-export default FarmVisitList;
+export default DownloadExcel;

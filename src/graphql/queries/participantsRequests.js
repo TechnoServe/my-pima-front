@@ -60,6 +60,7 @@ const GET_PARTICIPANTS_PER_PROJECT = gql`
         gender
         age
         coffee_tree_numbers
+        number_of_coffee_plots
         coop_membership_number
         phone_number
         hh_number
@@ -124,6 +125,7 @@ const UPLOAD_PARTICIPANTS = gql`
     uploadParticipants(parts_file: $partsFile) {
       message
       status
+      file
     }
   }
 `;

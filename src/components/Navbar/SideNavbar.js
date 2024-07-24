@@ -15,12 +15,10 @@ import "./navbar.css";
 import Logo from "../Logo";
 import { Chip } from "@mui/material";
 
-/* Component */
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [activeSubMenu, setActiveSubMenu] = useState(null);
 
-  // const toggle = () => setIsOpen(!isOpen);
   const navigate = useNavigate();
   const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
 
@@ -72,7 +70,7 @@ const Sidebar = ({ children }) => {
         //   name: "Farm Visit Verification",
         //   icon: <MdOutlineCalendarToday />,
         // },
-      ]
+      ],
     },
     {
       path: "/in/performance",
@@ -101,6 +99,7 @@ const Sidebar = ({ children }) => {
           userDetails.role === "ci_leadership"),
     },
   ];
+
   const bottomitem = [
     {
       path: "/in/profile",
@@ -153,7 +152,10 @@ const Sidebar = ({ children }) => {
             .map((item, index) => (
               <div key={index} className="menu-item">
                 {/* Render main menu item */}
-                <NavLink to={item.path} className="link">
+                <NavLink 
+                  to={item.path} 
+                  className={({ isActive }) => isActive ? "link active" : "link"}
+                >
                   <div className="icon">{item.icon}</div>
                   <div className="link_text">{item.name}</div>
                 </NavLink>
@@ -169,8 +171,7 @@ const Sidebar = ({ children }) => {
                       <NavLink
                         key={subIndex}
                         to={subItem.path}
-                        className="link"
-                        activeClassName="active"
+                        className={({ isActive }) => isActive ? "link active" : "link"}
                         onMouseEnter={() => setActiveSubMenu(index)}
                         onMouseLeave={() => setActiveSubMenu(null)}
                       >
@@ -187,8 +188,7 @@ const Sidebar = ({ children }) => {
         <div className="bottom__section">
           <NavLink
             to={bottomitem[0].path}
-            className="link"
-            activeclassname="active"
+            className={({ isActive }) => isActive ? "link active" : "link"}
             onClick={(e) => e.preventDefault()}
             style={{
               cursor: "default",
@@ -239,8 +239,7 @@ const Sidebar = ({ children }) => {
           </NavLink>
           <NavLink
             to={bottomitem[1].path}
-            className="link"
-            activeclassname="active"
+            className={({ isActive }) => isActive ? "link active" : "link"}
             onClick={handleLogout}
           >
             <div className="icon">{bottomitem[1].icon}</div>

@@ -38,7 +38,7 @@ const Participants = ({
     {
       id: "gender",
       name: "Gender",
-      selector: (row) => row.gender === "m"? "Male": "Female",
+      selector: (row) => (row.gender === "m" ? "Male" : "Female"),
       sortable: true,
     },
     {
@@ -98,40 +98,56 @@ const Participants = ({
   console.log("groups", trainingGroups.length);
 
   const rows = participants
-    ? participants.map((participant, index) => ({
-        num: index + 1,
-        Project: projects.find(
-          (project) => project.sf_project_id === selectedProject
-        ).project_name,
-        p_id: participant.p_id,
-        first_name: participant.first_name,
-        middle_name: participant.middle_name ? participant.middle_name : "",
-        last_name: participant.last_name ? participant.last_name : "",
-        gender: participant.gender,
-        age: participant.age,
-        coffee_tree_numbers: participant.coffee_tree_numbers,
-        coop_membership_number: participant.coop_membership_number
-          ? participant.coop_membership_number
-          : "",
-        phone_number: participant.phone_number,
-        farmer_sf_id: participant.p_id,
-        hh_number: participant.hh_number,
-        sf_household_id: participant.household_id,
-        ffg_id: participant.ffg_id,
-        location: participant.location,
-        tns_id: participant.tns_id,
-        training_group:
-          trainingGroups && trainingGroups.length > 0
-            ? trainingGroups.find(
-                (tg) => tg.tg_id === participant.training_group
-              )?.tg_name || "N/A"
-            : "N/A",
-        farmer_number: participant.primary_household_member,
-        status: participant.status,
-        farmer_trainer: participant.farmer_trainer,
-        business_advisor: participant.business_advisor,
-        create_in_commcare: participant.create_in_commcare,
-      }))
+    ? participants.map((participant, index) => {
+        const row = {
+          num: index + 1,
+          Project: projects.find(
+            (project) => project.sf_project_id === selectedProject
+          ).project_name,
+          p_id: participant.p_id,
+          first_name: participant.first_name,
+          middle_name: participant.middle_name ? participant.middle_name : "",
+          last_name: participant.last_name ? participant.last_name : "",
+          gender: participant.gender,
+          age: participant.age,
+          coffee_tree_numbers: participant.coffee_tree_numbers,
+          phone_number: participant.phone_number,
+          farmer_sf_id: participant.p_id,
+          hh_number: participant.hh_number,
+          sf_household_id: participant.household_id,
+          ffg_id: participant.ffg_id,
+          location: participant.location,
+          tns_id: participant.tns_id,
+          training_group:
+            trainingGroups && trainingGroups.length > 0
+              ? trainingGroups.find(
+                  (tg) => tg.tg_id === participant.training_group
+                )?.tg_name || "N/A"
+              : "N/A",
+          farmer_number: participant.primary_household_member,
+          status: participant.status,
+          farmer_trainer: participant.farmer_trainer,
+          business_advisor: participant.business_advisor,
+          create_in_commcare: participant.create_in_commcare,
+          number_of_coffee_plots: participant.number_of_coffee_plots
+        };
+
+        if (
+          selectedProject === "a0EOj000002FMGnMAO" ||
+          selectedProject === "a0EOj000002C7ivMAC"
+        ) {
+          row.national_identification_id =
+            participant.coop_membership_number
+              ? participant.coop_membership_number
+              : "";
+        } else {
+          row.coop_membership_number = participant.coop_membership_number
+            ? participant.coop_membership_number
+            : "";
+        }
+
+        return row;
+      })
     : [];
 
   const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
@@ -217,6 +233,7 @@ const Participants = ({
           data={rows}
           tableRowItem={tableRowItem}
           allAttendances={allAttendances}
+          selectedProject={selectedProject}
         />
       ) : (
         <div className="no__data">
