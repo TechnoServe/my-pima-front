@@ -7,13 +7,13 @@ const FarmVisit = ({ farmVisits }) => {
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
       id: "training_group",
-      name: "Training Group",
+      name: "TG Name",
       selector: (row) => row.training_group,
       sortable: true,
     },
     {
       id: "tns_id",
-      name: "TNS ID",
+      name: "TNS Farmer ID",
       selector: (row) => row.tns_id,
       sortable: true,
     },
@@ -23,12 +23,6 @@ const FarmVisit = ({ farmVisits }) => {
       selector: (row) => row.farm_visited,
       sortable: true,
     },
-    // {
-    //   id: "household_id",
-    //   name: "Household ID",
-    //   selector: (row) => row.household_id,
-    //   sortable: true,
-    // },
     {
       id: "farmer_trainer",
       name: "Farmer Trainer",
@@ -39,6 +33,18 @@ const FarmVisit = ({ farmVisits }) => {
       id: "date_visited",
       name: "Date Visited",
       selector: (row) => row.date_visited,
+      sortable: true,
+    },
+    {
+      id: "pima_household_id",
+      name: "PIMA HH Id",
+      selector: (row) => row.pima_household_id,
+      sortable: true,
+    },
+    {
+      id: "pima_farmer_id",
+      name: "PIMA Farmer ID",
+      selector: (row) => row.pima_farmer_id,
       sortable: true,
     },
   ];
@@ -57,6 +63,8 @@ const FarmVisit = ({ farmVisits }) => {
         farmer_trainer: fv.farmer_trainer,
         has_training: fv.has_training,
         date_visited: fv.date_visited,
+        pima_household_id: fv.pima_household_id,
+        pima_farmer_id: fv.pima_farmer_id,
       }))
     : [];
 
