@@ -25,13 +25,13 @@ import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../../graphql/queries/trainin
 import Tsdetail from "../../features/tsdetail/Tsdetail";
 import Partdetail from "../../features/partdetail/Partdetail";
 import TSApprove from "../../features/tsapprove/tslist";
-import FarmVisitList from "../../features/fvapprove/FarmVisitList";
 import { GET_PARTICIPANTS_PER_PROJECT } from "../../graphql/queries/participantsRequests";
 import { GET_FARM_VISITS_PER_PROJECT } from "../../graphql/queries/farmVisitsRequests";
 import LoaderPage from "../../pages/LoaderPage";
 import Management from "../../pages/Management";
 import { GET_ALL_ATTENDANCES } from "../../graphql/queries/attendancesRequests";
 import { useAuth } from "../../context/useAuth";
+import FarmVisitApp from "../../features/fvapprove/FarmVisitApp";
 
 const Navbar = () => {
   const auth = useAuth();
@@ -428,11 +428,11 @@ const Navbar = () => {
                         )
                       }
                     />
-                    {/* <Route
+                    <Route
                       path="/farmvisit/verification"
                       element={
                         // !farmVisitsPerProject.loading ? (
-                        <FarmVisitList
+                        <FarmVisitApp
                           // farmVisits={farmVisits}
                           selectedProject={selectedProject}
                         />
@@ -447,7 +447,7 @@ const Navbar = () => {
                         //   />
                         // )
                       }
-                    /> */}
+                    />
                     <Route
                       path="/manage"
                       element={<Management allProjects={allProjects} />}

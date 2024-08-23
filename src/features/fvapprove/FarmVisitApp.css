@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Raleway:wght@400;600&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+.farm-visit-app {
+  padding: 20px;
+  width: 100%; /* Reduced width to reduce empty space */
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+}
+
+.dashboard-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 1.6rem; /* Reduced size for a cleaner look */
+  color: #087c8f;
+  margin-bottom: 20px;
+}
+
+.download-button {
+  background-color: #087c8f;
+  color: white;
+  border: none;
+  padding: 10px 15px; /* Reduced padding for a cleaner button look */
+  font-size: 0.9rem; /* Reduced font size */
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #005f6b;
+}
+
+.practices-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Adjusted grid for better spacing */
+  gap: 15px; /* Reduced gap for a more compact look */
+}
+
+.practice-card {
+  background-color: #fff;
+  padding: 15px; /* Reduced padding */
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.practice-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.practice-card h3 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.3rem; /* Reduced font size */
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.practice-card .progress p {
+  font-size: 0.9rem; /* Reduced text size */
+  color: #666;
+}
+
+.indicator {
+  margin-bottom: 15px;
+}
+
+.indicator-link {
+  font-size: 1.1rem;
+  color: #087c8f;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.indicator-link::before {
+  content: "⬅";
+  margin-right: 8px;
+}
+
+.sub-header {
+  font-size: 1.4rem;
+  text-align: center;
+  color: #087c8f;
+  margin-bottom: 20px;
+}
+
+.visit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.visit-item {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  align-items: flex-start;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.visit-details p {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.visit-image img {
+  max-width: 150px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.answer-field, .comment-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.answer-field select {
+  padding: 10px 20px;
+  font-size: 0.9rem; /* Reduced size */
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #333;
+}
+
+.comment-field textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 0.9rem; /* Reduced size */
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #333;
+  resize: none;
+}
+
+.submit-button {
+  background-color: #087c8f;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  font-size: 1rem; /* Reduced size */
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin: 20px auto;
+  display: block;
+}
+
+.submit-button:hover {
+  background-color: #005f6b;
+  transform: translateY(-3px);
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  background-color: #087c8f;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.9rem; /* Reduced size */
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.image-modal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+}

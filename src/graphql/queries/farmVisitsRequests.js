@@ -189,6 +189,61 @@ const UPLOAD_APPROVED_FV = gql`
   }
 `;
 
+const GET_SAMPLED_VISITS_STATS = gql`
+  query GetSampledVisitsStats($projectId: String!) {
+    getSampledVisitsStats(projectId: $projectId) {
+      totalSampledVisits
+      totalReviewed
+      remainingVisits
+    }
+  }
+`;
+
+const GET_BEST_PRACTICE_STATS = gql`
+  query GetBestPracticeStats($projectId: String!, $practiceName: String!) {
+    getBestPracticeReviewStats(
+      projectId: $projectId
+      practiceName: $practiceName
+    ) {
+      reviewedVisits
+      remainingVisits
+      totalVisits
+    }
+  }
+`;
+
+const GET_PAGINATED_REVIEWS = gql`
+  query GetPaginatedReviews(
+    $projectId: String!
+    $practiceName: String!
+    $page: Int!
+    $pageSize: Int!
+  ) {
+    getPaginatedReviews(
+      projectId: $projectId
+      practiceName: $practiceName
+      page: $page
+      pageSize: $pageSize
+    ) {
+      id
+      sf_visit_id
+      farmer_name
+      farmer_pima_id
+      farmer_tns_id
+      date_visited
+      farmer_trainer
+      bestPractices {
+        id
+        practice_name
+        image_url
+        sf_practice_id
+        question
+        answer
+      }
+    }
+  }
+`;
+
 export {
   GET_FARM_VISITS_PER_PROJECT,
   GET_FARM_VISITS_PER_TG,
@@ -200,4 +255,7 @@ export {
   GET_FVQAS_BY_PROJECT_IN_EXCEL,
   GET_OVERALL_REPORT,
   UPLOAD_APPROVED_FV,
+  GET_PAGINATED_REVIEWS,
+  GET_BEST_PRACTICE_STATS,
+  GET_SAMPLED_VISITS_STATS,
 };
