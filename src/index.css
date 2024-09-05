@@ -28,19 +28,103 @@ body {
   margin-bottom: 10px;
 }
 .module__heading {
-  font-size: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1b2a4e; /* Dark blue to match sidebar */
+  margin-bottom: 20px;
+  /* border-bottom: 2px solid #1b2a4e; */
+  padding-bottom: 10px;
+  text-align: left; /* Centering the heading */
 }
 .flex__heading {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
-.no__data {
-  font-size: 16px;
+
+.circular_progress {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  text-align: center;
+  align-items: center;
+  min-height: 50vh;
+  background-color: #f4f7fc; /* Light background for a soft look */
+  font-family: 'Montserrat', sans-serif;
+  color: #1b2a4e; /* Dark blue color for text */
 }
+
+.circular_progress h2 {
+  font-size: 24px;
+  font-weight: 500;
+  margin-top: 20px;
+  color: #1b2a4e;
+  animation: fadeIn 1.5s infinite; /* Simple fade-in animation for the text */
+}
+
+/* Keyframes for the loading text animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.circular_progress .spinner-container {
+  position: relative;
+}
+
+.circular_progress .spinner {
+  animation: rotate 1.5s linear infinite; /* Spinner rotation animation */
+}
+
+/* Rotation animation for the spinner */
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Optional background glow effect for the spinner */
+.circular_progress .spinner-glow {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(27,42,78,0.2) 35%, transparent 100%);
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  z-index: -1;
+}
+
+.no__data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  background-color: #f9f9f9; /* Light background for better contrast */
+  border: 2px dashed #1b2a4e; /* Dashed border for a minimal look */
+  border-radius: 10px; /* Rounded corners for better aesthetics */
+  color: #1b2a4e;
+  font-size: 1.2rem;
+}
+
+.no__data h1 {
+  font-size: 1.5rem;
+  color: #34495e; /* Slightly darker color */
+  font-weight: 500;
+}
+
+.no__data h1 span {
+  font-size: 1rem;
+  color: #7f8c8d; /* Subtle gray for any additional information */
+}
+
 .file-info {
   /* add upload dashed border and style up labels inside */
   border: 2px dashed #ccc;
@@ -85,15 +169,14 @@ body {
   fill: #087c8f;
 }
 
-
 .active-participants-dialog {
-  background-color: #FFCCCC; /* Green background */
+  background-color: #ffcccc; /* Green background */
   color: #087c8f; /* White text */
   padding: 3%; /* Padding */
   text-align: center; /* Center text */
   border-radius: 10px; /* Rounded corners */
   margin: 5% auto;
-  width: 50%
+  width: 50%;
 }
 
 .take-action-button {

@@ -7,9 +7,9 @@ const GET_FARM_VISITS_PER_PROJECT = gql`
       status
       farmVisits {
         fv_id
-        fv_name
         training_group
-        tns_id
+        farmer_tns_id
+        household_tns_id
         farm_visited
         farmer_trainer
         date_visited
@@ -225,15 +225,15 @@ const GET_PAGINATED_REVIEWS = gql`
       page: $page
       pageSize: $pageSize
     ) {
-      id
+      visit_id
       sf_visit_id
       farmer_name
       farmer_pima_id
       farmer_tns_id
       date_visited
       farmer_trainer
-      bestPractices {
-        id
+      BestPractices {
+        practice_id
         practice_name
         image_url
         sf_practice_id
@@ -244,18 +244,49 @@ const GET_PAGINATED_REVIEWS = gql`
   }
 `;
 
+const GENERATE_FARM_VISIT_REPORT = gql`
+  query GenerateFarmVisitReport($projectId: String!) {
+    generateFarmVisitReport(projectId: $projectId) {
+      message
+      status
+      file
+    }
+  }
+`;
+
+const SUBMIT_BATCH_APPROVED_VISITS = gql`
+  mutation SubmitBatch($input: [BatchInput!]!) {
+    submitBatch(input: $input) {
+      success
+      message
+    }
+  }
+`;
+
+const SUBMIT_BATCH = gql`
+  mutation SubmitBatch($input: [BatchInput!]!) {
+    submitBatch(input: $input) {
+      success
+      message
+    }
+  }
+`;
+
 export {
   GET_FARM_VISITS_PER_PROJECT,
   GET_FARM_VISITS_PER_TG,
   GET_FARM_VISITS_PER_TS,
   GET_FARM_VISITS_PER_PART,
   GET_FARM_VISIT_QAs,
-  UPDATE_QA_IMAGE,
   GET_FVQAS_BY_PROJECT_FOR_REVIEW,
   GET_FVQAS_BY_PROJECT_IN_EXCEL,
   GET_OVERALL_REPORT,
-  UPLOAD_APPROVED_FV,
   GET_PAGINATED_REVIEWS,
   GET_BEST_PRACTICE_STATS,
   GET_SAMPLED_VISITS_STATS,
+  GENERATE_FARM_VISIT_REPORT,
+  SUBMIT_BATCH_APPROVED_VISITS,
+  SUBMIT_BATCH,
+  UPLOAD_APPROVED_FV,
+  UPDATE_QA_IMAGE,
 };

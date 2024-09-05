@@ -5,12 +5,10 @@ import { Chip } from "@mui/material";
 
 const TrainingGroup = ({
   trainingGroups,
-  orgTrainingGroups,
   filter,
   setFilter,
   setFilteredGroups,
   projectStats,
-  participants,
 }) => {
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
@@ -82,7 +80,7 @@ const TrainingGroup = ({
         <div>
           <Statsframe
             statistics={projectStats}
-            totalParticipants={participants.length}
+            // ={participants.length}
             trainingGroups={trainingGroups}
           />
           <Table

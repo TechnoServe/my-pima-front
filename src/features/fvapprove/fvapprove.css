@@ -8,14 +8,14 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
-  background-color: #f4f4f9;
-  color: #333;
+  background-color: #f4f7fc; /* Updated to match the light background */
+  color: #333; /* Consistent text color */
   line-height: 1.6;
 }
 
 .farm-visit-app {
   padding: 20px;
-  width: 100%; /* Reduced width to reduce empty space */
+  width: 100%; 
   margin: 0 auto;
 }
 
@@ -39,17 +39,17 @@ body {
 
 .dashboard-title {
   text-align: center;
-  font-size: 1.6rem; /* Reduced size for a cleaner look */
-  color: #087c8f;
+  font-size: 1.6rem; 
+  color: #1b2a4e; /* Matching previous heading color */
   margin-bottom: 20px;
 }
 
 .download-button {
-  background-color: #087c8f;
+  background-color: #087c8f; /* Primary color */
   color: white;
   border: none;
-  padding: 10px 15px; /* Reduced padding for a cleaner button look */
-  font-size: 0.9rem; /* Reduced font size */
+  padding: 10px 15px; 
+  font-size: 0.9rem; 
   cursor: pointer;
   border-radius: 8px;
   transition: background-color 0.3s ease;
@@ -61,13 +61,13 @@ body {
 
 .practices-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Adjusted grid for better spacing */
-  gap: 15px; /* Reduced gap for a more compact look */
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+  gap: 15px; 
 }
 
 .practice-card {
   background-color: #fff;
-  padding: 15px; /* Reduced padding */
+  padding: 15px;
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -82,13 +82,13 @@ body {
 
 .practice-card h3 {
   font-family: 'Raleway', sans-serif;
-  font-size: 1.3rem; /* Reduced font size */
+  font-size: 1.3rem; 
   margin-bottom: 10px;
-  color: #333;
+  color: #1b2a4e; /* Consistent heading color */
 }
 
 .practice-card .progress p {
-  font-size: 0.9rem; /* Reduced text size */
+  font-size: 0.9rem; 
   color: #666;
 }
 
@@ -98,7 +98,7 @@ body {
 
 .indicator-link {
   font-size: 1.1rem;
-  color: #087c8f;
+  color: #087c8f; /* Primary color */
   font-weight: bold;
   cursor: pointer;
   text-decoration: none;
@@ -114,7 +114,7 @@ body {
 .sub-header {
   font-size: 1.4rem;
   text-align: center;
-  color: #087c8f;
+  color: #1b2a4e; /* Consistent heading color */
   margin-bottom: 20px;
 }
 
@@ -156,7 +156,7 @@ body {
 
 .answer-field select {
   padding: 10px 20px;
-  font-size: 0.9rem; /* Reduced size */
+  font-size: 0.9rem;
   border-radius: 8px;
   border: 1px solid #ddd;
   background-color: #fff;
@@ -166,7 +166,7 @@ body {
 .comment-field textarea {
   width: 100%;
   padding: 10px;
-  font-size: 0.9rem; /* Reduced size */
+  font-size: 0.9rem; 
   border-radius: 8px;
   border: 1px solid #ddd;
   background-color: #fff;
@@ -175,11 +175,11 @@ body {
 }
 
 .submit-button {
-  background-color: #087c8f;
+  background-color: #087c8f; /* Primary color */
   color: white;
   padding: 12px 25px;
   border: none;
-  font-size: 1rem; /* Reduced size */
+  font-size: 1rem; 
   font-weight: bold;
   cursor: pointer;
   border-radius: 8px;
@@ -206,7 +206,7 @@ body {
   padding: 10px 15px;
   border-radius: 8px;
   border: none;
-  font-size: 0.9rem; /* Reduced size */
+  font-size: 0.9rem; 
   cursor: pointer;
 }
 
@@ -233,4 +233,41 @@ body {
   max-width: 90%;
   max-height: 90%;
   border-radius: 10px;
+}
+
+/* Loading Spinner Styles */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #087c8f;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Visit List Styles */
+
+.visit-image {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.visit-image img {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+  border-radius: 4px;
 }

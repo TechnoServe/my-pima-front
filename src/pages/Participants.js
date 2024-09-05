@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Chip } from "@mui/material";
 import Table from "../components/Table/Table";
 import { FaCloudUploadAlt } from "react-icons/fa";
@@ -7,25 +7,93 @@ import {
   GET_PARTICIPANTS_PER_PROJECT,
   SYNC_PARTICIPANTS_WITH_COMMCARE,
 } from "../graphql/queries/participantsRequests";
-import { useState, useEffect } from "react";
+import {GET_ALL_ATTENDANCES} from "../graphql/queries/attendancesRequests";
 import { useMutation, useQuery } from "@apollo/client";
+import { BeatLoader } from "react-spinners";
+import { Grid } from "@mui/material";
 
-const Participants = ({
-  participants,
-  allAttendances,
-  trainingGroups,
-  selectedProject,
-  projects,
-}) => {
+const Participants = ({ selectedProject, trainingGroups, projects }) => {
   const [open, setOpen] = useState(false);
   const [sendToCcCount, setSendToCcCount] = useState();
   const [isSyncing, setIsSyncing] = useState(false);
 
+  const { data: participantData, loading: participantsLoading, error: participantsError, refetch: refetchParticipants } = useQuery(
+    GET_PARTICIPANTS_PER_PROJECT,
+    {
+      variables: { projectId: selectedProject },
+      skip: !selectedProject,
+    }
+  );
+
+  const { data: attendanceData, loading: attendanceLoading, error: attendanceError } = useQuery(
+    GET_ALL_ATTENDANCES,
+    {
+      variables: { projectId: selectedProject },
+      skip: !selectedProject,
+    }
+  );
+
   const [SyncParticipants] = useMutation(SYNC_PARTICIPANTS_WITH_COMMCARE);
 
-  const participantsPerProject = useQuery(GET_PARTICIPANTS_PER_PROJECT, {
-    variables: { projectId: selectedProject },
-  });
+  const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
+
+  useEffect(() => {
+    if (participantData && participantData.getParticipantsByProject.status === 200) {
+      const sendToCcCount = participantData.getParticipantsByProject.participants.filter(
+        (participant) => participant.create_in_commcare === "false"
+      );
+      setSendToCcCount(sendToCcCount.length);
+    }
+  }, [participantData]);
+
+  const handleTakeAction = async () => {
+    setIsSyncing(true);
+
+    try {
+      await SyncParticipants({
+        variables: {
+          projectId: selectedProject,
+        },
+      });
+      await refetchParticipants(); // Refetch the participants data after syncing
+      setIsSyncing(false);
+    } catch (err) {
+      console.log(err);
+      setIsSyncing(false);
+    }
+  };
+
+  if (participantsLoading || attendanceLoading) {
+    return (
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        style={{ height: "100vh" }}
+      >
+        <BeatLoader color="#0D3C61" size={15} />
+        <em style={{ color: "#0D3C61" }}>Loading Participants and Attendances...</em>
+      </Grid>
+    );
+  }
+
+  if (participantsError || attendanceError) {
+    return (
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        style={{ height: "100vh" }}
+      >
+        <em style={{ color: "red" }}>Error loading data: {participantsError?.message || attendanceError?.message}</em>
+      </Grid>
+    );
+  }
+
+  const participants = participantData.getParticipantsByProject.participants;
+  const allAttendances = attendanceData.getAttendances.attendance;
 
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
@@ -94,98 +162,56 @@ const Participants = ({
   ];
   const tableRowItem = "participants";
 
-  console.log("participants", participants.length);
-  console.log("groups", trainingGroups.length);
+  const rows = participants.map((participant, index) => {
+    const row = {
+      num: index + 1,
+      Project: projects.find(
+        (project) => project.sf_project_id === selectedProject
+      ).project_name,
+      p_id: participant.p_id,
+      first_name: participant.first_name,
+      middle_name: participant.middle_name ? participant.middle_name : "",
+      last_name: participant.last_name ? participant.last_name : "",
+      gender: participant.gender,
+      age: participant.age,
+      coffee_tree_numbers: participant.coffee_tree_numbers,
+      phone_number: participant.phone_number,
+      farmer_sf_id: participant.p_id,
+      hh_number: participant.hh_number,
+      sf_household_id: participant.household_id,
+      ffg_id: participant.ffg_id,
+      location: participant.location,
+      tns_id: participant.tns_id,
+      training_group:
+        trainingGroups && trainingGroups.length > 0
+          ? trainingGroups.find(
+              (tg) => tg.tg_id === participant.training_group
+            )?.tg_name || "N/A"
+          : "N/A",
+      farmer_number: participant.primary_household_member,
+      status: participant.status,
+      farmer_trainer: participant.farmer_trainer,
+      business_advisor: participant.business_advisor,
+      create_in_commcare: participant.create_in_commcare,
+      number_of_coffee_plots: participant.number_of_coffee_plots,
+    };
 
-  const rows = participants
-    ? participants.map((participant, index) => {
-        const row = {
-          num: index + 1,
-          Project: projects.find(
-            (project) => project.sf_project_id === selectedProject
-          ).project_name,
-          p_id: participant.p_id,
-          first_name: participant.first_name,
-          middle_name: participant.middle_name ? participant.middle_name : "",
-          last_name: participant.last_name ? participant.last_name : "",
-          gender: participant.gender,
-          age: participant.age,
-          coffee_tree_numbers: participant.coffee_tree_numbers,
-          phone_number: participant.phone_number,
-          farmer_sf_id: participant.p_id,
-          hh_number: participant.hh_number,
-          sf_household_id: participant.household_id,
-          ffg_id: participant.ffg_id,
-          location: participant.location,
-          tns_id: participant.tns_id,
-          training_group:
-            trainingGroups && trainingGroups.length > 0
-              ? trainingGroups.find(
-                  (tg) => tg.tg_id === participant.training_group
-                )?.tg_name || "N/A"
-              : "N/A",
-          farmer_number: participant.primary_household_member,
-          status: participant.status,
-          farmer_trainer: participant.farmer_trainer,
-          business_advisor: participant.business_advisor,
-          create_in_commcare: participant.create_in_commcare,
-          number_of_coffee_plots: participant.number_of_coffee_plots
-        };
+    if (
+      selectedProject === "a0EOj000002FMGnMAO" ||
+      selectedProject === "a0EOj000002C7ivMAC"
+    ) {
+      row.national_identification_id =
+        participant.coop_membership_number
+          ? participant.coop_membership_number
+          : "";
+    } else {
+      row.coop_membership_number = participant.coop_membership_number
+        ? participant.coop_membership_number
+        : "";
+    }
 
-        if (
-          selectedProject === "a0EOj000002FMGnMAO" ||
-          selectedProject === "a0EOj000002C7ivMAC"
-        ) {
-          row.national_identification_id =
-            participant.coop_membership_number
-              ? participant.coop_membership_number
-              : "";
-        } else {
-          row.coop_membership_number = participant.coop_membership_number
-            ? participant.coop_membership_number
-            : "";
-        }
-
-        return row;
-      })
-    : [];
-
-  const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
-
-  useEffect(() => {
-    // Calculate the count of active participants
-    const sendToCcCount = participants.filter(
-      (participant) => participant.create_in_commcare === "false"
-    );
-    setSendToCcCount(sendToCcCount.length);
-  }, [participants]);
-
-  const handleTakeAction = async () => {
-    setIsSyncing(true);
-
-    await SyncParticipants({
-      variables: {
-        projectId: selectedProject,
-      },
-    })
-      .then(async (res) => {
-        // refetch participants per project
-        await participantsPerProject
-          .refetch()
-          .then(() => {
-            // setUploadResult(res.data.uploadParticipants);
-            setIsSyncing(false);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-
-        setIsSyncing(false);
-      });
-  };
+    return row;
+  });
 
   return (
     <div>

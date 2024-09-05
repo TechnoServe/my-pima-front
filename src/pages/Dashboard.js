@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Card from "../features/cards/card";
 import { MdGroups } from "react-icons/md";
 import { VscFileSubmodule } from "react-icons/vsc";
@@ -7,11 +7,12 @@ import { GiFarmer } from "react-icons/gi";
 import { FaTripadvisor } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import ListUpModal from "../components/Modals/ListUpModal";
-import { useState } from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, CircularProgress } from "@mui/material";
 import { Chrono } from "react-chrono";
 import { useQuery } from "@apollo/client";
 import { GET_TRAINING_MODULES_PER_PROJECT } from "../graphql/queries/trainingModulesRequests";
+import PropTypes from 'prop-types';
+import LoadingScreen from "../components/LoadingScreen";
 
 const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
   const [open, setOpen] = useState(false);
@@ -19,11 +20,26 @@ const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
   const [title, setTitle] = useState("");
   const [modules, setModules] = useState([]);
 
-  const getProjectModules = useQuery(GET_TRAINING_MODULES_PER_PROJECT, {
+  const { data, loading, error } = useQuery(GET_TRAINING_MODULES_PER_PROJECT, {
     variables: { projectId: selectedProject },
   });
 
-  const statsData = [
+  useEffect(() => {
+    if (data && data.getTrainingModulesByProject?.status === 200) {
+      setModules(
+        data.getTrainingModulesByProject.training_modules.map((t_module) => ({
+          title: t_module.tm_date || "No date",
+          cardTitle: t_module.tm_is_current
+            ? `${t_module.tm_title} (Current)`
+            : t_module.tm_title,
+          cardSubtitle: `Session Number: ${t_module.tm_module_number}`,
+          isCurrent: t_module.tm_is_current,
+        }))
+      );
+    }
+  }, [data]);
+
+  const statsData = useMemo(() => [
     {
       name: "total_training_groups",
       heading: "Total FFGs",
@@ -36,11 +52,8 @@ const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
       name: "total_training_modules",
       heading: "Completed Sessions",
       figures:
-        getProjectModules.data &&
-        getProjectModules.data.getTrainingModulesByProject &&
-        getProjectModules.data.getTrainingModulesByProject.status === 200
-          ? getProjectModules.data.getTrainingModulesByProject.training_modules
-              .length
+        data?.getTrainingModulesByProject?.status === 200
+          ? data.getTrainingModulesByProject.training_modules.length
           : 0,
       icon: <VscFileSubmodule />,
       color: "#25245D",
@@ -49,10 +62,8 @@ const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
       name: "total_completed_training_modules",
       heading: "Completed Topics",
       figures:
-        getProjectModules.data &&
-        getProjectModules.data.getTrainingModulesByProject &&
-        getProjectModules.data.getTrainingModulesByProject.status === 200
-          ? getProjectModules.data.getTrainingModulesByProject.training_modules.map(
+        data?.getTrainingModulesByProject?.status === 200
+          ? data.getTrainingModulesByProject.training_modules.filter(
               (module) => !module.tm_is_current
             ).length
           : 0,
@@ -101,142 +112,107 @@ const Dashboard = ({ trainingGroups, projectStats, selectedProject }) => {
       icon: <GiFarmer />,
       color: "#F46700",
     },
-  ];
-
-  useEffect(() => {
-    if (
-      getProjectModules.data &&
-      getProjectModules.data.getTrainingModulesByProject &&
-      getProjectModules.data.getTrainingModulesByProject.status === 200
-    ) {
-      setModules(
-        getProjectModules.data.getTrainingModulesByProject.training_modules.map(
-          (t_module) => {
-            return {
-              title: t_module.tm_date || "No date",
-              cardTitle: t_module.tm_is_current
-                ? `${t_module.tm_title} (Current)`
-                : t_module.tm_title,
-              cardSubtitle: `Session Number: ${t_module.tm_module_number}`,
-              isCurrent: t_module.tm_is_current,
-            };
-          }
-        )
-      );
-    }
-  }, [getProjectModules.data]);
+  ], [trainingGroups, data, projectStats]);
 
   const openList = (e, name) => {
     e.preventDefault();
+    const listMap = {
+      total_bas: {
+        title: "Business Advisors",
+        list: [...new Set(trainingGroups.map((group) => group.business_advisor))],
+      },
+      total_fts: {
+        title: "Farmer Trainers",
+        list: [...new Set(trainingGroups.map((group) => group.farmer_trainer))],
+      },
+    };
 
-    if (name === "total_bas") {
+    if (listMap[name]) {
       setOpen(true);
-      setTitle("Business Advisors");
-      setList([
-        ...new Set(trainingGroups.map((group) => group.business_advisor)),
-      ]);
-    }
-    if (name === "total_fts") {
-      setOpen(true);
-      setTitle("Farmer Trainers");
-      setList([
-        ...new Set(trainingGroups.map((group) => group.farmer_trainer)),
-      ]);
+      setTitle(listMap[name].title);
+      setList(listMap[name].list);
     }
   };
+
+  if (loading) return (
+    <LoadingScreen />
+  );
+  
+  if (error) return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Typography color="error">Error loading data</Typography>
+    </div>
+  );
 
   return (
     <div>
       <h1 className="module__heading">Your Dashboard</h1>
-
-      <Grid container direction="row">
-        <Grid item xs={12}>
-          <div
-            style={{
-              width: "100%",
-              marginBottom: "50px",
-              display: "flex",
-              flexWrap: "wrap",
-            }}
-          >
-            {statsData.map((data, index) => (
-              <div key={index}>
-                <NavLink
-                  to={data.path ? data.path : null}
-                  key={index}
-                  onClick={(e) => (data.path ? null : openList(e, data.name))}
-                >
-                  <Card
-                    heading={data.heading}
-                    figures={data.figures}
-                    icon={data.icon}
-                    color={data.color}
-                  />
-                </NavLink>
-              </div>
-            ))}{" "}
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              marginTop: "20px",
-              position: "relative",
-            }}
-          >
-            <h4
-              style={{
-                width: "100%",
-                marginBottom: "30px",
-              }}
+      <Grid container spacing={2}>
+        {statsData.map((data, index) => (
+          <Grid item key={index} xs={12} sm={6} md={3}>
+            <NavLink
+              to={data.path || '#'}
+              onClick={(e) => (!data.path ? openList(e, data.name) : null)}
             >
-              Project Modules Timeline
-            </h4>
-            {modules.length > 0 ? (
-              <div style={{ widht: "100%", height: "500px" }}>
-                <Chrono
-                  items={modules}
-                  mode="HORIZONTAL"
-                  allowDynamicUpdate={true}
-                  cardWidth={300}
-                  cardHeight={150}
-                  contentDetailsHeight={250}
-                  activeItemIndex={
-                    modules.findIndex((module) => module.isCurrent) !== -1
-                      ? modules.findIndex((module) => module.isCurrent)
-                      : modules.length - 1
-                  }
-                  focusActiveItemOnLoad={true}
-                  cardPositionHorizontal="TOP"
-                  theme={{
-                    primary: "#087C8F",
-                    secondary: "#087C8F",
-                    cardBgColor: "#fff",
-                    cardForeColor: "#7D7F88",
-                    titleColor: "#7D7F88",
-                    titleColorActive: "#fff",
-                    subtitleColor: "#fff",
-                  }}
-                />
-              </div>
-            ) : (
-              <Typography variant="body1" color="textSecondary" align="center">
-                No modules found
-              </Typography>
-            )}
-          </div>
-        </Grid>
+              <Card
+                heading={data.heading}
+                figures={data.figures}
+                icon={data.icon}
+                color={data.color}
+              />
+            </NavLink>
+          </Grid>
+        ))}
       </Grid>
 
+      <div style={{ marginTop: "20px" }}>
+        <h4>Project Modules Timeline</h4>
+        {modules.length > 0 ? (
+          <div style={{ width: "100%", height: "500px" }}>
+            <Chrono
+              items={modules}
+              mode="HORIZONTAL"
+              allowDynamicUpdate
+              cardWidth={300}
+              cardHeight={150}
+              contentDetailsHeight={250}
+              activeItemIndex={modules.findIndex((m) => m.isCurrent) !== -1
+                ? modules.findIndex((m) => m.isCurrent)
+                : modules.length - 1}
+              focusActiveItemOnLoad
+              cardPositionHorizontal="TOP"
+              theme={{
+                primary: "#087C8F",
+                secondary: "#087C8F",
+                cardBgColor: "#fff",
+                cardForeColor: "#7D7F88",
+                titleColor: "#7D7F88",
+                titleColorActive: "#fff",
+                subtitleColor: "#fff",
+              }}
+            />
+          </div>
+        ) : (
+          <Typography variant="body1" color="textSecondary" align="center">
+            No modules found
+          </Typography>
+        )}
+      </div>
+
       <ListUpModal
-        open={trainingGroups.length > 0 ? open : false}
+        open={open && trainingGroups.length > 0}
         handleClose={() => setOpen(false)}
         data={list}
         title={title}
       />
     </div>
   );
+};
+
+Dashboard.propTypes = {
+  trainingGroups: PropTypes.array.isRequired,
+  projectStats: PropTypes.object.isRequired,
+  selectedProject: PropTypes.string.isRequired,
 };
 
 export default Dashboard;
