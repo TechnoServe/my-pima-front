@@ -25,7 +25,7 @@ const customStyles = {
     style: {
       paddingLeft: "8px",
       paddingRight: "8px",
-      backgroundColor: "#1b2a4e", /* Matching sidebar color */
+      backgroundColor: "#1b2a4e" /* Matching sidebar color */,
       color: "white",
     },
   },
@@ -40,7 +40,11 @@ const customStyles = {
 };
 
 // Export Buttons Component
-const ExportButtons = ({ handleCSVExport, handleExcelExport, tableRowItem }) => (
+const ExportButtons = ({
+  handleCSVExport,
+  handleExcelExport,
+  tableRowItem,
+}) => (
   <div className="export-buttons">
     {tableRowItem !== "trainsessionapprov" && (
       <Button
@@ -108,7 +112,9 @@ const Table = ({
       imageData.data?.trainingSessionImage?.status === 200
     ) {
       setLoading(false);
-      setSession_image(imageData.data.trainingSessionImage.trainingSessionImage);
+      setSession_image(
+        imageData.data.trainingSessionImage.trainingSessionImage
+      );
     }
   }, [imageData]);
 
@@ -164,14 +170,114 @@ const Table = ({
 
     if (pathName === "farmvisit") {
       const new_columns = [
-        { id: 'farmer_tns_id' },
-        { id: 'household_tns_id' },
-        { id: 'pima_household_id' },
-        { id: 'pima_farmer_id' }
+        { id: "farmer_tns_id" },
+        { id: "household_tns_id" },
+        { id: "pima_household_id" },
+        { id: "pima_farmer_id" },
       ];
-      
+
       // Use concat to add new columns
       columns = columns.concat(new_columns);
+    }
+
+    // Create an array of headers for the CSV file
+    const partsHeaders = [
+      "num",
+      "Project",
+      "first_name",
+      "middle_name",
+      "last_name",
+      "gender",
+      "age",
+      "coffee_tree_numbers",
+      "number_of_coffee_plots",
+      "phone_number",
+      selectedProject === "a0EOj000002FMGnMAO" ||
+      selectedProject === "a0EOj000002C7ivMAC"
+        ? "national_identification_id"
+        : "coop_membership_number",
+      "location",
+      "farmer_sf_id",
+      "tns_id",
+      "hh_number",
+      "sf_household_id",
+      "farmer_number",
+      "ffg_id",
+      "training_group",
+      "status",
+      "farmer_trainer",
+      "business_advisor",
+      "create_in_commcare",
+    ];
+
+    if (tableRowItem === "participants") {
+      // Create a map to store monthly attendance data
+      const monthlyAttendanceMap = new Map();
+
+      // filter all attendances by data's participant ids
+      const filteredAttendances = allAttendances.filter((attendance) =>
+        data.some(
+          (participant) => participant.p_id === attendance.participant_id
+        )
+      );
+
+      // Iterate through the attendance data to calculate monthly attendance
+      filteredAttendances.forEach((attendance) => {
+        const {
+          attendance_status,
+          participant_id,
+          module_number,
+          module_name,
+          module_id,
+        } = attendance;
+        // const [year, month] = attendance_date.split("-");
+        const key = `${module_number}-${module_name}-${module_id}`;
+
+        // Initialize the monthly attendance object if it doesn't exist
+        if (!monthlyAttendanceMap.has(key)) {
+          monthlyAttendanceMap.set(key, {});
+        }
+
+        // Set the attendance status for the participant in the corresponding month
+        const monthlyAttendance = monthlyAttendanceMap.get(key);
+        monthlyAttendance[participant_id] =
+          attendance_status === "Present" ? "1" : "0";
+      });
+
+      // Add monthly columns to the headers
+      for (const [monthKey] of monthlyAttendanceMap) {
+        partsHeaders.push(monthKey);
+      }
+
+      // Prepare data for writing to the CSV file
+      const csvRows =
+        searchText.length > 0
+          ? filteredData.map((participant) => {
+              const rowData = { ...participant };
+              for (const [
+                monthKey,
+                monthlyAttendance,
+              ] of monthlyAttendanceMap) {
+                rowData[monthKey] = monthlyAttendance[participant.p_id] || "";
+              }
+              return rowData;
+            })
+          : data.map((participant) => {
+              const rowData = { ...participant };
+              for (const [
+                monthKey,
+                monthlyAttendance,
+              ] of monthlyAttendanceMap) {
+                rowData[monthKey] = monthlyAttendance[participant.p_id] || "";
+              }
+              return rowData;
+            });
+
+      data = csvRows;
+
+      console.log("CSV Participants export");
+
+      console.log(data);
     }
 
     const csvExporter = new ExportToCsv({
@@ -182,7 +288,11 @@ const Table = ({
       useTextFile: false,
       useBom: true,
       filename: `${filename}`,
-      headers: columns.map((column) => column.id),
+      // headers: columns.map((column) => column.id),
+      headers:
+        tableRowItem === "participants"
+          ? partsHeaders
+          : columns.map((column) => column.id),
     });
 
     csvExporter.generateCsv(
@@ -205,14 +315,17 @@ const Table = ({
       ),
     };
 
-    const trainerSummary = data.reduce((acc, { farmer_trainer, session_image_status }) => {
-      const key = `${farmer_trainer}_${session_image_status}`;
-      if (!acc[key]) {
-        acc[key] = { farmer_trainer, session_image_status, count: 0 };
-      }
-      acc[key].count += 1;
-      return acc;
-    }, {});
+    const trainerSummary = data.reduce(
+      (acc, { farmer_trainer, session_image_status }) => {
+        const key = `${farmer_trainer}_${session_image_status}`;
+        if (!acc[key]) {
+          acc[key] = { farmer_trainer, session_image_status, count: 0 };
+        }
+        acc[key].count += 1;
+        return acc;
+      },
+      {}
+    );
 
     const summaryData = Object.values(trainerSummary);
 
@@ -239,14 +352,19 @@ const Table = ({
 
   return (
     <div>
-      <div className={`table-header-actions ${!filter ? 'no-filter' : ''}`}>
+      <div className={`table-header-actions ${!filter ? "no-filter" : ""}`}>
         {/* Filter Button (if filter exists) */}
-        {filter && (
-          <Button className="filter-button">Filter</Button>
-        )}
+        {filter && <Button className="filter-button">Filter</Button>}
 
         {/* Search and Export Buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
           <div className="search-container">
             <input
               type="text"
