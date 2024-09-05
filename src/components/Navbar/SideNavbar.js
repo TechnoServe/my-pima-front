@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   MdOutlineDashboardCustomize,
   MdOutlineGroups,
@@ -8,21 +9,22 @@ import {
   MdManageAccounts,
   MdPerson,
   MdAddChart,
+  MdMenu,
+  MdClose,
 } from "react-icons/md";
-import { HiOutlineTruck, HiMenuAlt2 } from "react-icons/hi";
-import { NavLink, useNavigate } from "react-router-dom";
-import "./navbar.css";
-import Logo from "../Logo";
-import { Chip } from "@mui/material";
+import { HiOutlineTruck } from "react-icons/hi";
+import "./Sidebar.css"; // Custom CSS file
 
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [activeSubMenu, setActiveSubMenu] = useState(null);
-
+  const [activeSubMenu, setActiveSubMenu] = useState(null); // Track open submenu
   const navigate = useNavigate();
-  const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
 
-  const menuItem = [
+  // Fetch user details from localStorage
+  const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData")) || {};
+
+  // Menu items structure (using original paths you provided)
+  const menuItems = [
     {
       path: "/in/dashboard",
       name: "Dashboard",
@@ -34,20 +36,11 @@ const Sidebar = ({ children }) => {
       icon: <MdOutlineGroups />,
     },
     {
-      path: "/in/trainsession",
       name: "Training Sessions",
       icon: <MdOutlineCalendarToday />,
       subMenu: [
-        {
-          path: "/in/trainsession/",
-          name: "All Sessions",
-          icon: <MdOutlineCalendarToday />,
-        },
-        {
-          path: "/in/trainsession/pending",
-          name: "Image Approvals",
-          icon: <MdOutlineCalendarToday />,
-        },
+        { path: "/in/trainsession", name: "All Sessions", icon: <MdOutlineCalendarToday /> },
+        { path: "/in/trainsession/pending", name: "Image Approvals", icon: <MdOutlineCalendarToday /> },
       ],
     },
     {
@@ -56,203 +49,100 @@ const Sidebar = ({ children }) => {
       icon: <MdOutlinePersonSearch />,
     },
     {
-      path: "/in/farmvisit",
       name: "Farm Visits",
       icon: <HiOutlineTruck />,
       subMenu: [
-        {
-          path: "/in/farmvisit/",
-          name: "Farm Visits",
-          icon: <MdOutlineCalendarToday />,
-        },
-        // {
-        //   path: "/in/farmvisit/verification",
-        //   name: "Farm Visit Verification",
-        //   icon: <MdOutlineCalendarToday />,
-        // },
+        { path: "/in/farmvisit", name: "All Visits", icon: <HiOutlineTruck /> },
+        { path: "/in/farmvisit/verification", name: "Visit Verification", icon: <HiOutlineTruck /> },
       ],
     },
     {
-      path: "/in/performance",
       name: "Field Team Performance",
       icon: <MdAddChart />,
       subMenu: [
-        {
-          path: "/in/performance/aa",
-          name: "Agronomy Advisors",
-          icon: <MdPerson />,
-        },
-        {
-          path: "/in/performance/ft",
-          name: "Farmer Trainers",
-          icon: <MdPerson />,
-        },
+        { path: "/in/performance/aa", name: "Agronomy Advisors", icon: <MdPerson /> },
+        { path: "/in/performance/ft", name: "Farmer Trainers", icon: <MdPerson /> },
       ],
     },
     {
       path: "/in/manage",
       name: "Management",
       icon: <MdManageAccounts />,
-      isPrivate:
-        userDetails &&
-        (userDetails.role === "super_admin" ||
-          userDetails.role === "ci_leadership"),
+      isPrivate: userDetails.role === "super_admin" || userDetails.role === "ci_leadership",
     },
   ];
 
-  const bottomitem = [
-    {
-      path: "/in/profile",
-      name: userDetails && (userDetails.username || "N/A"),
-      email: userDetails && (userDetails.email || "N/A"),
-      role_name: userDetails && (userDetails.role || "N/A"),
-      icon: <MdOutlinePersonSearch />,
-    },
-    {
-      path: "/in/logout",
-      name: "Logout",
-      icon: <MdLogout />,
-    },
-  ];
+  // Toggle sidebar visibility
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
-  const handleLogout = (e) => {
-    e.preventDefault();
+  // Handle submenu toggle
+  const toggleSubMenu = (index) => {
+    setActiveSubMenu(activeSubMenu === index ? null : index);
+  };
 
+  const handleLogout = () => {
     window.localStorage.removeItem("my-pima-token");
     window.localStorage.removeItem("myPimaUserData");
-
     navigate("/login");
   };
 
   return (
-    <div className="nav__container">
-      <div
-        style={{
-          alignItems: isOpen ? "unset" : "center",
-          transition: "max-width 0.3s ease",
-        }}
-        className="sidebar"
-      >
-        <div className="top_section">
-          <div
-            style={{
-              display: isOpen ? "flex" : "none",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            className="logo"
-          >
-            <Logo />
-          </div>
+    <div className="sidebar-layout">
+      <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
+        <div className="sidebar-header">
+          <h2 className="sidebar-logo">MyPima</h2>
+          <button className="sidebar-toggle" onClick={toggleSidebar}>
+            {isOpen ? <MdClose /> : <MdMenu />}
+          </button>
         </div>
 
-        <div className="mid__section">
-          {menuItem
-            .filter((item) => item.isPrivate === undefined || item.isPrivate)
-            .map((item, index) => (
-              <div key={index} className="menu-item">
-                {/* Render main menu item */}
-                <NavLink 
-                  to={item.path} 
-                  className={({ isActive }) => isActive ? "link active" : "link"}
-                >
-                  <div className="icon">{item.icon}</div>
-                  <div className="link_text">{item.name}</div>
-                </NavLink>
-
-                {/* Render sub-menu items if available */}
-                {item.subMenu && (
-                  <div
-                    className={`sub__menu ${
-                      activeSubMenu === index ? "active" : ""
-                    }`}
-                  >
-                    {item.subMenu.map((subItem, subIndex) => (
-                      <NavLink
-                        key={subIndex}
-                        to={subItem.path}
-                        className={({ isActive }) => isActive ? "link active" : "link"}
-                        onMouseEnter={() => setActiveSubMenu(index)}
-                        onMouseLeave={() => setActiveSubMenu(null)}
-                      >
-                        <div className="icon">{subItem.icon}</div>
-                        <div className="link_text">{subItem.name}</div>
-                      </NavLink>
-                    ))}
+        <div className="menu-items">
+          {menuItems.map((item, index) => (
+            <div key={index} className="menu-item">
+              {/* If the item has a submenu, it acts as a toggle, not a link */}
+              {item.subMenu ? (
+                <>
+                  <div className="submenu-toggle" onClick={() => toggleSubMenu(index)}>
+                    <div className="icon">{item.icon}</div>
+                    <span className={`menu-text ${!isOpen && "hide"}`}>{item.name}</span>
                   </div>
-                )}
-              </div>
-            ))}
+                  {activeSubMenu === index && isOpen && (
+                    <div className="submenu">
+                      {item.subMenu.map((subItem, subIndex) => (
+                        <NavLink key={subIndex} to={subItem.path} className="submenu-link" activeClassName="active">
+                          <div className="icon">{subItem.icon}</div>
+                          <span className="submenu-text">{subItem.name}</span>
+                        </NavLink>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                // If it's a simple link without a submenu
+                <NavLink to={item.path} className="menu-link" activeClassName="active">
+                  <div className="icon">{item.icon}</div>
+                  <span className={`menu-text ${!isOpen && "hide"}`}>{item.name}</span>
+                </NavLink>
+              )}
+            </div>
+          ))}
         </div>
 
-        <div className="bottom__section">
-          <NavLink
-            to={bottomitem[0].path}
-            className={({ isActive }) => isActive ? "link active" : "link"}
-            onClick={(e) => e.preventDefault()}
-            style={{
-              cursor: "default",
-            }}
-          >
-            <div>{bottomitem[0].icon}</div>
-            <div>
-              <div
-                style={{ display: isOpen ? "block" : "none" }}
-                className="profile__text"
-              >
-                {bottomitem[0].name}
-              </div>{" "}
-              <div
-                style={{ display: isOpen ? "block" : "none" }}
-                className="profile__text"
-              >
-                {bottomitem[0].email}
-              </div>
-              <div
-                style={{
-                  display: isOpen ? "block" : "none",
-                  marginTop: "10px",
-                }}
-                className="profile__text"
-              >
-                <Chip
-                  label={
-                    bottomitem[0].role_name
-                      ? bottomitem[0].role_name.includes("_")
-                        ? bottomitem[0].role_name
-                            .split("_")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() + word.slice(1)
-                            )
-                            .join(" ")
-                        : bottomitem[0].role_name.charAt(0).toUpperCase() +
-                          bottomitem[0].role_name.slice(1)
-                      : "N/A"
-                  }
-                  variant="contained"
-                  size="small"
-                  color="secondary"
-                />
-              </div>
-            </div>
-          </NavLink>
-          <NavLink
-            to={bottomitem[1].path}
-            className={({ isActive }) => isActive ? "link active" : "link"}
-            onClick={handleLogout}
-          >
-            <div className="icon">{bottomitem[1].icon}</div>
-            <div
-              style={{ display: isOpen ? "block" : "none" }}
-              className="link_text"
-            >
-              {bottomitem[1].name}
-            </div>
-          </NavLink>
+        <div className="sidebar-footer">
+          <div className="profile-section">
+            <span className="profile-name">{userDetails.username || "N/A"}</span>
+            <span className="profile-email">{userDetails.email || "N/A"}</span>
+          </div>
+          <button className="logout-button" onClick={handleLogout}>
+            <MdLogout />
+            <span className="logout-text">Logout</span>
+          </button>
         </div>
       </div>
-      <main style={{ width: "100%" }}>{children}</main>
+
+      <main className={`main-content ${isOpen ? "open" : "closed"}`}>
+        {children}
+      </main>
     </div>
   );
 };

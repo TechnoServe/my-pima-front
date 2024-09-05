@@ -1,77 +1,70 @@
-.table__container {
-  width: 100%;
-  max-height: 300px;
-  overflow-y: scroll;
+.table-header-actions {
+  display: flex;
+  justify-content: space-between; /* Distribute elements across the header */
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 2% 0;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table__header {
-  position: sticky;
-  top: 0;
-  background-color: rgba(0, 165, 163, 1);
-  z-index: 1;
-  width: 100%;
-  padding-top: 20px;
-}
-
-.table__header th {
-  font-size: 14px;
-  padding: 8px;
-  font-weight: 600;
-  color: #fff;
-  text-align: start;
-}
-
-.table__body {
-  flex-grow: 1;
-  overflow: auto;
-  table-layout: fixed;
-}
-
-.table__body td {
-  font-size: 14px;
-  padding: 8px;
-  border: 1px solid #eeeef2;
-}
-.table__body td:hover {
-  font-weight: 600;
-}
-.table__body tr:nth-child(even) {
-  background-color: #f1f5f9; /* Set the background color for odd rows */
-}
-
-.table__body tr:hover {
-  box-shadow: 0px 2px 8px 3px rgba(0, 0, 0, 0.2); /* Customize the box shadow effect on hover */
-  transition: box-shadow 0.3s ease-in-out;
-  cursor: pointer;
+.table-header-actions.no-filter {
+  justify-content: space-between; /* Ensure search stays on the left and export buttons on the right when filter is not present */
 }
 
 .search-container {
   position: relative;
   display: inline-block;
-  float: right;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-left: 0; /* Align search to the left */
 }
 
 .search-container input[type="text"] {
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
   font-size: 16px;
-  width: 200px;
+  width: 250px;
   outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-container input[type="text"]:focus {
+  border-color: #1b2a4e; /* Dark blue focus border */
 }
 
 .search-icon {
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 15px;
   transform: translateY(-50%);
   font-size: 20px;
   cursor: pointer;
+  color: #1b2a4e; /* Matching dark blue for the icon */
+}
+
+.export-buttons {
+  display: flex;
+  gap: 10px; /* Adds spacing between export buttons */
+  justify-content: flex-end; /* Align buttons to the right */
+}
+
+.export-buttons button {
+  color: #1b2a4e; /* Matching dark blue */
+  border-color: #1b2a4e;
+}
+
+button:hover {
+  background-color: rgba(27, 42, 78, 0.1); /* Dark blue hover background */
+  border-color: #1b2a4e; /* Button hover border color */
+}
+
+.filter-button {
+  background-color: transparent;
+  border: 1px solid #1b2a4e;
+  color: #1b2a4e;
+  padding: 8px 16px;
+  margin-right: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.filter-button:hover {
+  background-color: rgba(27, 42, 78, 0.1); /* Same hover as export buttons */
 }

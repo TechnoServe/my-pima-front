@@ -1,106 +1,151 @@
+/* Sidebar Layout */
+.sidebar-layout {
+  display: flex;
+}
+
+/* Sidebar */
 .sidebar {
-    width: 250px;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #283048;
-    overflow-y: auto;
-    transition: left 0.3s ease;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .sidebar.closed {
-    left: -250px;
-  }
-  
-  .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    cursor: pointer;
-  }
-  
-  .menu-icon {
-    color: #fff;
-    font-size: 24px;
-  }
-  
-  .logo {
-    width: 100px;
-  }
-  
-  .menu-items {
-    flex: 1;
-    padding: 20px 0;
-  }
-  
-  .menu-item {
-    position: relative;
-  }
-  
-  .menu-item a {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    color: #fff;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-  }
-  
-  .menu-item a:hover {
-    background-color: #34495e;
-  }
-  
-  .menu-item .icon {
-    margin-right: 10px;
-  }
-  
-  .sub-menu {
-    display: none;
-    background-color: #34495e;
-    padding: 10px 0;
-  }
-  
-  .menu-item:hover .sub-menu {
-    display: block;
-  }
-  
-  .sub-menu a {
-    padding: 10px 40px;
-  }
-  
-  .sub-menu a:hover {
-    background-color: #2c3e50;
-  }
-  
-  .sidebar-footer {
-    padding: 20px;
-    border-top: 1px solid #ddd;
-  }
-  
-  .profile,
-  .logout {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  .profile-icon,
-  .logout-icon {
-    margin-right: 10px;
-  }
-  
-  .profile:hover,
-  .logout:hover {
-    color: #f39c12;
-  }
-  
-  .active {
-    background-color: #2c3e50;
-  }
-  
+  background-color: #1b2a4e; /* Dark blue */
+  color: white;
+  width: 250px;
+  height: 100vh;
+  transition: width 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar.closed {
+  width: 80px;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #162243; /* Slightly darker for contrast */
+}
+
+.sidebar-logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Menu Items */
+.menu-items {
+  flex: 1;
+  padding-top: 10px;
+}
+
+.menu-item {
+  margin-bottom: 10px;
+}
+
+.menu-link,
+.submenu-toggle {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.menu-link:hover,
+.submenu-toggle:hover {
+  background-color: #34495e; /* Hover color */
+}
+
+.icon {
+  font-size: 1.2rem;
+  margin-right: 10px;
+}
+
+.menu-text {
+  font-size: 1rem;
+  transition: opacity 0.3s ease;
+}
+
+.hide {
+  display: none;
+}
+
+/* Submenu */
+.submenu {
+  margin-left: 20px;
+  background-color: #2c3e50;
+}
+
+.submenu-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: #d1d1d1; /* Slightly faded color */
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.submenu-link:hover {
+  background-color: #34495e;
+}
+
+/* Footer */
+.sidebar-footer {
+  padding: 20px;
+  background-color: #162243;
+}
+
+.profile-section {
+  margin-bottom: 10px;
+}
+
+.profile-name {
+  font-weight: bold;
+  display: block;
+}
+
+.profile-email {
+  font-size: 0.9rem;
+  display: block;
+  margin-top: 5px;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logout-button .logout-text {
+  margin-left: 10px;
+}
+
+/* Main Content */
+.main-content {
+  width: 100%;
+  overflow-y: hidden;
+  padding: 1%;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.closed {
+  margin-left: 80px;
+}
