@@ -26,7 +26,8 @@ const AAPerfomance = React.lazy(() => import("../../pages/AAPerformance"));
 const FTPerformance = React.lazy(() => import("../../pages/FTPerformance"));
 const Tgdetail = React.lazy(() => import("../../features/tgdetail/Tgdetail"));
 const Tsdetail = React.lazy(() => import("../../features/tsdetail/Tsdetail"));
-const TSApprove = React.lazy(() => import("../../features/tsapprove/tslist"));
+//const TSApprove = React.lazy(() => import("../../features/tsapprove/tslist"));
+const TSApprove = React.lazy(() => import("../../features/tsapprove/tsapprove"))
 const LoaderPage = React.lazy(() => import("../../pages/LoaderPage"));
 const Management = React.lazy(() => import("../../pages/Management"));
 const FarmVisitApp = React.lazy(() => import("../../features/fvapprove/fvApprove"));
@@ -248,6 +249,17 @@ const Navbar = () => {
                             filter={filter}
                             setFilter={setFilter}
                             setFilteredSessions={setFilteredSessions}
+                          />
+                        }
+                      />
+                       <Route
+                        path="/trainsession/verification"
+                        element={
+                          <TSApprove
+                            selectedProject={selectedProject}
+                            filter={filter}
+                            setFilter={setFilter}
+                            userId={auth.user.id}
                           />
                         }
                       />

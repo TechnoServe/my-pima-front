@@ -40,7 +40,7 @@ const Sidebar = ({ children }) => {
       icon: <MdOutlineCalendarToday />,
       subMenu: [
         { path: "/in/trainsession", name: "All Sessions", icon: <MdOutlineCalendarToday /> },
-        { path: "/in/trainsession/pending", name: "Image Approvals", icon: <MdOutlineCalendarToday /> },
+        { path: "/in/trainsession/verification", name: "Image Approvals", icon: <MdOutlineCalendarToday /> },
       ],
     },
     {
@@ -109,17 +109,17 @@ const Sidebar = ({ children }) => {
                   {activeSubMenu === index && isOpen && (
                     <div className="submenu">
                       {item.subMenu.map((subItem, subIndex) => (
-                        <NavLink key={subIndex} to={subItem.path} className="submenu-link" activeClassName="active">
+                        <NavLink key={subIndex} to={subItem.path} className="submenu-link" activeclassname="active">
                           <div className="icon">{subItem.icon}</div>
                           <span className="submenu-text">{subItem.name}</span>
                         </NavLink>
                       ))}
-                    </div>
+                    </div> 
                   )}
                 </>
               ) : (
                 // If it's a simple link without a submenu
-                <NavLink to={item.path} className="menu-link" activeClassName="active">
+                <NavLink to={item.path} className="menu-link" activeclassname="active">
                   <div className="icon">{item.icon}</div>
                   <span className={`menu-text ${!isOpen && "hide"}`}>{item.name}</span>
                 </NavLink>
