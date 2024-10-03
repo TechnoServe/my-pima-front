@@ -3,38 +3,30 @@ import Statscard from "../statstg/Statscard";
 import { MdGroups, MdBarChart } from "react-icons/md";
 import { BsPersonBoundingBox } from "react-icons/bs";
 
-const Statsframe = ({ statistics, currentSessions }) => {
-    console.log(currentSessions)
+const Statsframe = ({ sampledSessions }) => {
+
   const statsData = [
     {
-      heading: "Unverified Sessions",
-      figures: currentSessions.filter((session) => session.is_verified === false).length,
+      heading: "Total Sampled",
+      figures: sampledSessions.length,
       icon: <MdGroups />,
       color: "#25245D",
     },
     {
-      heading: "Correct Attendees #",
-      figures: currentSessions.filter(
-        (session) => session.session_image_status === "approved"
+      heading: "Total Reviewed",
+      figures: sampledSessions.filter(
+        (session) => session.image_review_result !== null
       ).length,
       icon: <MdGroups />,
-      color: "#25245D",
-    },
-    {
-      heading: "Incorrect Attendees #",
-      figures: currentSessions.filter(
-        (session) => session.session_image_status === "invalid"
-      ).length,
-      icon: <BsPersonBoundingBox />,
       color: "#087C8F",
     },
     {
-      heading: "Unclear Photos",
-      figures: currentSessions.filter(
-        (session) => session.session_image_status === "unclear"
+      heading: "Not Reviewed",
+      figures: sampledSessions.filter(
+        (session) => session.image_review_result === null
       ).length,
-      icon: <MdBarChart />,
-      color: "#F46700",
+      icon: <BsPersonBoundingBox />,
+      color: "#25245D",
     },
   ];
 

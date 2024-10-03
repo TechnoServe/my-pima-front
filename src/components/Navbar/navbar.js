@@ -26,7 +26,8 @@ const AAPerfomance = React.lazy(() => import("../../pages/AAPerformance"));
 const FTPerformance = React.lazy(() => import("../../pages/FTPerformance"));
 const Tgdetail = React.lazy(() => import("../../features/tgdetail/Tgdetail"));
 const Tsdetail = React.lazy(() => import("../../features/tsdetail/Tsdetail"));
-const TSApprove = React.lazy(() => import("../../features/tsapprove/tslist"));
+//const TSApprove = React.lazy(() => import("../../features/tsapprove/tslist"));
+const TSApprove = React.lazy(() => import("../../features/tsapprove/tsapprove"))
 const LoaderPage = React.lazy(() => import("../../pages/LoaderPage"));
 const Management = React.lazy(() => import("../../pages/Management"));
 const FarmVisitApp = React.lazy(() => import("../../features/fvapprove/fvApprove"));
@@ -152,7 +153,7 @@ const Navbar = () => {
           />
           <LoaderPage
             loadings={{
-              load1: trainingGroupsPerProject.loading,
+              load1: false,
               load5: false, // No need to show attendance loading here
             }}
           />
@@ -179,7 +180,6 @@ const Navbar = () => {
                         element={
                           <Dashboard
                             trainingGroups={trainingGroups}
-                            trainingSessions={trainingSessions}
                             projectStats={projectStats}
                             selectedProject={selectedProject}
                           />
@@ -190,7 +190,6 @@ const Navbar = () => {
                         element={
                           <Dashboard
                             trainingGroups={trainingGroups}
-                            trainingSessions={trainingSessions}
                             projectStats={projectStats}
                             selectedProject={selectedProject}
                           />
@@ -223,7 +222,6 @@ const Navbar = () => {
                         path="/trainsession"
                         element={
                           <TrainingSession
-                            trainingSessions={filteredSessions.length > 0 ? filteredSessions : trainingSessions}
                             selectedProject={selectedProject}
                             filter={filter}
                             setFilter={setFilter}
@@ -239,15 +237,14 @@ const Navbar = () => {
                         path="/performance/ft"
                         element={<FTPerformance selectedProject={selectedProject} />}
                       />
-                      <Route
-                        path="/trainsession/pending"
+                       <Route
+                        path="/trainsession/verification"
                         element={
                           <TSApprove
-                            trainingSessions={filteredSessions.length > 0 ? filteredSessions : trainingSessions}
                             selectedProject={selectedProject}
                             filter={filter}
                             setFilter={setFilter}
-                            setFilteredSessions={setFilteredSessions}
+                            userId={auth.user.id}
                           />
                         }
                       />

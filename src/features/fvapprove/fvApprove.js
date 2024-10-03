@@ -15,11 +15,11 @@ const pageSize = 5;
 
 const practices = [
   { name: "Compost" },
-  { name: "Record Book" },
+  { name: "Main Stems" },
   { name: "Shade Management" },
   { name: "Weeding" },
+  { name: "Record Book" },
   { name: "Stumping" },
-  { name: "Main Stems" },
 ];
 
 const placeholderImageUrl = "https://via.placeholder.com/150"; // Placeholder image URL

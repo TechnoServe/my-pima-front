@@ -1,16 +1,32 @@
-import React, { useEffect } from "react";
-import { Chip } from "@mui/material";
-import Table from "../components/Table/Table";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_TRAINING_MODULES_PER_PROJECT } from "../graphql/queries/trainingModulesRequests";
+import { Chip, Typography } from "@mui/material";
+import Table from "../components/Table/Table";
+import { toast } from "react-hot-toast";
+import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../graphql/queries/trainingSessionsRequests";
+import LoadingScreen from "../components/LoadingScreen";
 
-const TrainingSession = ({
-  trainingSessions,
-  filter,
-  setFilter,
-  setFilteredSessions,
-  selectedProject,
-}) => {
+const TrainingSession = ({ selectedProject }) => {
+  const [trainingSessions, setTrainingSessions] = useState([]);
+  const { data, error, loading } = useQuery(GET_TRAINING_SESSIONS_PER_PROJECT, {
+    variables: { sfProjectId: selectedProject },
+  });
+
+  useEffect(() => {
+    if (data) {
+      const trainingSessionsData = data.trainingSessionsByProject;
+      setTrainingSessions(
+        trainingSessionsData.status === 200
+          ? trainingSessionsData.trainingSessions
+          : []
+      );
+    }
+
+    if (error) {
+      toast.error(error.message);
+    }
+  }, [data, error]);
+
   const columns = [
     {
       id: "num",
@@ -143,54 +159,28 @@ const TrainingSession = ({
       }))
     : [];
 
-  const getProjectModules = useQuery(GET_TRAINING_MODULES_PER_PROJECT, {
-    variables: { projectId: selectedProject },
-  });
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
-  useEffect(() => {
-    if (
-      getProjectModules.data &&
-      getProjectModules.data.getTrainingModulesByProject &&
-      getProjectModules.data.getTrainingModulesByProject.status === 200 &&
-      trainingSessions &&
-      trainingSessions.length > 0
-    ) {
-      if (
-        getProjectModules.data.getTrainingModulesByProject.training_modules.filter(
-          (module) =>
-            trainingSessions.map((d) => d.ts_module).includes(module.tm_title)
-        ).length > 0
-      ) {
-        setFilteredSessions(
-          trainingSessions.filter(
-            (session) =>
-              session.ts_module ===
-              getProjectModules.data.getTrainingModulesByProject.training_modules
-                .filter((module) =>
-                  trainingSessions
-                    .map((d) => d.ts_module)
-                    .includes(module.tm_title)
-                )
-                .sort((a, b) => new Date(b.tm_date) - new Date(a.tm_date))[0]
-                .tm_title
-          )
-        );
-      }
-    }
-  }, [selectedProject]);
+  if (error) {
+    return (
+      <div className="circular_progress">
+        <Typography color="error">Error loading data</Typography>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h1 className="module__heading">Training Sessions</h1>
-      <Table
-        columns={columns}
-        data={rows}
-        tableRowItem={tableRowItem}
-        filter={filter}
-        setFilter={setFilter}
-        setFilteredSessions={setFilteredSessions}
-        selectedProject={selectedProject}
-      />
+    <div className="page__container">
+      <h1 className="module__heading">Training Sessions View</h1>
+      {trainingSessions.length > 0 ? (
+        <Table columns={columns} data={rows} tableRowItem={tableRowItem} />
+      ) : (
+        <div className="no__data">
+          <h1 style={{ fontSize: "20px" }}>No Training Sessions Yet</h1>
+        </div>
+      )}
     </div>
   );
 };
