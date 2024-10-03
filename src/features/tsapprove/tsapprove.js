@@ -320,8 +320,8 @@ const TSApprove = ({ selectedProject, userId }) => {
                         }
                       >
                         <option value="">-- Select --</option>
-                        <option value="approved">Approve</option>
-                        <option value="invalid">Invalid</option>
+                        <option value="approved">Correct</option>
+                        <option value="invalid">Incorrect</option>
                         <option value="unclear">Unclear</option>
                       </select>
                     </div>

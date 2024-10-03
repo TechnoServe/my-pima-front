@@ -153,7 +153,7 @@ const Navbar = () => {
           />
           <LoaderPage
             loadings={{
-              load1: trainingGroupsPerProject.loading,
+              load1: false,
               load5: false, // No need to show attendance loading here
             }}
           />
@@ -180,7 +180,6 @@ const Navbar = () => {
                         element={
                           <Dashboard
                             trainingGroups={trainingGroups}
-                            trainingSessions={trainingSessions}
                             projectStats={projectStats}
                             selectedProject={selectedProject}
                           />
@@ -191,7 +190,6 @@ const Navbar = () => {
                         element={
                           <Dashboard
                             trainingGroups={trainingGroups}
-                            trainingSessions={trainingSessions}
                             projectStats={projectStats}
                             selectedProject={selectedProject}
                           />
@@ -224,7 +222,6 @@ const Navbar = () => {
                         path="/trainsession"
                         element={
                           <TrainingSession
-                            trainingSessions={filteredSessions.length > 0 ? filteredSessions : trainingSessions}
                             selectedProject={selectedProject}
                             filter={filter}
                             setFilter={setFilter}
@@ -239,18 +236,6 @@ const Navbar = () => {
                       <Route
                         path="/performance/ft"
                         element={<FTPerformance selectedProject={selectedProject} />}
-                      />
-                      <Route
-                        path="/trainsession/pending"
-                        element={
-                          <TSApprove
-                            trainingSessions={filteredSessions.length > 0 ? filteredSessions : trainingSessions}
-                            selectedProject={selectedProject}
-                            filter={filter}
-                            setFilter={setFilter}
-                            setFilteredSessions={setFilteredSessions}
-                          />
-                        }
                       />
                        <Route
                         path="/trainsession/verification"
