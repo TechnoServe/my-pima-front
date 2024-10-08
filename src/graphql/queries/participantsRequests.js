@@ -87,7 +87,9 @@ const GET_PARTICIPANTS_PER_TG = gql`
       status
       participants {
         p_id
-        full_name
+        first_name
+        middle_name
+        last_name
         gender
         location
         tns_id

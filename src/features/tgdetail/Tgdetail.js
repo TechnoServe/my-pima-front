@@ -1,11 +1,12 @@
-import React from "react";
-import Breadcrumb from "../../components/Breadcrumbs";
-import Tgtabs from "./Tgtabs";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
+import Breadcrumb from "../../components/Breadcrumbs";
+import Tgtabs from "./Tgtabs";
 import { GET_FARM_VISITS_PER_TG } from "../../graphql/queries/farmVisitsRequests";
-import { useState } from "react";
-import { useEffect } from "react";
+import { GET_PARTICIPANTS_PER_TG } from "../../graphql/queries/participantsRequests";
+import LoadingScreen from "../../components/LoadingScreen";
+import { Typography } from "@mui/material";
 
 const Styles = {
   marginTop: "15px",
@@ -15,23 +16,38 @@ const Styles = {
   maxWidth: "80%",
 };
 
-const Tgdetail = ({ trainingGroups, trainingSessions, participants }) => {
+const Tgdetail = ({ trainingGroups, trainingSessions }) => {
   const breadCrumbs = "Training group";
 
-  const [farmVisitsPerGroup, setFarmVisitsPerGroup] = useState([]); // eslint-disable-line no-unused-vars
+  const [farmVisitsPerGroup, setFarmVisitsPerGroup] = useState([]);
+  const [participantsPerGroup, setParticipantsPerGroup] = useState([]);
 
-  // get params from url
+  // Get params from URL
   const params = useParams();
   const { id } = params;
+
+  // Ensure `id` is present before making the query
+  const shouldSkipQuery = !id;
+
+  // Query for farm visits
   const getAllFarmVisitsByTG = useQuery(GET_FARM_VISITS_PER_TG, {
     variables: { tgId: id },
+    skip: shouldSkipQuery, // Skip query if id is not present
+  });
+
+  // Query for participants
+  const { loading, error, data } = useQuery(GET_PARTICIPANTS_PER_TG, {
+    variables: { tgId: id },
+    skip: shouldSkipQuery, // Skip query if id is not present
   });
 
   const selectedTrainingGroup = trainingGroups.find(
     (group) => group.tg_id === id
   );
+
   const breadCrumbsLinkTo = "traingroup";
 
+  // Update farm visits data
   useEffect(() => {
     if (getAllFarmVisitsByTG.data) {
       const farmVisits =
@@ -40,13 +56,30 @@ const Tgdetail = ({ trainingGroups, trainingSessions, participants }) => {
     }
   }, [getAllFarmVisitsByTG.data]);
 
+  // Update participants data
+  useEffect(() => {
+    if (data && data.getParticipantsByGroup.participants) {
+      setParticipantsPerGroup(data.getParticipantsByGroup.participants);
+    }
+  }, [data]);
+
+  if (loading) {
+    return <LoadingScreen />; // Display loading spinner
+  }
+
+  if (error)
+    return (
+      <div className="circular_progress">
+        <Typography color="error">Error loading data</Typography>
+      </div>
+    );
+
   return (
     <div>
       {selectedTrainingGroup && (
         <>
           <Breadcrumb
             name={selectedTrainingGroup.tg_name}
-            q
             firstItem={breadCrumbs}
             linkTo={breadCrumbsLinkTo}
           />
@@ -54,10 +87,10 @@ const Tgdetail = ({ trainingGroups, trainingSessions, participants }) => {
             <h1>{selectedTrainingGroup.tg_name}</h1>
             <p style={Styles}>
               In the focal farmer group details you can access detailed information
-              for a specific ffg, explore the training sessions list
-              associated with the selected group. Review the Farm Visits List
-              associated with the ffg and export the information displayed on
-              this page to Excel or CSV format.
+              for a specific ffg, explore the training sessions list associated
+              with the selected group. Review the Farm Visits List associated with
+              the ffg and export the information displayed on this page to Excel or
+              CSV format.
             </p>
           </div>
           <Tgtabs
@@ -70,13 +103,7 @@ const Tgdetail = ({ trainingGroups, trainingSessions, participants }) => {
               )
             }
             farmVisits={farmVisitsPerGroup}
-            participants={
-              participants.length > 0 &&
-              participants.filter(
-                (participant) =>
-                  participant.training_group === selectedTrainingGroup.tg_id
-              )
-            }
+            participants={participantsPerGroup}
           />
         </>
       )}
