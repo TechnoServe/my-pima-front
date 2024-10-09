@@ -1,40 +1,59 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Breadcrumb from "../../components/Breadcrumbs";
 import "./partsstyles.css";
 import Partscontentview from "./Partscontentview";
 import Partstableview from "./Partstableview";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_FARM_VISITS_PER_PART } from "../../graphql/queries/farmVisitsRequests";
-import { useEffect } from "react";
+import { GET_FARM_VISITS_PER_PART} from "../../graphql/queries/farmVisitsRequests"; // Assuming this is the correct query
+import {GET_PARTICIPANT_BY_ID} from "../../graphql/queries/participantsRequests";
+import LoadingScreen from "../../components/LoadingScreen"; // Assuming you have a LoadingScreen component
+import { Typography } from "@mui/material";
 
-const Partdetail = ({ participants }) => {
+const Partdetail = () => {
   const breadCrumbs = "Participants";
   const breadCrumbsLinkTo = "participants";
 
-  const [farmVisitsPerPart, setFarmVisitsPerPart] = useState([]); // eslint-disable-line no-unused-vars
+  const [farmVisitsPerPart, setFarmVisitsPerPart] = useState([]);
 
-  // get params from url
+  // Get params from URL
   const params = useParams();
   const { id } = params;
 
-  const getAllFarmVisitsByPart = useQuery(GET_FARM_VISITS_PER_PART, {
-    variables: { partId: id },
+  // Query to get participant by ID
+  const { loading: participantLoading, error: participantError, data: participantData } = useQuery(GET_PARTICIPANT_BY_ID, {
+    variables: { id }, // Ensure that the variable matches the participant ID in the query
   });
 
-  const selectedParticipant =
-    participants && participants.find((participant) => participant.p_id === id);
-
-  console.log("selected participant", selectedParticipant);
+  // Query for farm visits per participant
+  const { loading: farmVisitsLoading, error: farmVisitsError, data: farmVisitsData } = useQuery(GET_FARM_VISITS_PER_PART, {
+    variables: { partId: id },
+    skip: !id, // Skip the query if id is not present
+  });
 
   useEffect(() => {
-    if (getAllFarmVisitsByPart.data) {
-      const farmVisits =
-        getAllFarmVisitsByPart.data.getFarmVisitsByParticipant.farmVisits;
+    if (farmVisitsData) {
+      const farmVisits = farmVisitsData.getFarmVisitsByParticipant.farmVisits;
       setFarmVisitsPerPart(farmVisits);
     }
-  }, [getAllFarmVisitsByPart.data]);
+  }, [farmVisitsData]);
+
+  // Handle loading and errors
+  if (participantLoading || farmVisitsLoading) {
+    return <LoadingScreen />; // Show loading spinner
+  }
+
+  if (participantError || farmVisitsError) {
+    return (
+      <div className="error__container">
+        <Typography color="error">
+          {participantError?.message || farmVisitsError?.message}
+        </Typography>
+      </div>
+    );
+  }
+
+  const selectedParticipant = participantData?.getParticipantsById?.participant;
 
   return (
     <>
@@ -44,26 +63,23 @@ const Partdetail = ({ participants }) => {
         linkTo={breadCrumbsLinkTo}
       />
       <div className="parts__container">
-        {
-          // check if selectedParticipant is not null
-          selectedParticipant ? (
-            <>
-              <div className="parts__detailcontent">
-                <Partscontentview participant={selectedParticipant} />
-              </div>
-              <div className="parts__tablecontent">
-                <Partstableview
-                  participant={selectedParticipant}
-                  farmVisitsPerPart={farmVisitsPerPart}
-                />
-              </div>
-            </>
-          ) : (
-            <div className="no__data">
-              <h1 style={{ fontSize: "20px" }}>No Participant Selected</h1>
+        {selectedParticipant ? (
+          <>
+            <div className="parts__detailcontent">
+              <Partscontentview participant={selectedParticipant} />
             </div>
-          )
-        }
+            <div className="parts__tablecontent">
+              <Partstableview
+                participant={selectedParticipant}
+                farmVisitsPerPart={farmVisitsPerPart}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="no__data">
+            <h1 style={{ fontSize: "20px" }}>No Participant Selected</h1>
+          </div>
+        )}
       </div>
     </>
   );

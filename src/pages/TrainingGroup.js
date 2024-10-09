@@ -1,7 +1,6 @@
 import React from "react";
 import Table from "../components/Table/Table";
 import Statsframe from "../features/statstg/Statsframe";
-import { Chip } from "@mui/material";
 
 const TrainingGroup = ({
   trainingGroups,

@@ -7,7 +7,7 @@ import { GiFarmer } from "react-icons/gi";
 import { FaTripadvisor } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import ListUpModal from "../components/Modals/ListUpModal";
-import { Grid, Typography, CircularProgress } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { Chrono } from "react-chrono";
 import { useQuery } from "@apollo/client";
 import { GET_TRAINING_MODULES_PER_PROJECT } from "../graphql/queries/trainingModulesRequests";

@@ -125,10 +125,6 @@ const TSApprove = ({ selectedProject, userId }) => {
     setMapVisible(true);
   };
 
-  const handleResetView = () => {
-    mapRef.current.setView(sessionCoords, 6); // Reset view to initial session coordinates and zoom level
-  };
-
   const handleGenerateReport = () => {
     if (!unfilteredSessions) {
       toast.error("No session data available to generate the report.");
@@ -215,8 +211,6 @@ const TSApprove = ({ selectedProject, userId }) => {
   const sessionCoords = selectedSession
     ? { lat: selectedSession.ts_latitude, lng: selectedSession.ts_longitude }
     : { lat: -1.2921, lng: 36.8219 };
-
-  const groupCoords = { lat: -1.295, lng: 36.824 };
 
   const tsIcon = icon({
     iconUrl:

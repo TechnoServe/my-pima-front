@@ -1,6 +1,6 @@
 import React from "react";
 import Statscard from "../statstg/Statscard";
-import { MdGroups, MdBarChart } from "react-icons/md";
+import { MdGroups } from "react-icons/md";
 import { BsPersonBoundingBox } from "react-icons/bs";
 
 const Statsframe = ({ sampledSessions }) => {

@@ -14,16 +14,16 @@ const Attendtable = ({ trainingSessions, participant }) => {
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
       id: "session_name",
-      name: "Session Name",
+      name: "Module Name",
       selector: (row) => row.session_name,
       sortable: true,
     },
-    {
-      id: "attendance_name",
-      name: "Attendance Name",
-      selector: (row) => row.attendance_name,
-      sortable: true,
-    },
+    // {
+    //   id: "attendance_name",
+    //   name: "Attendance Name",
+    //   selector: (row) => row.attendance_name,
+    //   sortable: true,
+    // },
     {
       id: "attendance_status",
       name: "Status",
@@ -62,11 +62,7 @@ const Attendtable = ({ trainingSessions, participant }) => {
             num: index + 1,
             attendance_id: attend.attendance_id,
             ts_id: attend.session_id,
-            session_name: trainingSessions
-              ? trainingSessions.find(
-                  (session) => session.ts_id === attend.session_id
-                ).ts_name
-              : "N/A",
+            session_name: attend.module_name,
             attendance_name: attend.attendance_name,
             attendance_status: attend.attendance_status,
             attendance_date: attend.attendance_date,

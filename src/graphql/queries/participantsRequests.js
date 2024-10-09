@@ -105,6 +105,31 @@ const GET_PARTICIPANTS_PER_TG = gql`
   }
 `;
 
+const GET_PARTICIPANT_BY_ID = gql`
+  query GetParticipantsById($id: String!) {
+    getParticipantsById(p_id: $id) {
+      message
+      status
+      participant {
+        p_id
+        first_name
+        middle_name
+        last_name
+        gender
+        location
+        tns_id
+        status
+        farmer_trainer
+        business_advisor
+        project_name
+        training_group
+        household_id
+        primary_household_member
+      }
+    }
+  }
+`;
+
 const GET_ATTENDANCE_PER_PARTICIPANT = gql`
   query GetAttendanceByParticipant($participantId: String!) {
     getAttendanceByParticipant(participant_id: $participantId) {
@@ -116,6 +141,7 @@ const GET_ATTENDANCE_PER_PARTICIPANT = gql`
         attendance_name
         attendance_date
         attendance_status
+        module_name
         session_id
       }
     }
@@ -148,4 +174,5 @@ export {
   UPLOAD_PARTICIPANTS,
   SYNC_PARTICIPANTS_WITH_COMMCARE,
   GET_PARTICIPANTS_ATTENDANCE_PER_PROJECT,
+  GET_PARTICIPANT_BY_ID
 };

@@ -1,5 +1,4 @@
 import React from "react";
-import { Chip } from "@mui/material";
 import Table from "../../../components/Table/Table";
 
 const FvTabTable = ({ farmVisitsPerPart }) => {

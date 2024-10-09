@@ -72,7 +72,7 @@ const GET_FARM_VISITS_PER_PART = gql`
         fv_name
         training_group
         training_session
-        tns_id
+        farmer_tns_id
         farm_visited
         household_id
         farmer_trainer

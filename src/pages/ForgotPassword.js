@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { BeatLoader } from "react-spinners";
-import { Toaster, toast } from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { Link } from "react-router-dom";
 import "../features/authentication/components/loginform.css";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
     email: "",
