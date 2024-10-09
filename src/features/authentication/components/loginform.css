@@ -1,160 +1,262 @@
+/* General Styles */
+body {
+  background-color: #f7fafc;
+  color: #333;
+}
+
 .form__text {
   display: block;
   padding: 25px;
   text-align: center;
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 600;
+  color: #087c8f;
 }
+
+/* Hero Image with Text Overlay */
 .heroimage {
-  display: none;
+  display: block;
+  position: relative;
+  width: 100%;
+  max-height: 500px;
+  text-align: center;
+  margin-bottom: 20px;
 }
+
+.heroimage img {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+  filter: brightness(0.4); /* Darken the image for better text contrast */
+}
+
+.heroimage .overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 2px 4px 6px rgba(0, 0, 0, 0.6); /* Add text shadow for readability */
+  font-family: 'Poppins', sans-serif;
+}
+
+@media screen and (max-width: 768px) {
+  .heroimage .overlay-text {
+    font-size: 2rem; /* Adjust font size for smaller screens */
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .heroimage img {
+    height: 600px;
+  }
+}
+
+
+/* Form Container */
 .form__container {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   margin: 20px;
 }
+
 .form__starts {
-  margin: auto;
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
+  max-width: 400px;
 }
 
+/* Form Title */
 .form__login {
   color: #2b2b2b;
   padding-bottom: 15px;
-}
-.form__label {
-  display: flex;
-  margin-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
 }
 
+/* Form Labels */
+.form__label {
+  display: flex;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Form Inputs */
 .form__input {
   width: 100%;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  border: 1px solid #2b2b2b;
-  -webkit-transition: 0.5s;
-  transition: border-color 0.5s ease;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease;
   outline: none;
 }
+
 .form__input:focus {
-  border: 2px solid #00a5a3;
+  border-color: #087c8f;
 }
+
 .form__input::placeholder {
   font-style: italic;
-  color: #ccc;
-  font-size: 12px;
+  color: #aaa;
 }
+
+/* Password Input with Eye Icon */
 .password-input-container {
   position: relative;
 }
+
 .password-icon {
   position: absolute;
   top: 50%;
-  right: 20px;
+  right: 15px;
   transform: translateY(-50%);
   cursor: pointer;
+  color: #666;
 }
 
+/* Form Footer */
 .form-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
+
 /* Checkbox */
 .form__checkbox {
   display: inline-flex;
   align-items: center;
   margin-right: 10px;
-  margin-top: 25px;
   cursor: pointer;
 }
+
 .text {
   font-size: 14px;
 }
+
+/* Forgot Password Link */
 .form__fp {
-  font-size: 14px;
-  color: #2b2b2b;
+  font-size: 0.9rem;
+  color: #087c8f;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
-.form__auth {
-  margin-top: 40px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+.form__fp:hover {
+  color: #005f6b;
 }
+
+/* Login Button */
 .form__btn {
-  cursor: pointer;
   background-color: #087c8f;
   border: none;
-  width: 60%;
+  width: 100%;
   padding: 12px;
-  border-radius: 32px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   color: #fff;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 26px 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+.form__btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.form__btn:hover {
+  background-color: #005f6b;
+  transform: translateY(-2px);
+}
+
+/* Error Text */
 .form__error-text {
-  color: red;
-  font-size: 12px;
-  margin-bottom: 15px;
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
 }
+
+/* Google Auth */
 .google__auth {
-  display: block;
   text-align: center;
+  margin-top: 20px;
 }
+
 .auth__container {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f1f1f1;
   border: none;
-  background-color: #e9f1ff;
-  display: inline-block;
   padding: 10px;
-  border-radius: 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.auth__container:hover {
+  background-color: #e0e0e0;
 }
 
 .auth__container p {
-  color: #4285f4; /* Replace with your desired text color */
-  padding: 5px;
-  font-size: 14px;
+  color: #4285f4;
+  font-size: 0.9rem;
+  margin-left: 10px;
 }
-/*Tablet*/
+
+/* Media Queries */
 @media screen and (min-width: 600px) {
   .form__container {
     flex-direction: row;
-    margin: 0;
-    margin-left: 20px;
   }
+
   .form__text {
     display: none;
   }
+
   .heroimage {
-    display: flex;
+    display: block;
     padding-bottom: 20px;
+    margin: auto;
   }
+
   .heroimage img {
     width: 100%;
-    max-width: max-content;
-    height: 70%;
-    max-height: max-content;
+    height: 500px;
+    margin: auto!;
+    padding: 50px;
   }
+
   .form__starts {
     max-height: 500px;
-    padding: 50px 50px 20px 50px;
+    padding: 50px;
   }
 }
-/*Desktop*/
 
 @media screen and (min-width: 1024px) {
   .form__container {
-    margin-top: 20px;
-    margin-left: 40px;
+    margin-top: 30px;
+    justify-content: space-between;
   }
+
   .form__starts {
     width: 60%;
-    max-width: 636px;
+    max-width: 600px;
     margin: 30px;
   }
 }

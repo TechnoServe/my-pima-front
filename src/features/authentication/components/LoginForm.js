@@ -80,11 +80,12 @@ const LoginForm = () => {
       <div className="form__container">
         <div className="heroimage">
           <img
-            src={process.env.PUBLIC_URL + "/heroimg.png"}
+            src="https://thequeenbean.blog/wp-content/uploads/2019/03/lifebean.jpg?w=1400"
             alt="hero"
-            className="hero"
           />
+          <div className="overlay-text">Welcome to My PIMA</div>
         </div>
+
         <div className="form__starts">
           <h2 className="form__login">Login</h2>
           <form>
