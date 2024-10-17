@@ -39,6 +39,51 @@ body {
   padding: 10px;
 }
 
+.report-controls {
+  display: flex;
+  align-items: center; /* Center items vertically */
+  justify-content: space-between; /* Space out the controls */
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  gap: 15px; /* Add some spacing between elements */
+}
+
+/* Ensure date pickers take up even space */
+.date-controls {
+  display: flex;
+  gap: 15px;
+  flex: 2; /* Allow date pickers to take more space */
+}
+
+.status-select {
+  flex: 1; /* Make sure the status selector takes less space */
+  min-width: 150px; /* Prevent it from becoming too small */
+}
+
+/* Button Styling */
+/* .download-report-button {
+  background-color: #087c8f;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.download-report-button:hover {
+  background-color: #005f6b;
+  transform: translateY(-3px);
+} */
+
 .download-report-button {
   display: inline-block;
   background-color: #1b2a4e;

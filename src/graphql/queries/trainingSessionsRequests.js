@@ -110,6 +110,26 @@ const SUBMIT_BATCH = gql`
   }
 `;
 
+const GENERATE_TS_REPORT = gql`
+  query GENERATE_TS_REPORT(
+    $projectId: String!
+    $startDate: String!
+    $endDate: String!
+    $status: String!
+  ) {
+    generateTSApprovalReport(
+      projectId: $projectId
+      startDate: $startDate
+      endDate: $endDate
+      status: $status
+    ) {
+      message
+      status
+      file
+    }
+  }
+`;
+
 export {
   GET_TRAINING_SESSIONS_PER_PROJECT,
   GET_TRAINING_SESSIONS_PER_GROUP,
@@ -118,4 +138,5 @@ export {
   GET_SAMPLED_SESSIONS,
   REVIEW_SESSION,
   SUBMIT_BATCH,
+  GENERATE_TS_REPORT
 };

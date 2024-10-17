@@ -1,26 +1,32 @@
-import React, { useState, useEffect } from "react"; 
-import { useQuery, useMutation } from "@apollo/client";
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { icon } from "leaflet";
 import { saveAs } from "file-saver";
 import {
   GET_SAMPLED_SESSIONS,
   SUBMIT_BATCH,
+  GENERATE_TS_REPORT,
 } from "../../graphql/queries/trainingSessionsRequests";
 import "./styles.css";
 import { toast } from "react-hot-toast";
 import Statsframe from "./statsframe";
-import { Typography } from "@mui/material";
+import { TextField, MenuItem, Button, Typography } from "@mui/material";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers"; // Ensure correct imports
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { format, subMonths } from "date-fns";
 import LoadingScreen from "../../components/LoadingScreen";
-import { format } from "date-fns";
 import { useRef } from "react"; // Import useRef for map reference
-import * as XLSX from "xlsx"; // Import xlsx library
 
 const pageSize = 5;
 
 const TSApprove = ({ selectedProject, userId }) => {
   const { data, loading, error, refetch } = useQuery(GET_SAMPLED_SESSIONS, {
     variables: { projectId: selectedProject },
+    fetchPolicy: "network-only",
+  });
+
+  const [generateTSReport] = useLazyQuery(GENERATE_TS_REPORT, {
     fetchPolicy: "network-only",
   });
 
@@ -34,6 +40,10 @@ const TSApprove = ({ selectedProject, userId }) => {
   const [submitting, setSubmitting] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const mapRef = useRef(null); // Reference for the map
+  const [downloadingReport, setDownloadingReport] = useState(false);
+  const [startDate, setStartDate] = useState(subMonths(new Date(), 1));
+  const [endDate, setEndDate] = useState(new Date());
+  const [status, setStatus] = useState("approved");
 
   useEffect(() => {
     if (mapVisible && mapRef.current) {
@@ -125,87 +135,61 @@ const TSApprove = ({ selectedProject, userId }) => {
     setMapVisible(true);
   };
 
-  const handleGenerateReport = () => {
-    if (!unfilteredSessions) {
-      toast.error("No session data available to generate the report.");
+  const handleDownloadReport = () => {
+    if (!selectedProject) {
+      toast.error("No project selected.");
       return;
     }
 
-    // Tab 1: Breakdown of session statuses for each Farmer Trainer (FT)
-    const breakdownData = unfilteredSessions.reduce((acc, session) => {
-      const trainer = session.farmer_trainer_name;
-      const status = session.image_review_result
-        ? session.image_review_result
-        : "pending";
+    setDownloadingReport(true);
+    generateTSReport({
+      variables: {
+        projectId: selectedProject,
+        startDate: startDate ? format(startDate, "yyyy-MM-dd") : null,
+        endDate: endDate ? format(endDate, "yyyy-MM-dd") : null,
+        status: status || null,
+      },
+    })
+      .then((response) => {
+        const { generateTSApprovalReport } = response.data;
+        if (
+          generateTSApprovalReport.status === 200 &&
+          generateTSApprovalReport.file
+        ) {
+          const base64Data = generateTSApprovalReport.file.split(",")[1];
+          const blob = base64ToBlob(
+            base64Data,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          );
+          saveAs(blob, "training-sessions-report.xlsx");
+          toast.success("Download started.");
+        } else {
+          toast.error(
+            generateTSApprovalReport.message || "Failed to generate report."
+          );
+        }
+        setDownloadingReport(false);
+      })
+      .catch((error) => {
+        console.error("Error generating report:", error);
+        toast.error("An error occurred while generating the report.");
+        setDownloadingReport(false);
+      });
+  };
 
-      if (!acc[trainer]) {
-        acc[trainer] = { approved: 0, unclear: 0, invalid: 0, pending: 0 };
+  const base64ToBlob = (base64Data, contentType) => {
+    const byteCharacters = atob(base64Data);
+    const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
       }
-
-      acc[trainer][status]++;
-      return acc;
-    }, {});
-
-    const tab1Data = [
-      ["Farmer Trainer", "Approved", "Unclear", "Invalid", "Pending"],
-      ...Object.entries(breakdownData).map(([trainer, counts]) => [
-        trainer,
-        counts.approved,
-        counts.unclear,
-        counts.invalid,
-        counts.pending,
-      ]),
-    ];
-
-    // Tab 2: Approved sessions with their data and image URLs
-    const tab2Data = [
-      [
-        "Training Module",
-        "Trainer",
-        "Attendance",
-        "Male",
-        "Female",
-        "Group",
-        "Date",
-        "Image URL",
-      ],
-      ...unfilteredSessions
-        .filter((session) => session.image_review_result === "approved")
-        .map((session) => {
-          const [formId, imageId] =
-            session?.session_image_url?.split("/").slice(-2) || [];
-          return [
-            session.training_module_name,
-            session.farmer_trainer_name,
-            session.total_attendance,
-            session.male_attendance,
-            session.female_attendance,
-            session.tg_name,
-            format(new Date(session.session_date), "MMMM dd, yyyy"),
-            `${process.env.REACT_APP_API_URL}/image/${formId}/${imageId}`,
-          ];
-        }),
-    ];
-
-    // Create a workbook with two sheets
-    const workbook = XLSX.utils.book_new();
-    const worksheet1 = XLSX.utils.aoa_to_sheet(tab1Data);
-    const worksheet2 = XLSX.utils.aoa_to_sheet(tab2Data);
-
-    // Append the sheets to the workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet1, "Status Breakdown");
-    XLSX.utils.book_append_sheet(workbook, worksheet2, "Approved Sessions");
-
-    // Write the workbook to a binary string
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-
-    // Save the file
-    saveAs(blob, "training-sessions-report.xlsx");
-    toast.success("Excel report generated successfully.");
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    return new Blob(byteArrays, { type: contentType });
   };
 
   const sessionCoords = selectedSession
@@ -214,7 +198,7 @@ const TSApprove = ({ selectedProject, userId }) => {
 
   const tsIcon = icon({
     iconUrl:
-      "https://img.icons8.com/?size=100&id=9HuXC128p4_T&format=png&color=000000",
+      "https://img.icons8.com/?size=100&id=60013&format=png&color=000000",
     iconSize: [35, 35],
     iconAnchor: [22, 94],
     popupAnchor: [-3, -76],
@@ -248,9 +232,50 @@ const TSApprove = ({ selectedProject, userId }) => {
         <Statsframe sampledSessions={unfilteredSessions} />
       </div>
       {/* Download Report Button */}
-      <button className="download-report-button" onClick={handleGenerateReport}>
-        Download Excel Report
-      </button>
+      {/* New Controls for Report Download */}
+      <div className="report-controls">
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <div className="date-controls">
+            <DatePicker
+              label="Start Date"
+              value={startDate}
+              onChange={(date) => setStartDate(date)}
+              renderInput={(params) => <TextField {...params} />}
+            />
+            <DatePicker
+              label="End Date"
+              value={endDate}
+              onChange={(date) => setEndDate(date)}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </div>
+        </LocalizationProvider>
+
+        <TextField
+          className="status-select"
+          label="Status"
+          select
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          variant="outlined"
+        >
+          <MenuItem value="all">All</MenuItem>
+          <MenuItem value="approved">Correct</MenuItem>
+          <MenuItem value="invalid">Incorrect</MenuItem>
+          <MenuItem value="unclear">Unclear</MenuItem>
+          <MenuItem value="">Not Reviewed</MenuItem>
+        </TextField>
+
+        <Button
+          className="download-report-button"
+          variant="contained"
+          color="primary"
+          onClick={handleDownloadReport}
+          disabled={downloadingReport}
+        >
+          {downloadingReport ? "Downloading..." : "Download Report"}
+        </Button>
+      </div>
 
       {/* No Data Message */}
       {noDataToReview ? (
