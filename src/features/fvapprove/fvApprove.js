@@ -127,10 +127,22 @@ const FarmVisitApp = ({ selectedProject, userId }) => {
       (visit) => answers[visit.visit_id]
     );
 
+    // Check if all comments are provided for 'No' answers
+    const allCommentsFilled = currentPageVisits.every(
+      (visit) =>
+        answers[visit.visit_id] === "Yes" ||
+        (answers[visit.visit_id] === "No" && comments[visit.visit_id])
+    );
+
     if (!allFilled) {
       toast.error(
         "Please fill out 'Correct Answer?' for all records before submitting."
       );
+      return;
+    }
+
+    if (!allCommentsFilled) {
+      toast.error("Please provide comments for all records with 'No' answers.");
       return;
     }
 
@@ -218,8 +230,11 @@ const FarmVisitApp = ({ selectedProject, userId }) => {
     generateFarmVisitReport({ variables: { projectId: selectedProject } })
       .then((response) => {
         const { generateFarmVisitReport } = response.data;
-        if (generateFarmVisitReport.status === 200 && generateFarmVisitReport.file) {
-          const base64Data = generateFarmVisitReport.file.split(',')[1]; // Removing the data URI prefix
+        if (
+          generateFarmVisitReport.status === 200 &&
+          generateFarmVisitReport.file
+        ) {
+          const base64Data = generateFarmVisitReport.file.split(",")[1]; // Removing the data URI prefix
           const blob = base64ToBlob(
             base64Data,
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -227,7 +242,9 @@ const FarmVisitApp = ({ selectedProject, userId }) => {
           saveAs(blob, "farm_visit_statistics.xlsx");
           toast.success("Download started.");
         } else {
-          toast.error(generateFarmVisitReport.message || "Failed to generate report.");
+          toast.error(
+            generateFarmVisitReport.message || "Failed to generate report."
+          );
         }
         setDownloadingReport(false);
       })
@@ -394,26 +411,54 @@ const FarmVisitApp = ({ selectedProject, userId }) => {
                                 e.target.value
                               )
                             }
-                            placeholder="Optional comments..."
+                            placeholder={
+                              answers[visit.visit_id] === "No"
+                                ? "Required is answer is 'No'"
+                                : "Required"
+                            }
+                            required={answers[visit.visit_id] === "No"}
+                            className={
+                              answers[visit.visit_id] === "No" &&
+                              !comments[visit.visit_id]
+                                ? "error" // Apply a style to indicate error
+                                : ""
+                            }
                           />
+                          {answers[visit.visit_id] === "No" &&
+                            !comments[visit.visit_id] && (
+                              <p className="error-message">
+                                Comment is required for 'No' answers
+                              </p>
+                            )}
                         </div>
                       </div>
                     );
                   })}
               </div>
+              <div className="pagination-info">
+                Reviewing{" "}
+                {Math.min((page + 1) * pageSize, filteredVisits.length)} of{" "}
+                {filteredVisits.length} records
+              </div>
+
               <div className="pagination-controls">
                 <button disabled={page === 0} onClick={() => setPage(page - 1)}>
-                  Previous Page
+                  Previous
                 </button>
+                <span className="current-page">
+                  Page {page + 1} of{" "}
+                  {Math.ceil(filteredVisits.length / pageSize)}
+                </span>
                 <button
                   disabled={
                     page >= Math.floor(filteredVisits.length / pageSize)
                   }
                   onClick={() => setPage(page + 1)}
                 >
-                  Next Page
+                  Next
                 </button>
               </div>
+
               <button
                 className="submit-button"
                 onClick={handleSubmitBatch}
