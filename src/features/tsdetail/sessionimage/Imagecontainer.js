@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import {
   Dialog,
-  Button,
+  // Button,
   DialogContent,
-  DialogActions,
+  // DialogActions,
   IconButton,
   Typography,
   Grid,
@@ -12,41 +12,44 @@ import {
 import { MdClose, MdFullscreen, MdFullscreenExit } from "react-icons/md";
 import { styled } from "@mui/material/styles";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_TRAINING_SESSIONS_PER_PROJECT, VALIDATE_TRAINING_SESSION } from "../../../graphql/queries/trainingSessionsRequests";
+import {
+  GET_TRAINING_SESSIONS_PER_PROJECT,
+  VALIDATE_TRAINING_SESSION,
+} from "../../../graphql/queries/trainingSessionsRequests";
 import { toast } from "react-hot-toast";
-import { BeatLoader } from "react-spinners";
+// import { BeatLoader } from "react-spinners";
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  marginBottom: "10px",
-  marginRight: "10px",
-  textTransform: "initial",
-  backgroundColor: "rgba(23, 177, 94, 1)",
-  color: "#fff",
-  fontSize: "12px",
+// const StyledButton = styled(Button)(({ theme }) => ({
+//   marginBottom: "10px",
+//   marginRight: "10px",
+//   textTransform: "initial",
+//   backgroundColor: "rgba(23, 177, 94, 1)",
+//   color: "#fff",
+//   fontSize: "12px",
 
-  "&:hover": {
-    backgroundColor: "rgba(23, 177, 94, 0.5)",
-    transition: "background-color 0.3s ease-in-out",
-  },
-}));
+//   "&:hover": {
+//     backgroundColor: "rgba(23, 177, 94, 0.5)",
+//     transition: "background-color 0.3s ease-in-out",
+//   },
+// }));
 
-const StyledButton2 = styled(Button)(({ theme }) => ({
-  marginBottom: "10px",
-  marginRight: "10px",
-  textTransform: "initial",
-  fontSize: "12px",
-  color: "rgba(200, 27, 27, 1)",
-  borderColor: "rgba(200, 27, 27, 1)",
+// const StyledButton2 = styled(Button)(({ theme }) => ({
+//   marginBottom: "10px",
+//   marginRight: "10px",
+//   textTransform: "initial",
+//   fontSize: "12px",
+//   color: "rgba(200, 27, 27, 1)",
+//   borderColor: "rgba(200, 27, 27, 1)",
 
-  "&:hover": {
-    backgroundColor: "rgba(235, 87, 87, 0.1)",
-    transition: "background-color 0.3s ease-in-out",
-    borderColor: "rgba(200, 27, 27, 1)",
-  },
-  ".MuiButton-outlined": {
-    color: "rgba(235, 87, 87, 1)",
-  },
-}));
+//   "&:hover": {
+//     backgroundColor: "rgba(235, 87, 87, 0.1)",
+//     transition: "background-color 0.3s ease-in-out",
+//     borderColor: "rgba(200, 27, 27, 1)",
+//   },
+//   ".MuiButton-outlined": {
+//     color: "rgba(235, 87, 87, 1)",
+//   },
+// }));
 
 const LoadingOverlay = styled("div")({
   position: "fixed",
@@ -65,63 +68,72 @@ const Imagecontainer = ({
   open,
   handleClose,
   sessionImageUrl,
-  id,
+  // id,
   data,
-  isVerified,
-  imageStatus,
+  // isVerified,
+  // imageStatus,
   selectedProject,
   loading,
 }) => {
+  console.log(data);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
+  // const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
 
-  const [validateSession] = useMutation(VALIDATE_TRAINING_SESSION);
+  // const [validateSession] = useMutation(VALIDATE_TRAINING_SESSION);
 
-  const trainingSessionsPerProject = useQuery(GET_TRAINING_SESSIONS_PER_PROJECT, {
-    variables: { sfProjectId: selectedProject },
-  });
+  // const trainingSessionsPerProject = useQuery(
+  //   GET_TRAINING_SESSIONS_PER_PROJECT,
+  //   {
+  //     variables: { sfProjectId: selectedProject },
+  //   }
+  // );
 
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
   };
 
-  const handleSessionValidation = async (id, session_image_status) => {
-    setIsLoading(true);
+  // const handleSessionValidation = async (id, session_image_status) => {
+  //   setIsLoading(true);
 
-    try {
-      await validateSession({
-        variables: {
-          tsId: id,
-          status: session_image_status,
-        },
-      });
+  //   try {
+  //     await validateSession({
+  //       variables: {
+  //         tsId: id,
+  //         status: session_image_status,
+  //       },
+  //     });
 
-      // refetch training sessions
-      trainingSessionsPerProject
-        .refetch()
-        .then(() => {
-          toast.success("Session validated successfully");
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
+  //     // refetch training sessions
+  //     trainingSessionsPerProject
+  //       .refetch()
+  //       .then(() => {
+  //         toast.success("Session validated successfully");
+  //         setIsLoading(false);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
 
-          toast.error("Error validating session");
-        });
-    } catch (error) {
-      console.log(error);
+  //         toast.error("Error validating session");
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
 
-      toast.error("Error validating session");
+  //     toast.error("Error validating session");
 
-      setIsLoading(false);
-    }
-  };
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <>
       {loading ? (
-        <Dialog open={open} keepMounted fullWidth aria-describedby="alert-dialog-slide-description">
+        <Dialog
+          open={open}
+          keepMounted
+          fullWidth
+          aria-describedby="alert-dialog-slide-description"
+        >
           <div style={{ margin: "20px" }}>
             <IconButton
               aria-label="close"
@@ -136,7 +148,14 @@ const Imagecontainer = ({
               <MdClose />
             </IconButton>
           </div>
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
             <CircularProgress />
             <Typography variant="h6" style={{ marginLeft: "10px" }}>
               Loading Image...
@@ -144,7 +163,12 @@ const Imagecontainer = ({
           </div>
         </Dialog>
       ) : (
-        <Dialog open={open} keepMounted fullWidth aria-describedby="alert-dialog-slide-description">
+        <Dialog
+          open={open}
+          keepMounted
+          fullWidth
+          aria-describedby="alert-dialog-slide-description"
+        >
           {isLoading && (
             <LoadingOverlay>
               <CircularProgress />
@@ -176,7 +200,8 @@ const Imagecontainer = ({
                   <strong>Female Attendees:</strong> {data.total_females}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Total Attendees:</strong> {data.total_males + data.total_females}
+                  <strong>Total Attendees:</strong>{" "}
+                  {data.total_males + data.total_females}
                 </Typography>
                 <Typography variant="body1">
                   <strong>Session Date:</strong> {data.session_date}
@@ -235,7 +260,7 @@ const Imagecontainer = ({
             </Grid>
           </DialogContent>
 
-          <DialogActions>
+          {/* <DialogActions>
             {(userDetails?.role === "super_admin" ||
               userDetails?.role === "ci_leadership" ||
               userDetails?.role === "project_manager" ||
@@ -253,7 +278,7 @@ const Imagecontainer = ({
                   </StyledButton>
                 </>
               )}
-          </DialogActions>
+          </DialogActions> */}
         </Dialog>
       )}
     </>

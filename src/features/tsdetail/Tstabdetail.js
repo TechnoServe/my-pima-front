@@ -159,6 +159,7 @@ const Tstabdetail = ({ details, selectedProject }) => {
               imageStatus={details.session_image_status}
               sessionImageUrl={session_image}
               selectedProject={selectedProject}
+              data={details}
             />
           )}
         </div>
