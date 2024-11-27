@@ -15,6 +15,7 @@ const GET_FARM_VISITS_PER_PROJECT = gql`
         date_visited
         pima_household_id
         pima_farmer_id
+        gender
       }
     }
   }

@@ -46,6 +46,12 @@ const FarmVisit = ({ selectedProject }) => {
       sortable: true,
     },
     {
+      id: "gender",
+      name: "Gender",
+      selector: (row) => row.gender,
+      sortable: true,
+    },
+    {
       id: "farmer_trainer",
       name: "Farmer Trainer",
       selector: (row) => row.farmer_trainer,
@@ -77,6 +83,7 @@ const FarmVisit = ({ selectedProject }) => {
         farmer_trainer: fv.farmer_trainer,
         has_training: fv.has_training,
         date_visited: fv.date_visited,
+        gender: fv.gender
       }))
     : [];
 

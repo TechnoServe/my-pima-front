@@ -170,10 +170,9 @@ const Table = ({
 
     if (pathName === "farmvisit") {
       const new_columns = [
-        { id: "farmer_tns_id" },
         { id: "household_tns_id" },
-        { id: "pima_household_id" },
         { id: "pima_farmer_id" },
+        { id: "pima_household_id" },
       ];
 
       // Use concat to add new columns
