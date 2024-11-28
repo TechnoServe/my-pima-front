@@ -191,9 +191,10 @@ const Table = ({
       "coffee_tree_numbers",
       "number_of_coffee_plots",
       "phone_number",
-      selectedProject === "a0EOj000002FMGnMAO" ||
-      selectedProject === "a0EOj000002C7ivMAC"
+      selectedProject === "a0EOj000002FMGnMAO" || selectedProject === "a0EOj000002C7ivMAC"
         ? "national_identification_id"
+        : selectedProject === "a0EOj000003E0knMAC"
+        ? "growers_number"
         : "coop_membership_number",
       "location",
       "farmer_sf_id",
@@ -206,8 +207,11 @@ const Table = ({
       "status",
       "farmer_trainer",
       "business_advisor",
-      "create_in_commcare",
-    ];
+      selectedProject === "a0EOj000003E0knMAC"
+        ? "agronomy_advisor"
+        : "business_advisor",
+      "create_in_commcare"
+    ];    
 
     if (tableRowItem === "participants") {
       // Create a map to store monthly attendance data

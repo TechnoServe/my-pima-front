@@ -7,7 +7,7 @@ import {
   GET_PARTICIPANTS_PER_PROJECT,
   SYNC_PARTICIPANTS_WITH_COMMCARE,
 } from "../graphql/queries/participantsRequests";
-import {GET_ALL_ATTENDANCES} from "../graphql/queries/attendancesRequests";
+import { GET_ALL_ATTENDANCES } from "../graphql/queries/attendancesRequests";
 import { useMutation, useQuery } from "@apollo/client";
 import { BeatLoader } from "react-spinners";
 import { Grid } from "@mui/material";
@@ -17,31 +17,38 @@ const Participants = ({ selectedProject, trainingGroups, projects }) => {
   const [sendToCcCount, setSendToCcCount] = useState();
   const [isSyncing, setIsSyncing] = useState(false);
 
-  const { data: participantData, loading: participantsLoading, error: participantsError, refetch: refetchParticipants } = useQuery(
-    GET_PARTICIPANTS_PER_PROJECT,
-    {
-      variables: { projectId: selectedProject },
-      skip: !selectedProject,
-    }
-  );
+  const {
+    data: participantData,
+    loading: participantsLoading,
+    error: participantsError,
+    refetch: refetchParticipants,
+  } = useQuery(GET_PARTICIPANTS_PER_PROJECT, {
+    variables: { projectId: selectedProject },
+    skip: !selectedProject,
+  });
 
-  const { data: attendanceData, loading: attendanceLoading, error: attendanceError } = useQuery(
-    GET_ALL_ATTENDANCES,
-    {
-      variables: { projectId: selectedProject },
-      skip: !selectedProject,
-    }
-  );
+  const {
+    data: attendanceData,
+    loading: attendanceLoading,
+    error: attendanceError,
+  } = useQuery(GET_ALL_ATTENDANCES, {
+    variables: { projectId: selectedProject },
+    skip: !selectedProject,
+  });
 
   const [SyncParticipants] = useMutation(SYNC_PARTICIPANTS_WITH_COMMCARE);
 
   const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
 
   useEffect(() => {
-    if (participantData && participantData.getParticipantsByProject.status === 200) {
-      const sendToCcCount = participantData.getParticipantsByProject.participants.filter(
-        (participant) => participant.create_in_commcare === "false"
-      );
+    if (
+      participantData &&
+      participantData.getParticipantsByProject.status === 200
+    ) {
+      const sendToCcCount =
+        participantData.getParticipantsByProject.participants.filter(
+          (participant) => participant.create_in_commcare === "false"
+        );
       setSendToCcCount(sendToCcCount.length);
     }
   }, [participantData]);
@@ -73,7 +80,9 @@ const Participants = ({ selectedProject, trainingGroups, projects }) => {
         style={{ height: "100vh" }}
       >
         <BeatLoader color="#0D3C61" size={15} />
-        <em style={{ color: "#0D3C61" }}>Loading Participants and Attendances...</em>
+        <em style={{ color: "#0D3C61" }}>
+          Loading Participants and Attendances...
+        </em>
       </Grid>
     );
   }
@@ -87,7 +96,10 @@ const Participants = ({ selectedProject, trainingGroups, projects }) => {
         alignItems="center"
         style={{ height: "100vh" }}
       >
-        <em style={{ color: "red" }}>Error loading data: {participantsError?.message || attendanceError?.message}</em>
+        <em style={{ color: "red" }}>
+          Error loading data:{" "}
+          {participantsError?.message || attendanceError?.message}
+        </em>
       </Grid>
     );
   }
@@ -184,26 +196,34 @@ const Participants = ({ selectedProject, trainingGroups, projects }) => {
       tns_id: participant.tns_id,
       training_group:
         trainingGroups && trainingGroups.length > 0
-          ? trainingGroups.find(
-              (tg) => tg.tg_id === participant.training_group
-            )?.tg_name || "N/A"
+          ? trainingGroups.find((tg) => tg.tg_id === participant.training_group)
+              ?.tg_name || "N/A"
           : "N/A",
       farmer_number: participant.primary_household_member,
       status: participant.status,
       farmer_trainer: participant.farmer_trainer,
-      business_advisor: participant.business_advisor,
+      // business_advisor: participant.business_advisor,
       create_in_commcare: participant.create_in_commcare,
       number_of_coffee_plots: participant.number_of_coffee_plots,
     };
+
+    if (selectedProject === "a0EOj000003E0knMAC") {
+      row.agronomy_advisor = participant.business_advisor
+    }else{
+      row.business_advisor = participant.business_advisor
+    }
 
     if (
       selectedProject === "a0EOj000002FMGnMAO" ||
       selectedProject === "a0EOj000002C7ivMAC"
     ) {
-      row.national_identification_id =
-        participant.coop_membership_number
-          ? participant.coop_membership_number
-          : "";
+      row.national_identification_id = participant.coop_membership_number
+        ? participant.coop_membership_number
+        : "";
+    } else if (selectedProject === "a0EOj000003E0knMAC") {
+      row.growers_number = participant.coop_membership_number
+        ? participant.coop_membership_number
+        : "";
     } else {
       row.coop_membership_number = participant.coop_membership_number
         ? participant.coop_membership_number
