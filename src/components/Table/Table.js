@@ -206,7 +206,6 @@ const Table = ({
       "training_group",
       "status",
       "farmer_trainer",
-      "business_advisor",
       selectedProject === "a0EOj000003E0knMAC"
         ? "agronomy_advisor"
         : "business_advisor",
