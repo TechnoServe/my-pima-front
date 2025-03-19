@@ -11,12 +11,12 @@ import {
 } from "@mui/material";
 import { MdClose, MdFullscreen, MdFullscreenExit } from "react-icons/md";
 import { styled } from "@mui/material/styles";
-import { useMutation, useQuery } from "@apollo/client";
-import {
-  GET_TRAINING_SESSIONS_PER_PROJECT,
-  VALIDATE_TRAINING_SESSION,
-} from "../../../graphql/queries/trainingSessionsRequests";
-import { toast } from "react-hot-toast";
+// import { useMutation, useQuery } from "@apollo/client";
+// import {
+//   GET_TRAINING_SESSIONS_PER_PROJECT,
+//   VALIDATE_TRAINING_SESSION,
+// } from "../../../graphql/queries/trainingSessionsRequests";
+// import { toast } from "react-hot-toast";
 // import { BeatLoader } from "react-spinners";
 
 // const StyledButton = styled(Button)(({ theme }) => ({
@@ -77,7 +77,7 @@ const Imagecontainer = ({
 }) => {
   console.log(data);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   // const userDetails = JSON.parse(window.localStorage.getItem("myPimaUserData"));
 
   // const [validateSession] = useMutation(VALIDATE_TRAINING_SESSION);

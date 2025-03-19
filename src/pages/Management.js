@@ -8,6 +8,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ALL_USERS } from "../graphql/queries/usersRequests";
 import { GET_ALL_PERMISSIONS } from "../graphql/queries/permissionsRequests";
 import { GET_ALL_ROLES } from "../graphql/queries/rolesRequests";
+import ProjectUserAssign from "../components/ProjectUserAssign";
 
 export function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -95,6 +96,7 @@ export default function Management({ allProjects }) {
               <Tab label="Assign Projects" {...a11yProps(0)} />
               <Tab label="Assign Permissions" {...a11yProps(1)} />
               <Tab label="Users" {...a11yProps(2)} />
+              <Tab label="Assign Projects" {...a11yProps(3)} />
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
@@ -109,6 +111,9 @@ export default function Management({ allProjects }) {
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
             <Users users={users} setUsers={setUsers} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={3}>
+            <ProjectUserAssign users={users}/>
           </CustomTabPanel>
         </Box>
       )}

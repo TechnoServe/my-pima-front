@@ -54,6 +54,7 @@ const Sidebar = ({ children }) => {
       subMenu: [
         { path: "/in/farmvisit", name: "All Visits", icon: <HiOutlineTruck /> },
         { path: "/in/farmvisit/verification", name: "Visit Verification", icon: <HiOutlineTruck /> },
+        { path: "/in/farmvisit/compare", name: "AA FT Comparison", icon: <HiOutlineTruck /> },
       ],
     },
     {

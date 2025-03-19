@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import "./table.css";
-import FilterContainer from "../Filter/FilterContainer";
+// import FilterContainer from "../Filter/FilterContainer";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { BiSearchAlt } from "react-icons/bi";
 import { Button } from "@mui/material";
 import { FaFileExport } from "react-icons/fa";
-import { ExportToCsv } from "export-to-csv";
+// import { ExportToCsv, generateCsv } from "export-to-csv";
+import { mkConfig, generateCsv, download } from "export-to-csv";
 import { utils, writeFile } from "xlsx";
 import { useQuery } from "@apollo/client";
 import TimeZone from "../../utils/timezone";
@@ -163,23 +164,23 @@ const Table = ({
   };
 
   const handleCSVExport = () => {
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
       alert("No data available for export.");
       return;
     }
 
+    let updatedColumns = [...columns];
+
+    // Add new columns if pathName is "farmvisit"
     if (pathName === "farmvisit") {
-      const new_columns = [
+      const newColumns = [
         { id: "household_tns_id" },
         { id: "pima_farmer_id" },
         { id: "pima_household_id" },
       ];
-
-      // Use concat to add new columns
-      columns = columns.concat(new_columns);
+      updatedColumns = [...updatedColumns, ...newColumns];
     }
 
-    // Create an array of headers for the CSV file
     const partsHeaders = [
       "num",
       "Project",
@@ -191,7 +192,8 @@ const Table = ({
       "coffee_tree_numbers",
       "number_of_coffee_plots",
       "phone_number",
-      selectedProject === "a0EOj000002FMGnMAO" || selectedProject === "a0EOj000002C7ivMAC"
+      selectedProject === "a0EOj000002FMGnMAO" ||
+      selectedProject === "a0EOj000002C7ivMAC"
         ? "national_identification_id"
         : selectedProject === "a0EOj000003E0knMAC"
         ? "growers_number"
@@ -209,21 +211,17 @@ const Table = ({
       selectedProject === "a0EOj000003E0knMAC"
         ? "agronomy_advisor"
         : "business_advisor",
-      "create_in_commcare"
-    ];    
+      "create_in_commcare",
+    ];
 
     if (tableRowItem === "participants") {
-      // Create a map to store monthly attendance data
       const monthlyAttendanceMap = new Map();
-
-      // filter all attendances by data's participant ids
       const filteredAttendances = allAttendances.filter((attendance) =>
         data.some(
           (participant) => participant.p_id === attendance.participant_id
         )
       );
 
-      // Iterate through the attendance data to calculate monthly attendance
       filteredAttendances.forEach((attendance) => {
         const {
           attendance_status,
@@ -232,26 +230,22 @@ const Table = ({
           module_name,
           module_id,
         } = attendance;
-        // const [year, month] = attendance_date.split("-");
+
         const key = `${module_number}-${module_name}-${module_id}`;
 
-        // Initialize the monthly attendance object if it doesn't exist
         if (!monthlyAttendanceMap.has(key)) {
           monthlyAttendanceMap.set(key, {});
         }
 
-        // Set the attendance status for the participant in the corresponding month
         const monthlyAttendance = monthlyAttendanceMap.get(key);
         monthlyAttendance[participant_id] =
           attendance_status === "Present" ? "1" : "0";
       });
 
-      // Add monthly columns to the headers
       for (const [monthKey] of monthlyAttendanceMap) {
         partsHeaders.push(monthKey);
       }
 
-      // Prepare data for writing to the CSV file
       const csvRows =
         searchText.length > 0
           ? filteredData.map((participant) => {
@@ -276,33 +270,40 @@ const Table = ({
             });
 
       data = csvRows;
-
-      console.log("CSV Participants export");
-
-      console.log(data);
     }
 
-    const csvExporter = new ExportToCsv({
-      fieldSeparator: ",",
-      quoteStrings: '"',
-      decimalSeparator: ".",
-      showLabels: true,
-      useTextFile: false,
-      useBom: true,
-      filename: `${filename}`,
-      // headers: columns.map((column) => column.id),
-      headers:
-        tableRowItem === "participants"
-          ? partsHeaders
-          : columns.map((column) => column.id),
+    // Remove unnecessary keys from the data
+    const sanitizedData = data.map(
+      ({ tg_id, ts_id, p_id, attendance_id, fv_id, __typename, ...rest }) =>
+        rest
+    );
+
+    // Step 1: Create the configuration for CSV
+    const config = mkConfig({
+      // fieldSeparator: ",",
+      // quoteStrings: '"',
+      // decimalSeparator: ".",
+      // showLabels: true,
+      // useBom: true,
+      filename: filename,
+      columnHeaders: tableRowItem === "participants" ? partsHeaders : updatedColumns.map((column) => column.id)
     });
 
-    csvExporter.generateCsv(
-      data.map(
-        ({ tg_id, ts_id, p_id, attendance_id, fv_id, __typename, ...rest }) =>
-          rest
-      )
-    );
+    // Step 2: Generate CSV string content
+    const csvContent = generateCsv(config)(sanitizedData);
+
+    if (!csvContent) {
+      console.error("Output is empty. Is your data formatted correctly?");
+      return;
+    }
+
+    // Step 3: Trigger CSV file download
+    download(config)(csvContent);
+    console.log("Download successful");
+
+    console.log("Config:", config);
+    console.log("Data:", data);
+    console.log("CSV Content:", csvContent);
   };
 
   const handleExcelExport = () => {

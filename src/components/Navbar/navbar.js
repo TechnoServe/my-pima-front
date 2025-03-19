@@ -37,6 +37,10 @@ const Management = React.lazy(() => import("../../pages/Management"));
 const FarmVisitApp = React.lazy(() =>
   import("../../features/fvapprove/fvApprove")
 );
+
+const FarmVisitComparison = React.lazy(() =>
+  import("../../features/fvcompare/fvCompare")
+);
 const Participants = React.lazy(() => import("../../pages/Participants")); // Corrected import
 
 // Reusable component for loading states and error messages
@@ -340,6 +344,15 @@ const Navbar = () => {
                         path="/farmvisit/verification"
                         element={
                           <FarmVisitApp
+                            selectedProject={selectedProject}
+                            userId={auth.user.id}
+                          />
+                        }
+                      />
+                      <Route
+                        path="/farmvisit/compare"
+                        element={
+                          <FarmVisitComparison
                             selectedProject={selectedProject}
                             userId={auth.user.id}
                           />

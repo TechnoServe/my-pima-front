@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Raleway:wght@400;600&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f4f7fc;
+  color: #333;
+  line-height: 1.6;
+}
+
+.farm-visit-app {
+  padding: 20px 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.full-width {
+    max-width: 100%;
+    width: 100%;
+    padding: 10px 20px;
+  }
+  
+
+.back-nav {
+  margin-bottom: 10px;
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #1b2a4e;
+  margin-bottom: 30px;
+}
+
+.indicator-link {
+  font-size: 1rem;
+  color: #087c8f;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.indicator-link:hover {
+  text-decoration: underline;
+}
+
+.visit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.household-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.household-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #f9fbff;
+  cursor: pointer;
+}
+
+.household-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #087c8f;
+  display: flex;
+  flex-direction: column;
+}
+
+.household-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.visit-date {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.chevron {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.chevron.rotate {
+  transform: rotate(180deg);
+}
+
+.comparison-content {
+  padding: 0 20px 20px;
+}
+
+.field-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background-color: #087c8f;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+  align-items: center;
+}
+
+.field-row.highlight {
+  background-color: #fff6e5;
+}
+
+.field-label {
+  font-weight: 600;
+  color: #555;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin: 30px 0 50px;
+}
+
+.pagination-controls button {
+  background-color: #087c8f;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #005f6b;
+}
+
+.current-page {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #087c8f;
+}
