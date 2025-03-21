@@ -27,14 +27,106 @@ const Participants = ({ selectedProject, trainingGroups, projects }) => {
     skip: !selectedProject,
   });
 
-  const {
-    data: attendanceData,
-    loading: attendanceLoading,
-    error: attendanceError,
-  } = useQuery(GET_ALL_ATTENDANCES, {
-    variables: { projectId: selectedProject },
+  const [allAttendances, setAllAttendances] = useState([]);
+  const [attendanceLoading, setAttendanceLoading] = useState(true);
+  const [attendanceError, setAttendanceError] = useState(null);
+
+  const { fetchMore } = useQuery(GET_ALL_ATTENDANCES, {
+    variables: {
+      projectId: selectedProject,
+      limit: 5000,
+      offset: 0,
+    },
     skip: !selectedProject,
+    notifyOnNetworkStatusChange: true,
   });
+
+  useEffect(() => {
+    const fetchAllAttendancesParallel = async () => {
+      if (!selectedProject) return;
+
+      try {
+        setAttendanceLoading(true);
+        setAttendanceError(null);
+
+        const limit = 5000;
+        let offset = 0;
+        let allChunks = [];
+
+        // First request
+        const { data: initialData } = await fetchMore({
+          variables: { projectId: selectedProject, limit, offset },
+        });
+
+        const initialChunk = initialData?.getAttendances?.attendance || [];
+        allChunks = [...initialChunk];
+
+        if (initialChunk.length < limit) {
+          setAllAttendances(allChunks);
+          return setAttendanceLoading(false);
+        }
+
+        offset += limit;
+
+        // Now fetch sequentially in batches (e.g. 3 at a time)
+        const maxParallel = 10;
+        let keepGoing = true;
+
+        while (keepGoing) {
+          const promises = [];
+
+          for (let i = 0; i < maxParallel; i++) {
+            const currentOffset = offset + i * limit;
+
+            const p = fetchMore({
+              variables: {
+                projectId: selectedProject,
+                limit,
+                offset: currentOffset,
+              },
+            }).then((res) => {
+              const chunk = res?.data?.getAttendances?.attendance || [];
+              return { chunk, currentOffset };
+            });
+
+            promises.push(p);
+          }
+
+          const results = await Promise.all(promises);
+
+          for (let res of results) {
+            if (res.chunk.length > 0) {
+              allChunks = [...allChunks, ...res.chunk];
+            }
+
+            if (res.chunk.length < limit) {
+              keepGoing = false;
+            }
+          }
+
+          offset += maxParallel * limit;
+        }
+
+        setAllAttendances(allChunks);
+      } catch (err) {
+        console.error("Parallel attendance fetch error:", err);
+        setAttendanceError(err);
+      } finally {
+        setAttendanceLoading(false);
+      }
+    };
+
+    fetchAllAttendancesParallel();
+  }, [selectedProject, fetchMore]);
+
+  // const {
+  //   data: attendanceData,
+  //   loading: attendanceLoading,
+  //   error: attendanceError,
+  // } = useQuery(GET_ALL_ATTENDANCES, {
+  //   variables: { projectId: selectedProject },
+  //   skip: !selectedProject,
+  // });
 
   const [SyncParticipants] = useMutation(SYNC_PARTICIPANTS_WITH_COMMCARE);
 
@@ -105,7 +197,7 @@ const Participants = ({ selectedProject, trainingGroups, projects }) => {
   }
 
   const participants = participantData.getParticipantsByProject.participants;
-  const allAttendances = attendanceData.getAttendances.attendance;
+  // const allAttendances = attendanceData.getAttendances.attendance;
 
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
@@ -208,9 +300,9 @@ const Participants = ({ selectedProject, trainingGroups, projects }) => {
     };
 
     if (selectedProject === "a0EOj000003E0knMAC") {
-      row.agronomy_advisor = participant.business_advisor
-    }else{
-      row.business_advisor = participant.business_advisor
+      row.agronomy_advisor = participant.business_advisor;
+    } else {
+      row.business_advisor = participant.business_advisor;
     }
 
     if (
