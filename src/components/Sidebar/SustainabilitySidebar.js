@@ -45,12 +45,12 @@ const SustainabilitySidebar = ({ children }) => {
             </span>
           </NavLink>
 
-          <NavLink to="/in/sustainability/dashboards" className="menu-link">
+          {/* <NavLink to="/in/sustainability/dashboards" className="menu-link">
             <div className="icon"><MdOutlineDashboardCustomize /></div>
             <span className={`menu-text ${!isOpen ? "hide" : ""}`}>
               Dashboards
             </span>
-          </NavLink>
+          </NavLink> */}
         </div>
 
         <div className="sidebar-footer">

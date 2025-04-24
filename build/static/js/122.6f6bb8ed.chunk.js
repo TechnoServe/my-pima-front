@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmypima_front=self.webpackChunkmypima_front||[]).push([[122],{33122:(e,r,s)=>{s.r(r),s.d(r,{default:()=>i});s(65043);var a=s(70579);const i=()=>(0,a.jsx)("div",{children:(0,a.jsx)("h1",{children:"Profile Page"})})}}]);
+//# sourceMappingURL=122.6f6bb8ed.chunk.js.map
