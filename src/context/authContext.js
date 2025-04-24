@@ -31,6 +31,8 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = window.localStorage.getItem("my-pima-token");
+      const activeFocusArea = window.localStorage.getItem("active_focus_area");
+
       if (storedToken) {
         try {
           const response = await verifySavedToken({
@@ -39,11 +41,15 @@ const AuthProvider = ({ children }) => {
 
           if (response.data.verifyToken.status === 200) {
             setUser(JSON.parse(localStorage.getItem("myPimaUserData")));
-            navigate(
-              location.pathname === "/login"
-                ? "/in/dashboard"
-                : location.pathname
-            );
+            if (activeFocusArea === "sustainability") {
+              navigate("/in/sustainability/summary");
+            } else {
+              navigate(
+                location.pathname === "/login"
+                  ? "/in/dashboard"
+                  : location.pathname
+              );
+            }
           } else {
             navigate("/login");
           }

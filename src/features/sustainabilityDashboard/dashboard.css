@@ -1,0 +1,71 @@
+.sustain__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+}
+
+.sustain__card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  /* ensure Pie/Line only fill the card height */
+  height: 300px;
+}
+
+.sustain__error {
+  padding: 20px;
+  background-color: #fff0f0;
+  border: 1px solid #ffcccc;
+  border-radius: 8px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.sustain__cardTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1b2a4e;
+}
+
+.sustain__full {
+  grid-column: 1 / -1; /* full width */
+}
+
+/* summary stats row */
+.graphs__stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.stat-card h2 {
+  font-size: 1rem;
+  color: #1b2a4e;
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #087c8f;
+}
+
+/* ensure full-width visit chart title spacing */
+.sustain__full > h3 {
+  margin-bottom: 15px;
+}

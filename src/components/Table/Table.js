@@ -399,13 +399,14 @@ const Table = ({
         className="table-container"
       />
 
-      <FVQAModal
+      {/* TODO: REIMPLEMENT THIS */}
+      {/* <FVQAModal
         open={modalOpen}
         handleClose={handleCloseModal}
         fvId={fvId}
         details={details}
         rowDetails={rowDetails}
-      />
+      /> */}
 
       {open && (
         <Imagecontainer

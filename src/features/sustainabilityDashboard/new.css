@@ -1,0 +1,93 @@
+.dashboard-container {
+    padding: 1rem 2rem;
+    background: #f4f6f8;
+    font-family: "Roboto", sans-serif;
+    color: #333;
+  }
+  
+  .dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  
+  .dashboard-title {
+    font-weight: 700;
+    color: #087c8f;
+  }
+  
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .chart-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chart-card.full-width {
+    grid-column: 1 / -1;
+    height: 380px;
+  }
+  
+  .chart-card canvas {
+    flex: 1;
+    width: 100% !important;
+    margin-top: 1rem;
+  }
+  
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0 0;
+  }
+  
+  .checklist li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  
+  .checklist li svg {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+  }
+  
+  .checklist li .MuiSvgIcon-colorDisabled {
+    opacity: 0.3;
+  }
+  
+  /* Tabs */
+  .MuiTabs-root {
+    margin-bottom: 0.75rem;
+  }
+  
+  .MuiTab-root {
+    text-transform: none;
+    font-weight: 600;
+    color: #666;
+  }
+  
+  .MuiTab-root.Mui-selected {
+    color: #087c8f;
+  }
+  
+  /* Mobile adjustments */
+  @media (max-width: 600px) {
+    .chart-card {
+      height: 260px;
+    }
+    .chart-card.full-width {
+      height: 300px;
+    }
+  }
+  

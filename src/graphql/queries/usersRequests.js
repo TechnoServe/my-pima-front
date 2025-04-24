@@ -97,4 +97,19 @@ const UPDATE_USER = gql`
   }
 `;
 
-export { GET_ALL_USERS, ADD_USER, UPDATE_USER };
+const GET_WETMILL_BAS = gql`
+  query GetWetmillBas($sfProjectId: String!) {
+    getWetMillBusinessAdvisors(sfProjectId: $sfProjectId) {
+      advisors {
+        id
+        name
+        wetmillId
+      }
+      message
+      status
+    }
+  }
+`;
+
+
+export { GET_ALL_USERS, ADD_USER, UPDATE_USER, GET_WETMILL_BAS};

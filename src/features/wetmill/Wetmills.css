@@ -1,0 +1,22 @@
+.page__actions {
+    display: flex;
+    justify-content: flex-start;
+    margin: 1.5rem 0;
+  }
+  
+  .export__button {
+    text-transform: none;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.5rem;
+    background-color: #087c8f;    /* your app’s primary teal blue */
+    color: #ffffff;               /* ensure text is readable */
+  }
+  
+  .export__button:hover {
+    background-color: #005f6b;    /* darker teal for hover */
+  }
+  
+  .export__button .MuiCircularProgress-root {
+    margin-right: 0.5rem;
+  }
+  

@@ -1,14 +1,12 @@
 import React from "react";
 import Table from "../components/Table/Table";
 import Statsframe from "../features/statstg/Statsframe";
+import { useOutletContext } from "react-router-dom";
 
-const TrainingGroup = ({
-  trainingGroups,
-  filter,
-  setFilter,
-  setFilteredGroups,
-  projectStats,
-}) => {
+const TrainingGroup = () => {
+  const { trainingGroups, filter, setFilter, setFilteredGroups, projectStats } =
+    useOutletContext();
+
   const columns = [
     { id: "num", name: "No.", selector: (row) => row.num, sortable: true },
     {
@@ -40,7 +38,7 @@ const TrainingGroup = ({
       name: "Farmer Trainer",
       selector: (row) => row.farmer_trainer,
       sortable: true,
-    }
+    },
     // {
     //   id: "status",
     //   name: "Status",
