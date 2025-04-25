@@ -9,6 +9,7 @@ import { GET_ALL_USERS } from "../graphql/queries/usersRequests";
 import { GET_ALL_PERMISSIONS } from "../graphql/queries/permissionsRequests";
 import { GET_ALL_ROLES } from "../graphql/queries/rolesRequests";
 import ProjectUserAssign from "../components/ProjectUserAssign";
+import { useOutletContext } from "react-router-dom";
 
 export function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -43,7 +44,10 @@ export function a11yProps(index) {
   };
 }
 
-export default function Management({ allProjects }) {
+export default function Management() {
+
+  const { projects } = useOutletContext();
+
   const [value, setValue] = useState(0);
   const [users, setUsers] = useState([]);
   const [permissions, setPermissions] = useState([]);
@@ -96,11 +100,11 @@ export default function Management({ allProjects }) {
               <Tab label="Assign Projects" {...a11yProps(0)} />
               <Tab label="Assign Permissions" {...a11yProps(1)} />
               <Tab label="Users" {...a11yProps(2)} />
-              <Tab label="Assign Projects" {...a11yProps(3)} />
+              {/* <Tab label="Assign Projects" {...a11yProps(3)} /> */}
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <AssignProjects allProjects={allProjects} />
+            <AssignProjects allProjects={projects} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             <Permissions
@@ -112,9 +116,9 @@ export default function Management({ allProjects }) {
           <CustomTabPanel value={value} index={2}>
             <Users users={users} setUsers={setUsers} />
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={3}>
+          {/* <CustomTabPanel value={value} index={3}>
             <ProjectUserAssign users={users}/>
-          </CustomTabPanel>
+          </CustomTabPanel> */}
         </Box>
       )}
     </>

@@ -11,8 +11,8 @@ import { mkConfig, generateCsv, download } from "export-to-csv";
 import { utils, writeFile } from "xlsx";
 import { useQuery } from "@apollo/client";
 import TimeZone from "../../utils/timezone";
-import FVQAModal from "../Modals/FVQAModal";
-import Imagecontainer from "../../features/tsdetail/sessionimage/Imagecontainer";
+// import FVQAModal from "../Modals/FVQAModal";
+import Imagecontainer from "../../features/training-session/ts-detail/sessionimage/Imagecontainer";
 import { GET_TRAINING_SESSION_IMAGE } from "../../graphql/queries/trainingSessionsRequests";
 
 const customStyles = {
@@ -71,12 +71,12 @@ const Table = ({
   columns,
   data,
   filter,
-  setFilter,
-  setFilteredGroups,
-  setFilteredSessions,
+  // setFilter,
+  // setFilteredGroups,
+  // setFilteredSessions,
   tableRowItem,
   allAttendances,
-  details,
+  // details,
   selectedProject,
 }) => {
   const pathName = tableRowItem || window.location.pathname.split("/")[2];
@@ -123,9 +123,9 @@ const Table = ({
     setModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
+  // const handleCloseModal = () => {
+  //   setModalOpen(false);
+  // };
 
   const handleRowClick = (row) => {
     setRowDetails(row);

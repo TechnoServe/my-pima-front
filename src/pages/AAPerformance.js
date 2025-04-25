@@ -13,6 +13,9 @@ import {
 import { BsDownload } from "react-icons/bs";
 import * as XLSX from "xlsx";
 import "./AAList.css";
+import { useOutletContext } from "react-router-dom";
+import { Typography } from "@mui/material";
+import LoadingScreen from "../components/LoadingScreen";
 
 const GET_AAS = gql`
   query GetAAs($project_id: String!) {
@@ -32,10 +35,13 @@ const GET_AAS = gql`
   }
 `;
 
-const AAList = ({ selectedProject }) => {
+const AAList = () => {
+  const { activeProject } = useOutletContext();
+
   const { loading, error, data } = useQuery(GET_AAS, {
-    variables: { project_id: selectedProject },
+    variables: { project_id: activeProject },
   });
+  
   const [selectedAA, setSelectedAA] = useState(null);
   const [selectWidth, setSelectWidth] = useState("auto");
   const selectRef = useRef(null);
@@ -75,6 +81,22 @@ const AAList = ({ selectedProject }) => {
     XLSX.utils.book_append_sheet(wb, ws, "AA_Performance");
     XLSX.writeFile(wb, fileName);
   };
+
+  if (loading) return <LoadingScreen />;
+
+  if (error)
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography color="error">Error loading data</Typography>
+      </div>
+    );
 
   return (
     <div className="aa-list-container">
@@ -134,8 +156,6 @@ const AAList = ({ selectedProject }) => {
           </div>
         </div>
       )}
-      {loading && <p className="loading-message">Loading...</p>}
-      {error && <p className="error-message">Error: {error.message}</p>}
     </div>
   );
 };

@@ -10,19 +10,23 @@ const NotFound = lazy(() => import('../pages/NotFound'));
 const Dashboard = lazy(() => import('../features/dashboard/Dashboard'));
 const SustainabilityDashboard = lazy(() => import('../features/sustainabilityDashboard/index'));
 const DashboardFeature = lazy(() => import('../features/sustainabilityDashboard/Dashboard'));
-const SustainabilityReports = lazy(() => import('../features/SustainabilityReport/SustainabilityReports'));
 const Wetmills = lazy(() => import('../features/wetmill/index'));
-const TrainingGroup = lazy(() => import('../pages/TrainingGroup'));
-const TrainingSession = lazy(() => import('../pages/TrainingSession'));
+const TrainingGroup = lazy(() => import('../features/training-group/TrainingGroup'));
+const Tgdetail = lazy(() => import('../features/training-group/tgdetail/Tgdetail'));
+// Import Training Session Pages
+const TrainingSession = lazy(() => import('../features/training-session'));
+const Tsdetail = lazy(() => import('../features/training-session/ts-detail'));
+const TSApprove = lazy(() => import('../features/training-session/ts-approve'));
+
+const Participants = lazy(() => import('../features/participants/Participants'));
+const Partdetail = lazy(() => import('../features/participants/partdetail/Partdetail'));
+
 const AAPerfomance = lazy(() => import('../pages/AAPerformance'));
 const FTPerformance = lazy(() => import('../pages/FTPerformance'));
-const Tgdetail = lazy(() => import('../features/tgdetail/Tgdetail'));
-const Tsdetail = lazy(() => import('../features/tsdetail/Tsdetail'));
-const Partdetail = lazy(() => import('../features/partdetail/Partdetail'));
-const TSApprove = lazy(() => import('../features/tsapprove/tsapprove'));
-const FarmVisit = lazy(() => import('../pages/FarmVisit'));
-const FarmVisitApp = lazy(() => import('../features/fvapprove/fvApprove'));
-const Participants = lazy(() => import('../pages/Participants'));
+
+const FarmVisit = lazy(() => import('../features/farm-visit/FarmVisit'));
+const FarmVisitApp = lazy(() => import('../features/farm-visit/fvapprove/fvApprove'));
+
 const Management = lazy(() => import('../pages/Management'));
 const Profile = lazy(() => import('../pages/Profile'));
 

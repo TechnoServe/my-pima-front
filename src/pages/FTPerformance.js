@@ -15,6 +15,10 @@ import {
 import "./FTPerformance.css";
 import * as XLSX from "xlsx";
 
+import LoadingScreen from "../components/LoadingScreen";
+import { Typography } from "@mui/material";
+import { useOutletContext } from "react-router-dom";
+
 const GET_PERFORMANCE_BY_FT = gql`
   query GetPerformanceByFT($projectId: String!) {
     getPerformanceByFT(project_id: $projectId) {
@@ -50,9 +54,10 @@ const GET_PERFORMANCE_BY_FT = gql`
   }
 `;
 
-const FTPerformance = ({ selectedProject }) => {
+const FTPerformance = () => {
+  const { activeProject } = useOutletContext();
   const { loading, error, data } = useQuery(GET_PERFORMANCE_BY_FT, {
-    variables: { projectId: selectedProject },
+    variables: { projectId: activeProject },
   });
 
   const [selectedFT, setSelectedFT] = useState(null);
@@ -78,7 +83,8 @@ const FTPerformance = ({ selectedProject }) => {
   const formatLabel = ({ month, year }) => `${month}/${year}`;
 
   const exportToExcel = () => {
-    if (!data || !data.getPerformanceByFT || !data.getPerformanceByFT.data) return;
+    if (!data || !data.getPerformanceByFT || !data.getPerformanceByFT.data)
+      return;
 
     const fileName = `FT_Performance_Data.xlsx`;
     const wsData = [];
@@ -125,6 +131,21 @@ const FTPerformance = ({ selectedProject }) => {
     XLSX.writeFile(wb, fileName);
   };
 
+  if (loading) return <LoadingScreen />;
+
+  if (error)
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography color="error">Error loading data</Typography>
+      </div>
+    );
 
   return (
     <div className="ft-performance-container">
@@ -134,7 +155,8 @@ const FTPerformance = ({ selectedProject }) => {
           <p className="loading-message">Loading...</p>
         ) : error ? (
           <p className="error-message">
-            Error: Unable to fetch data. Refresh page, if it doesn't work please contact the PIMA team.
+            Error: Unable to fetch data. Refresh page, if it doesn't work please
+            contact the PIMA team.
           </p>
         ) : (
           <>

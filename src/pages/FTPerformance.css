@@ -28,7 +28,7 @@
 
 .download-button {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #087c8f;
   color: white;
   border: none;
   border-radius: 5px;
@@ -36,7 +36,7 @@
 }
 
 .download-button:hover {
-  background-color: #0056b3;
+  background-color: #087c8f;
 }
 
 .section-title {
@@ -72,7 +72,7 @@
 }
 
 .loading-message {
-  color: #007bff; /* Blue color */
+  color: #087c8f; /* Blue color */
 }
 
 .error-message {

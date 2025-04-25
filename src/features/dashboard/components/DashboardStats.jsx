@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import Card from "../../cards/card";
+import Card from "../../../components/cards/card";
 import { MdGroups } from "react-icons/md";
 import { VscFileSubmodule } from "react-icons/vsc";
 import { BsPersonBoundingBox } from "react-icons/bs";

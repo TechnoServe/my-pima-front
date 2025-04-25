@@ -8,7 +8,7 @@
   box-sizing: border-box;
 }
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   background-color: #f4f7fc;
   height: 100vh;
   line-height: 1.6;
@@ -117,30 +117,33 @@ body {
   z-index: -1;
 }
 
+*/
+
 .no__data {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 300px;
-  background-color: #f9f9f9; /* Light background for better contrast * /
-  border: 2px dashed #1b2a4e; /* Dashed border for a minimal look * /
-  border-radius: 10px; /* Rounded corners for better aesthetics * /
+  background-color: #f9f9f9;
+  border: 2px dashed #1b2a4e;
+  border-radius: 10px;
   color: #1b2a4e;
   font-size: 1.2rem;
 }
 
 .no__data h1 {
   font-size: 1.5rem;
-  color: #34495e; /* Slightly darker color * /
+  color: #34495e;
   font-weight: 500;
 }
 
 .no__data h1 span {
   font-size: 1rem;
-  color: #7f8c8d; /* Subtle gray for any additional information * /
+  color: #7f8c8d;
 }
 
+/*
 .file-info {
   /* add upload dashed border and style up labels inside * /
   border: 2px dashed #ccc;
