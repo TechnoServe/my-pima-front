@@ -32,11 +32,12 @@ const PrivateLayout = () => {
     setFilteredSessions,
     filter,
     setFilter,
-    projectStats,
-    loading,
     program,
     setProgram,
-  } = useNavbarData(auth.user);
+    wetmills,
+    projectStats,
+    loading,
+  } = useNavbarData(auth.user, focusArea);
 
   useEffect(() => {
     localStorage.setItem("active_program", program);
@@ -71,11 +72,7 @@ const PrivateLayout = () => {
             />
           ) : (
             <ProgramListDropdown
-              programs={[
-                "USDA BURUNDI",
-                "Nespreso Kenya",
-                "CREW ETHIOPIA",
-              ]}
+              programs={["USDA BURUNDI", "Nespreso Kenya", "CREW ETHIOPIA"]}
               selectedProgram={selectedProgram}
               setSelectedProgram={setSelectedProgram}
             />
@@ -97,6 +94,8 @@ const PrivateLayout = () => {
             setFilter,
             userId: auth.user.id,
             program,
+            wetmills,
+            setProgram,
           }}
         />
       </div>

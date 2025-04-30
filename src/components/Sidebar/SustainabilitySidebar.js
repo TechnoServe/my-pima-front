@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { MdMenu, MdClose, MdOutlineDashboardCustomize, MdLogout } from "react-icons/md";
+import {
+  MdMenu,
+  MdClose,
+  MdOutlineDashboardCustomize,
+  MdLogout,
+} from "react-icons/md";
 import "./Sidebar.css";
-
 
 const SustainabilitySidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -39,18 +43,22 @@ const SustainabilitySidebar = ({ children }) => {
           </NavLink>
 
           <NavLink to="/in/sustainability/wetmills" className="menu-link">
-            <div className="icon"><MdOutlineDashboardCustomize /></div>
+            <div className="icon">
+              <MdOutlineDashboardCustomize />
+            </div>
             <span className={`menu-text ${!isOpen ? "hide" : ""}`}>
               Wet Mills
             </span>
           </NavLink>
 
-          {/* <NavLink to="/in/sustainability/dashboards" className="menu-link">
-            <div className="icon"><MdOutlineDashboardCustomize /></div>
+          <NavLink to="/in/sustainability/dashboards" className="menu-link">
+            <div className="icon">
+              <MdOutlineDashboardCustomize />
+            </div>
             <span className={`menu-text ${!isOpen ? "hide" : ""}`}>
               Dashboards
             </span>
-          </NavLink> */}
+          </NavLink>
         </div>
 
         <div className="sidebar-footer">

@@ -29,6 +29,7 @@ import {
 } from "chart.js";
 import "chartjs-adapter-date-fns";
 import "./new.css";
+import { useOutletContext } from "react-router-dom";
 
 ChartJS.register(
   CategoryScale,
@@ -42,12 +43,6 @@ ChartJS.register(
   Legend
 );
 
-const WETMILLS = [
-  { id: "1", name: "Alpha Wetmill" },
-  { id: "2", name: "Beta Cooperative" },
-  { id: "3", name: "Gamma Processing" },
-];
-
 function TabPanel({ children, value, index, ...props }) {
   return (
     <div role="tabpanel" hidden={value !== index} {...props}>
@@ -57,11 +52,12 @@ function TabPanel({ children, value, index, ...props }) {
 }
 
 export default function DashboardFeature() {
+  const { wetmills } = useOutletContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [tab, setTab] = useState(0);
-  const [wetmill, setWetmill] = useState(WETMILLS[0].id);
+  const [wetmill, setWetmill] = useState(wetmills[0].id);
 
   const handleTab = (_, v) => setTab(v);
   const handleMill = (e) => setWetmill(e.target.value);
@@ -71,34 +67,40 @@ export default function DashboardFeature() {
   // Existing...
   const profileStatus = {
     labels: ["Cooperative", "Private"],
-    datasets: [{
-      data: [60, 40],
-      borderColor: ["#087c8f", "#cccccc"],
-      borderWidth: 4,
-      hoverOffset: 20,
-      cutout: "70%",
-    }],
+    datasets: [
+      {
+        data: [60, 40],
+        borderColor: ["#087c8f", "#cccccc"],
+        borderWidth: 4,
+        hoverOffset: 20,
+        cutout: "70%",
+      },
+    ],
   };
 
   const profileExport = {
     labels: ["Exporter", "Non-exporter"],
-    datasets: [{
-      data: [30, 70],
-      borderColor: ["#005f6b", "#dddddd"],
-      borderWidth: 4,
-      hoverOffset: 20,
-      cutout: "70%",
-    }],
+    datasets: [
+      {
+        data: [30, 70],
+        borderColor: ["#005f6b", "#dddddd"],
+        borderWidth: 4,
+        hoverOffset: 20,
+        cutout: "70%",
+      },
+    ],
   };
 
   const managerNeeds = {
     labels: ["Equipment", "Training", "Quality"],
-    datasets: [{
-      label: "Priority (1=highest)",
-      data: [1, 2, 3],
-      backgroundColor: "#087c8f",
-      borderRadius: 6,
-    }],
+    datasets: [
+      {
+        label: "Priority (1=highest)",
+        data: [1, 2, 3],
+        backgroundColor: "#087c8f",
+        borderRadius: 6,
+      },
+    ],
   };
 
   const infraChecklist = [
@@ -109,92 +111,104 @@ export default function DashboardFeature() {
 
   const financials = {
     labels: ["Farmers’ Payment", "Reserves", "Social Activities"],
-    datasets: [{
-      data: [50, 30, 20],
-      backgroundColor: ["#087c8f", "#005f6b", "#cccccc"],
-      borderWidth: 2,
-    }],
+    datasets: [
+      {
+        data: [50, 30, 20],
+        backgroundColor: ["#087c8f", "#005f6b", "#cccccc"],
+        borderWidth: 2,
+      },
+    ],
   };
 
   const employees = {
     labels: ["Board M", "Board F", "Staff M", "Staff F"],
-    datasets: [{
-      label: "Count",
-      data: [5, 3, 8, 4],
-      backgroundColor: "#087c8f",
-      borderRadius: 4,
-      maxBarThickness: 40,
-    }],
+    datasets: [
+      {
+        label: "Count",
+        data: [5, 3, 8, 4],
+        backgroundColor: "#087c8f",
+        borderRadius: 4,
+        maxBarThickness: 40,
+      },
+    ],
   };
 
   const processingWater = {
     labels: ["Meter", "Record Book", "Reduction Effort"],
-    datasets: [{
-      label: "Compliant",
-      data: [1, 0, 1],
-      backgroundColor: ["#27ae60", "#e67e22", "#2980b9"],
-      borderRadius: 6,
-    }],
+    datasets: [
+      {
+        label: "Compliant",
+        data: [1, 0, 1],
+        backgroundColor: ["#27ae60", "#e67e22", "#2980b9"],
+        borderRadius: 6,
+      },
+    ],
   };
 
   const cpqi = {
     labels: ["Reception", "Fermentation", "Washing"],
     datasets: [
       { label: "Yes", data: [80, 60, 90], backgroundColor: "#087c8f" },
-      { label: "No",  data: [20, 40, 10], backgroundColor: "#dddddd" },
+      { label: "No", data: [20, 40, 10], backgroundColor: "#dddddd" },
     ],
   };
 
   const attendance = {
     labels: ["Topic A", "Topic B", "Topic C"],
     datasets: [
-      { label: "Male",   data: [20, 15, 10], backgroundColor: "#087c8f" },
-      { label: "Female", data: [18, 12,  8], backgroundColor: "#005f6b" },
+      { label: "Male", data: [20, 15, 10], backgroundColor: "#087c8f" },
+      { label: "Female", data: [18, 12, 8], backgroundColor: "#005f6b" },
     ],
   };
 
   const kpisLine = {
-    datasets: [{
-      label: "Cherry Price (USD)",
-      data: [
-        { x: "2025-01-01", y: 0.25 },
-        { x: "2025-02-01", y: 0.28 },
-        { x: "2025-03-01", y: 0.30 },
-      ],
-      borderColor: "#087c8f",
-      borderWidth: 3,
-      tension: 0.4,
-      fill: "start",
-      backgroundColor: ctx => {
-        const {ctx: c, chart} = ctx.chart;
-        const gradient = c.createLinearGradient(0, 0, 0, chart.height);
-        gradient.addColorStop(0, "rgba(8,124,143,0.5)");
-        gradient.addColorStop(1, "rgba(8,124,143,0.1)");
-        return gradient;
+    datasets: [
+      {
+        label: "Cherry Price (USD)",
+        data: [
+          { x: "2025-01-01", y: 0.25 },
+          { x: "2025-02-01", y: 0.28 },
+          { x: "2025-03-01", y: 0.3 },
+        ],
+        borderColor: "#087c8f",
+        borderWidth: 3,
+        tension: 0.4,
+        fill: "start",
+        backgroundColor: (ctx) => {
+          const { ctx: c, chart } = ctx.chart;
+          const gradient = c.createLinearGradient(0, 0, 0, chart.height);
+          gradient.addColorStop(0, "rgba(8,124,143,0.5)");
+          gradient.addColorStop(1, "rgba(8,124,143,0.1)");
+          return gradient;
+        },
+        pointRadius: 5,
+        pointHoverRadius: 8,
       },
-      pointRadius: 5,
-      pointHoverRadius: 8,
-    }],
+    ],
   };
 
   const kpiPie = {
     labels: ["A1", "A2", "A3", "Other"],
-    datasets: [{
-      data: [40, 30, 20, 10],
-      borderColor: ["#087c8f", "#005f6b", "#cccccc", "#eeeeee"],
-      borderWidth: 3,
-      hoverOffset: 15,
-      cutout: "65%",
-    }],
+    datasets: [
+      {
+        data: [40, 30, 20, 10],
+        borderColor: ["#087c8f", "#005f6b", "#cccccc", "#eeeeee"],
+        borderWidth: 3,
+        hoverOffset: 15,
+        cutout: "65%",
+      },
+    ],
   };
 
   const wastewater = {
     labels: ["Lagoon", "Wetland", "None"],
-    datasets: [{
-      data: [50, 30, 20],
-      backgroundColor: ["#27ae60", "#2980b9", "#e74c3c"],
-      borderRadius: 6,
-    }],
+    datasets: [
+      {
+        data: [50, 30, 20],
+        backgroundColor: ["#27ae60", "#2980b9", "#e74c3c"],
+        borderRadius: 6,
+      },
+    ],
   };
 
   // — NEW: Missing Documents list for Profile
@@ -229,13 +243,13 @@ export default function DashboardFeature() {
   };
 
   // — NEW: KPIs stats + weekly & monthly cherry price
-  const kpiStats = { price: 0.30, totalSales: 50000 };
+  const kpiStats = { price: 0.3, totalSales: 50000 };
   const cherryWeekly = {
     labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
     datasets: [
       {
         label: "Cherry $/kg",
-        data: [0.25, 0.28, 0.30, 0.32],
+        data: [0.25, 0.28, 0.3, 0.32],
         borderColor: "#087c8f",
         backgroundColor: (ctx) => {
           const grad = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
@@ -253,7 +267,7 @@ export default function DashboardFeature() {
     datasets: [
       {
         label: "Cherry $/kg",
-        data: [0.25, 0.27, 0.30, 0.28, 0.31, 0.33],
+        data: [0.25, 0.27, 0.3, 0.28, 0.31, 0.33],
         borderColor: "#005f6b",
         backgroundColor: (ctx) => {
           const grad = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
@@ -325,7 +339,7 @@ export default function DashboardFeature() {
         <FormControl size="small">
           <InputLabel>Wetmill</InputLabel>
           <Select value={wetmill} label="Wetmill" onChange={handleMill}>
-            {WETMILLS.map((w) => (
+            {wetmills.map((w) => (
               <MenuItem key={w.id} value={w.id}>
                 {w.name}
               </MenuItem>
@@ -478,7 +492,9 @@ export default function DashboardFeature() {
           {/* Training by Gender */}
           <Card className="chart-card full-width">
             <CardContent>
-              <Typography variant="h6">Training Attendance by Gender</Typography>
+              <Typography variant="h6">
+                Training Attendance by Gender
+              </Typography>
               <Bar data={attendance} options={commonOptions} />
             </CardContent>
           </Card>
@@ -508,9 +524,7 @@ export default function DashboardFeature() {
               <Typography variant="subtitle2">
                 End-of-Season Cherry Price
               </Typography>
-              <Typography variant="h5">
-                ${kpiStats.price.toFixed(2)}
-              </Typography>
+              <Typography variant="h5">${kpiStats.price.toFixed(2)}</Typography>
             </CardContent>
           </Card>
           <Card className="stat-card">
@@ -558,18 +572,14 @@ export default function DashboardFeature() {
           {/* Existing: Method Used */}
           <Card className="chart-card full-width">
             <CardContent>
-              <Typography variant="h6">
-                Wastewater Management Method
-              </Typography>
+              <Typography variant="h6">Wastewater Management Method</Typography>
               <Doughnut data={wastewater} options={commonOptions} />
             </CardContent>
           </Card>
           {/* New: Distance to Waterbody */}
           <Card className="chart-card full-width">
             <CardContent>
-              <Typography variant="h6">
-                Distance to Waterbody
-              </Typography>
+              <Typography variant="h6">Distance to Waterbody</Typography>
               <Bar data={wastewaterDistance} options={commonOptions} />
             </CardContent>
           </Card>
