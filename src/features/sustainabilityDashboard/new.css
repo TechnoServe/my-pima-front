@@ -1,93 +1,150 @@
 .dashboard-container {
-    padding: 1rem 2rem;
-    background: #f4f6f8;
-    font-family: "Roboto", sans-serif;
-    color: #333;
-  }
-  
-  .dashboard-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.5rem;
-  }
-  
-  .dashboard-title {
-    font-weight: 700;
-    color: #087c8f;
-  }
-  
-  .charts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-  
+  padding: 1rem 2rem;
+  background: #f4f6f8;
+  font-family: "Roboto", sans-serif;
+  color: #333;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-title {
+  font-weight: 700;
+  color: #087c8f;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.chart-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  border: 1px transparent
+}
+
+.chart-card.full-width {
+  grid-column: 1 / -1;
+  min-width: 200px;
+}
+
+.small-doughnut canvas {
+  width: 100px !important;
+
+  margin: 10px auto 0 auto !important;
+}
+
+
+.chart-card canvas {
+  flex: 1;
+  width: 100% !important;
+  margin-top: 1rem;
+}
+
+/* Card container */
+.info-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Grid layout */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 1rem;
+}
+
+/* Each info cell */
+.info-item {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Vertical dividers between columns */
+.info-item+.info-item {
+  border-left: 1px solid #e0e0e0;
+}
+
+/* Label styling is handled by Typography.overline */
+/* Value styling handled by Typography.subtitle1 */
+
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0 0;
+}
+
+.checklist li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.checklist li svg {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.checklist li .MuiSvgIcon-colorDisabled {
+  opacity: 0.3;
+}
+
+.checklist-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;        /* space between icon and text */
+  width: 100%;        /* ensure it can fill the container */
+  white-space: nowrap;/* keep icon and text on one line */
+}
+
+.checklist-line .MuiTypography-root {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* Tabs */
+.MuiTabs-root {
+  margin-bottom: 0.75rem;
+}
+
+.MuiTab-root {
+  text-transform: none;
+  font-weight: 600;
+  color: #666;
+}
+
+.MuiTab-root.Mui-selected {
+  color: #087c8f;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
   .chart-card {
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    height: 320px;
-    display: flex;
-    flex-direction: column;
+    height: 260px;
   }
-  
+
   .chart-card.full-width {
-    grid-column: 1 / -1;
-    height: 380px;
+    height: 300px;
   }
-  
-  .chart-card canvas {
-    flex: 1;
-    width: 100% !important;
-    margin-top: 1rem;
-  }
-  
-  .checklist {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0 0 0;
-  }
-  
-  .checklist li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.75rem;
-  }
-  
-  .checklist li svg {
-    margin-right: 0.5rem;
-    font-size: 1.2rem;
-  }
-  
-  .checklist li .MuiSvgIcon-colorDisabled {
-    opacity: 0.3;
-  }
-  
-  /* Tabs */
-  .MuiTabs-root {
-    margin-bottom: 0.75rem;
-  }
-  
-  .MuiTab-root {
-    text-transform: none;
-    font-weight: 600;
-    color: #666;
-  }
-  
-  .MuiTab-root.Mui-selected {
-    color: #087c8f;
-  }
-  
-  /* Mobile adjustments */
-  @media (max-width: 600px) {
-    .chart-card {
-      height: 260px;
-    }
-    .chart-card.full-width {
-      height: 300px;
-    }
-  }
-  
+}

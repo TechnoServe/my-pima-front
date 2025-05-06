@@ -63,10 +63,7 @@ export const useNavbarData = (user, focusArea) => {
 
   const wetmills =
     focusArea === 'sustainability' && wmData?.getWetmills?.status === 200
-      ? wmData.getWetmills.wetmills.map((w) => ({
-          id: w.wet_mill_unique_id,
-          name: w.name,
-        }))
+      ? wmData.getWetmills.wetmills
       : [];
 
   // ── program selector UI state ────────────────────────────────────────────

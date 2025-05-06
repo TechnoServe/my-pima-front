@@ -34,7 +34,7 @@ const DashboardGraphs = ({
       {/* Summary stats */}
       <div className="graphs__stats">
         <div className="stat-card">
-          <h2>Total Wet Mills</h2>
+          <h2>Total Registered Wet Mills</h2>
           <p>{millsCount}</p>
         </div>
         <div className="stat-card">
@@ -51,7 +51,7 @@ const DashboardGraphs = ({
             labels: visitsPerWeekData.map((d) => d.week),
             datasets: [
               {
-                label: "Visits",
+                label: "Wet Mill Visits",
                 data: visitsPerWeekData.map((d) => d.count),
                 fill: true,
                 borderColor: "#087c8f",
@@ -64,7 +64,17 @@ const DashboardGraphs = ({
             responsive: true,
             maintainAspectRatio: false,
             plugins: { legend: { position: "top" } },
-            scales: { x: { grid: { display: false } } },
+            scales: {
+              x: { grid: { display: false } }, y: {
+                ticks: {
+                  // Force integer ticks
+                  callback: function (value) {
+                    return Number.isInteger(value) ? value : '';
+                  },
+                  stepSize: 1, // Optional: ensures spacing is in whole numbers
+                }
+              }
+            },
           }}
           height={200}
         />

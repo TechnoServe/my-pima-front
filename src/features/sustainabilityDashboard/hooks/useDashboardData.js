@@ -34,18 +34,34 @@ export const useDashboardData = () => {
 
   const visitsPerWeekData = useMemo(() => {
     const map = {};
+
     visits.forEach((v) => {
       const date = new Date(v.visited_at);
-      const yearStart = new Date(date.getFullYear(), 0, 1);
-      const week = Math.ceil(
-        ((date - yearStart) / 864e5 + yearStart.getDay() + 1) / 7
-      );
-      const label = `${date.getFullYear()}-W${String(week).padStart(2, "0")}`;
-      map[label] = (map[label] || 0) + 1;
+
+      const year = date.getFullYear();
+      const month = date.getMonth(); // 0-based
+      const day = date.getDate();
+
+      const firstDayOfMonth = new Date(year, month, 1);
+      const week = Math.ceil((day + firstDayOfMonth.getDay()) / 7); // Week of the month
+      const monthLabel = date.toLocaleString("default", { month: "short" }); // "Apr"
+
+      const label = `${monthLabel} W${week}`;
+
+      // Use first day of that week as a consistent timestamp
+      const sortKey = new Date(year, month, (week - 1) * 7 + 1).getTime();
+
+      if (!map[label]) {
+        map[label] = { count: 0, sortKey };
+      }
+
+      map[label].count += 1;
     });
+
     return Object.entries(map)
-      .map(([week, count]) => ({ week, count }))
-      .sort((a, b) => (a.week > b.week ? 1 : -1));
+      .map(([week, { count, sortKey }]) => ({ week, count, sortKey }))
+      .sort((a, b) => a.sortKey - b.sortKey) // Oldest first
+      .map(({ week, count }) => ({ week, count })); // Strip sortKey
   }, [visits]);
 
   const ownershipData = useMemo(() => {

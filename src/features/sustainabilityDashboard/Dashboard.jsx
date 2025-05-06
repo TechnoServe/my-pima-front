@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+// src/features/dashboard/DashboardFeature.jsx
+import React, { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import {
   Box,
   Tabs,
   Tab,
   Typography,
-  Card,
-  CardContent,
   FormControl,
   InputLabel,
   Select,
@@ -13,125 +13,121 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { CheckCircle, Construction, WarningAmber } from "@mui/icons-material";
-import { Doughnut, Bar, Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  LineElement,
-  PointElement,
-  Tooltip,
-  Legend,
-  TimeScale,
-} from "chart.js";
-import "chartjs-adapter-date-fns";
+import ChartJS from "chart.js/auto";
+import annotationPlugin from "chartjs-plugin-annotation";
+import { Bar, Doughnut, Line } from "react-chartjs-2";
+
+import InfoCard from "./components/infoCard";
+import ChartCard from "../../components/Charts/ChartCard";
+import ChecklistCard from "../../components/Charts/ChecklistCard";
+import InfraChecklistCard from "./components/InfraChecklistCard";
+
+import { useWetmillDashboardData } from "./hooks/useWetmillDashboardData";
+
 import "./new.css";
-import { useOutletContext } from "react-router-dom";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  BarElement,
-  ArcElement,
-  LineElement,
-  PointElement,
-  Tooltip,
-  Legend
-);
+ChartJS.register(annotationPlugin);
 
-function TabPanel({ children, value, index, ...props }) {
+function TabPanel({ children, value, index }) {
   return (
-    <div role="tabpanel" hidden={value !== index} {...props}>
+    <div role="tabpanel" hidden={value !== index}>
       {value === index && <Box sx={{ pt: 2 }}>{children}</Box>}
     </div>
   );
 }
 
 export default function DashboardFeature() {
+  // --- wetmill selection with persistence ---
   const { wetmills } = useOutletContext();
+  const [wetmill, setWetmill] = useState(
+    () => window.localStorage.getItem("selectedWetmill") || ""
+  );
+  useEffect(() => {
+    if (!wetmill && wetmills.length) {
+      const saved = window.localStorage.getItem("selectedWetmill");
+      if (saved && wetmills.some((w) => w.id === saved)) {
+        setWetmill(saved);
+      } else {
+        setWetmill(wetmills[0].id);
+      }
+    }
+  }, [wetmills, wetmill]);
+  useEffect(() => {
+    if (wetmill) window.localStorage.setItem("selectedWetmill", wetmill);
+  }, [wetmill]);
+
+  // --- layout state ---
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
   const [tab, setTab] = useState(0);
-  const [wetmill, setWetmill] = useState(wetmills[0].id);
-
   const handleTab = (_, v) => setTab(v);
-  const handleMill = (e) => setWetmill(e.target.value);
 
-  // ── Dummy Data ─────────────────────────────────────────────────────────────
+  // --- current wetmill info ---
+  const currentMill = wetmills.find((w) => w.id === wetmill) || {};
+  const registrationInfo = {
+    "Wetmill ID": currentMill.wet_mill_unique_id || wetmill,
+    Name: currentMill.name || "N/A",
+    "Registered On": currentMill.registration_date || "N/A",
+    Ownership: currentMill.mill_status || "N/A",
+    "Exporting Status": currentMill.exporting_status || "N/A",
+  };
 
-  // Existing...
-  const profileStatus = {
-    labels: ["Cooperative", "Private"],
+  // --- pull all dashboard slices via hooks ---
+  const {
+    managerNeeds,       // { chartData, loading, error }
+    missingDocuments,   // { items, loading, error }
+    infrastructure,     // { items, goodItems, repairItems, loading, error }
+    financials,         // { totalProfit, reserves, socialActivities, secondPaymentToFarmers }
+    employeeStats,
+  } = useWetmillDashboardData(wetmill);
+
+  const raw = managerNeeds.raw || [];
+
+  // Order: [2nd place, 1st place, 3rd place]
+  const podiumOrder = [2, 1, 3];
+  const podiumItems = podiumOrder.map((rnk) =>
+    raw.find((r) => r.rank === rnk) || {}
+  );
+
+  const podiumLabels = podiumItems.map((i) => i.issue || "");
+  const podiumRanks = podiumOrder; // [2,1,3]
+
+  // Heights: 1st place = 3 units tall; 2nd & 3rd = 1 unit
+  const podiumHeights = podiumOrder.map((rnk) => (rnk === 1 ? 2 : 1));
+
+  const podiumData = {
+    labels: podiumLabels,
     datasets: [
       {
-        data: [60, 40],
-        borderColor: ["#087c8f", "#cccccc"],
-        borderWidth: 4,
-        hoverOffset: 20,
-        cutout: "70%",
+        data: podiumHeights,
+        backgroundColor: ["#C0C0C0", "#1b2a4e", "#C0C0C0"],
+        borderRadius: { topLeft: 12, topRight: 12 },
+        barThickness: 60,
       },
     ],
   };
 
-  const profileExport = {
-    labels: ["Exporter", "Non-exporter"],
-    datasets: [
-      {
-        data: [30, 70],
-        borderColor: ["#005f6b", "#dddddd"],
-        borderWidth: 4,
-        hoverOffset: 20,
-        cutout: "70%",
+  const podiumOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          // show the issue as title
+          title: (ctx) => podiumLabels[ctx[0].dataIndex],
+          // show the actual rank number as the label
+          label: (ctx) => `Rank: ${podiumRanks[ctx.dataIndex]}`,
+        },
       },
-    ],
+    },
+    scales: {
+      x: { display: false },
+      y: { display: false },
+    },
   };
 
-  const managerNeeds = {
-    labels: ["Equipment", "Training", "Quality"],
-    datasets: [
-      {
-        label: "Priority (1=highest)",
-        data: [1, 2, 3],
-        backgroundColor: "#087c8f",
-        borderRadius: 6,
-      },
-    ],
-  };
-
-  const infraChecklist = [
-    { name: "Drying Tables", ok: true, repair: false },
-    { name: "Pulp Hopper", ok: false, repair: true },
-    { name: "Vetiver Wetland", ok: true, repair: false },
-  ];
-
-  const financials = {
-    labels: ["Farmers’ Payment", "Reserves", "Social Activities"],
-    datasets: [
-      {
-        data: [50, 30, 20],
-        backgroundColor: ["#087c8f", "#005f6b", "#cccccc"],
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  const employees = {
-    labels: ["Board M", "Board F", "Staff M", "Staff F"],
-    datasets: [
-      {
-        label: "Count",
-        data: [5, 3, 8, 4],
-        backgroundColor: "#087c8f",
-        borderRadius: 4,
-        maxBarThickness: 40,
-      },
-    ],
-  };
+  // --- dummy data for charts we haven't wired yet ---
 
   const processingWater = {
     labels: ["Meter", "Record Book", "Reduction Effort"],
@@ -139,7 +135,7 @@ export default function DashboardFeature() {
       {
         label: "Compliant",
         data: [1, 0, 1],
-        backgroundColor: ["#27ae60", "#e67e22", "#2980b9"],
+        backgroundColor: ["#1b2a4e", "#e67e22", "#2980b9"],
         borderRadius: 6,
       },
     ],
@@ -161,28 +157,68 @@ export default function DashboardFeature() {
     ],
   };
 
-  const kpisLine = {
+  const attendanceOverall = {
+    labels: ["Male", "Female"],
     datasets: [
       {
-        label: "Cherry Price (USD)",
-        data: [
-          { x: "2025-01-01", y: 0.25 },
-          { x: "2025-02-01", y: 0.28 },
-          { x: "2025-03-01", y: 0.3 },
-        ],
+        data: [35, 30],
+        backgroundColor: ["#087c8f", "#005f6b"],
+        cutout: "65%",
+        borderWidth: 4,
+      },
+    ],
+  };
+
+  const attendanceAge = {
+    labels: ["≤30 (Youth)", ">30"],
+    datasets: [
+      {
+        data: [40, 25],
+        backgroundColor: ["#27ae60", "#e67e22"],
+        cutout: "65%",
+        borderWidth: 4,
+      },
+    ],
+  };
+
+  const kpiStats = { price: 0.3, totalSales: 50000 };
+
+  const cherryWeekly = {
+    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+    datasets: [
+      {
+        label: "Cherry $/kg",
+        data: [0.25, 0.28, 0.3, 0.32],
         borderColor: "#087c8f",
-        borderWidth: 3,
-        tension: 0.4,
-        fill: "start",
         backgroundColor: (ctx) => {
-          const { ctx: c, chart } = ctx.chart;
-          const gradient = c.createLinearGradient(0, 0, 0, chart.height);
-          gradient.addColorStop(0, "rgba(8,124,143,0.5)");
-          gradient.addColorStop(1, "rgba(8,124,143,0.1)");
-          return gradient;
+          const c = ctx.chart.ctx;
+          const grad = c.createLinearGradient(0, 0, 0, 200);
+          grad.addColorStop(0, "rgba(8,124,143,0.5)");
+          grad.addColorStop(1, "rgba(8,124,143,0.1)");
+          return grad;
         },
-        pointRadius: 5,
-        pointHoverRadius: 8,
+        fill: "start",
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const cherryMonthly = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    datasets: [
+      {
+        label: "Cherry $/kg",
+        data: [0.25, 0.27, 0.3, 0.28, 0.31, 0.33],
+        borderColor: "#005f6b",
+        backgroundColor: (ctx) => {
+          const c = ctx.chart.ctx;
+          const grad = c.createLinearGradient(0, 0, 0, 200);
+          grad.addColorStop(0, "rgba(0,95,107,0.5)");
+          grad.addColorStop(1, "rgba(0,95,107,0.1)");
+          return grad;
+        },
+        fill: "start",
+        tension: 0.4,
       },
     ],
   };
@@ -200,129 +236,41 @@ export default function DashboardFeature() {
     ],
   };
 
-  const wastewater = {
-    labels: ["Lagoon", "Wetland", "None"],
-    datasets: [
-      {
-        data: [50, 30, 20],
-        backgroundColor: ["#27ae60", "#2980b9", "#e74c3c"],
-        borderRadius: 6,
-      },
-    ],
-  };
-
-  // — NEW: Missing Documents list for Profile
-  const missingDocs = [
-    "Operating License",
-    "Safety Certificate",
-    "Water Usage Log",
-  ];
-
-  // — NEW: Overall Attendance & Age Distribution
-  const attendanceOverall = {
-    labels: ["Male", "Female"],
-    datasets: [
-      {
-        data: [35, 30],
-        backgroundColor: ["#087c8f", "#005f6b"],
-        cutout: "65%",
-        borderWidth: 4,
-      },
-    ],
-  };
-  const attendanceAge = {
-    labels: ["≤30 (Youth)", ">30"],
-    datasets: [
-      {
-        data: [40, 25],
-        backgroundColor: ["#27ae60", "#e67e22"],
-        cutout: "65%",
-        borderWidth: 4,
-      },
-    ],
-  };
-
-  // — NEW: KPIs stats + weekly & monthly cherry price
-  const kpiStats = { price: 0.3, totalSales: 50000 };
-  const cherryWeekly = {
-    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    datasets: [
-      {
-        label: "Cherry $/kg",
-        data: [0.25, 0.28, 0.3, 0.32],
-        borderColor: "#087c8f",
-        backgroundColor: (ctx) => {
-          const grad = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
-          grad.addColorStop(0, "rgba(8,124,143,0.5)");
-          grad.addColorStop(1, "rgba(8,124,143,0.1)");
-          return grad;
-        },
-        fill: "start",
-        tension: 0.4,
-      },
-    ],
-  };
-  const cherryMonthly = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        label: "Cherry $/kg",
-        data: [0.25, 0.27, 0.3, 0.28, 0.31, 0.33],
-        borderColor: "#005f6b",
-        backgroundColor: (ctx) => {
-          const grad = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
-          grad.addColorStop(0, "rgba(0,95,107,0.5)");
-          grad.addColorStop(1, "rgba(0,95,107,0.1)");
-          return grad;
-        },
-        fill: "start",
-        tension: 0.4,
-      },
-    ],
-  };
-  const parchment = {
-    labels: ["A1", "A2", "A3", "Other"],
-    datasets: [
-      {
-        data: [40, 30, 20, 10],
-        backgroundColor: ["#087c8f", "#005f6b", "#cccccc", "#eeeeee"],
-        cutout: "65%",
-        borderWidth: 3,
-      },
-    ],
-  };
-
-  // — NEW: Wastewater distance bar
   const wastewaterDistance = {
-    labels: ["Site A", "Site B", "None"],
+    labels: ["Lagoon"],
     datasets: [
       {
         label: "Distance (m)",
-        data: [120, 40, 0],
-        backgroundColor: (ctx) => {
-          const v = ctx.parsed.y;
-          if (v === 0) return "#888888";
-          return v >= 50 ? "#27ae60" : "#e74c3c";
-        },
+        data: [120],
+        backgroundColor: (ctx) =>
+          ctx.parsed.y >= 50 ? "#1b2a4e" : "#e74c3c",
         borderRadius: 4,
         maxBarThickness: 40,
       },
     ],
   };
+  const recommendedDistance = 50;
 
   const commonOptions = {
     responsive: true,
     maintainAspectRatio: true,
     plugins: {
-      legend: {
-        position: "top",
-        labels: { boxWidth: 12, usePointStyle: true },
-      },
+      legend: { position: "top", labels: { boxWidth: 12, usePointStyle: true } },
       tooltip: { mode: "index", intersect: false, padding: 10 },
     },
     scales: {
       x: { grid: { display: false } },
       y: { grid: { borderDash: [5, 5] }, beginAtZero: true },
+    },
+  };
+
+  const pieOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    layout: { padding: { top: 0, bottom: 0, left: 0, right: 0 } },
+    plugins: {
+      legend: { position: "top", labels: { boxWidth: 12, usePointStyle: true, padding: 10 } },
+      tooltip: { mode: "nearest", intersect: false, padding: 10 },
     },
   };
 
@@ -338,7 +286,11 @@ export default function DashboardFeature() {
         </Typography>
         <FormControl size="small">
           <InputLabel>Wetmill</InputLabel>
-          <Select value={wetmill} label="Wetmill" onChange={handleMill}>
+          <Select
+            value={wetmill}
+            label="Wetmill"
+            onChange={(e) => setWetmill(e.target.value)}
+          >
             {wetmills.map((w) => (
               <MenuItem key={w.id} value={w.id}>
                 {w.name}
@@ -358,7 +310,7 @@ export default function DashboardFeature() {
         allowScrollButtonsMobile
       >
         {["Profile", "Processing", "Attendance", "KPIs", "Wastewater"].map(
-          (label, i) => (
+          (label) => (
             <Tab key={label} label={label} />
           )
         )}
@@ -367,222 +319,183 @@ export default function DashboardFeature() {
       {/* Profile Tab */}
       <TabPanel value={tab} index={0}>
         <Box className="charts-grid">
-          {/* Mill Status */}
-          <Card className="chart-card">
-            <CardContent>
-              <Typography variant="h6">Mill Status</Typography>
-              <Doughnut data={profileStatus} options={commonOptions} />
-            </CardContent>
-          </Card>
-          {/* Exporter Status */}
-          <Card className="chart-card">
-            <CardContent>
-              <Typography variant="h6">Exporter Status</Typography>
-              <Doughnut data={profileExport} options={commonOptions} />
-            </CardContent>
-          </Card>
-          {/* Manager Needs */}
-          <Card className="chart-card full-width">
-            <CardContent>
-              <Typography variant="h6">Manager Needs Ranking</Typography>
-              <Bar data={managerNeeds} options={commonOptions} />
-            </CardContent>
-          </Card>
-          {/* Infrastructure */}
-          <Card className="chart-card full-width">
-            <CardContent>
-              <Typography variant="h6">Infrastructure Checklist</Typography>
-              <Box component="ul" className="checklist">
-                {infraChecklist.map((i) => (
-                  <li key={i.name}>
-                    {i.ok ? (
-                      <CheckCircle color="success" />
-                    ) : (
-                      <CheckCircle color="disabled" />
-                    )}
-                    <Typography component="span" sx={{ ml: 1 }}>
-                      {i.name}
-                    </Typography>
-                    {i.repair && (
-                      <Construction
-                        fontSize="small"
-                        color="warning"
-                        sx={{ ml: 1 }}
-                      />
-                    )}
-                  </li>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
-          {/* New: Missing Documents */}
-          <Card className="chart-card full-width">
-            <CardContent>
-              <Typography variant="h6">Missing Documents</Typography>
-              <Box className="checklist">
-                {missingDocs.map((d) => (
-                  <Box key={d} className="checklist-line">
-                    <WarningAmber color="warning" />
-                    <Typography sx={{ ml: 1 }}>{d}</Typography>
-                  </Box>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
+          <InfoCard title="Registration Info" data={registrationInfo} />
+
+          <ChartCard
+            title="Manager Needs Ranking"
+            loading={managerNeeds.loading}
+            error={managerNeeds.error}
+            height={300}  // give it some vertical room
+          >
+            <Bar data={podiumData} options={podiumOptions} />
+          </ChartCard>
+
+          <ChecklistCard
+            title="Missing Documents"
+            items={missingDocuments.items}
+            loading={missingDocuments.loading}
+            error={missingDocuments.error}
+            emptyMessage="No documents missing :)"
+          />
+
           {/* Profit Usage */}
-          <Card className="chart-card">
-            <CardContent>
-              <Typography variant="h6">Profit Usage</Typography>
-              <Doughnut data={financials} options={commonOptions} />
-            </CardContent>
-          </Card>
-          {/* Employees */}
-          <Card className="chart-card">
-            <CardContent>
-              <Typography variant="h6">Employees by Gender/Type</Typography>
-              <Bar data={employees} options={commonOptions} />
-            </CardContent>
-          </Card>
+          <ChartCard
+            title="Profit Usage"
+            loading={financials.loading}
+            error={financials.error}
+            height={250}
+          >
+            <Doughnut
+              data={financials.chartData}
+              options={financials.chartOptions}
+              plugins={financials.plugins}
+            />
+          </ChartCard>
+
+          {/* Dummy Employees */}
+          <ChartCard
+            title="Employees"
+            loading={employeeStats.loading}
+            error={employeeStats.error}
+            height={900}
+          >
+            <Bar
+              data={employeeStats.chartData}
+              options={employeeStats.chartOptions}
+            />
+          </ChartCard>
+
+          <InfraChecklistCard
+            title="Infrastructure Checklist"
+            list={infrastructure.items.map((name) => ({
+              name,
+              ok: infrastructure.goodItems.includes(name),
+              repair: infrastructure.repairItems.includes(name),
+            }))}
+            loading={infrastructure.loading}
+            error={infrastructure.error}
+          />
         </Box>
       </TabPanel>
 
       {/* Processing Tab */}
       <TabPanel value={tab} index={1}>
         <Box className="charts-grid">
-          {/* Water & Energy Compliance */}
-          <Card className="chart-card full-width">
-            <CardContent>
-              <Typography variant="h6">Water & Energy Compliance</Typography>
-              <Bar
-                data={processingWater}
-                options={{
-                  ...commonOptions,
-                  scales: {
-                    ...commonOptions.scales,
-                    x: { stacked: true },
-                    y: { stacked: true },
-                  },
-                }}
-              />
-            </CardContent>
-          </Card>
-          {/* CPQI Scores */}
-          <Card className="chart-card full-width">
-            <CardContent>
-              <Typography variant="h6">CPQI Scores</Typography>
-              <Bar
-                data={cpqi}
-                options={{
-                  ...commonOptions,
-                  scales: {
-                    ...commonOptions.scales,
-                    x: { stacked: true },
-                    y: { stacked: true },
-                  },
-                }}
-              />
-            </CardContent>
-          </Card>
+          <ChartCard title="Water & Energy Compliance">
+            <Bar
+              data={processingWater}
+              options={{
+                ...commonOptions,
+                scales: { x: { stacked: true }, y: { stacked: true } },
+              }}
+            />
+          </ChartCard>
+
+          <ChartCard title="CPQI Scores">
+            <Bar
+              data={cpqi}
+              options={{
+                ...commonOptions,
+                scales: { x: { stacked: true }, y: { stacked: true } },
+              }}
+            />
+          </ChartCard>
         </Box>
       </TabPanel>
 
       {/* Attendance Tab */}
       <TabPanel value={tab} index={2}>
         <Box className="charts-grid">
-          {/* Training by Gender */}
-          <Card className="chart-card full-width">
-            <CardContent>
-              <Typography variant="h6">
-                Training Attendance by Gender
-              </Typography>
-              <Bar data={attendance} options={commonOptions} />
-            </CardContent>
-          </Card>
-          {/* New: Overall Unique Attendees */}
-          <Card className="chart-card">
-            <CardContent>
-              <Typography variant="h6">Overall Unique Attendees</Typography>
-              <Doughnut data={attendanceOverall} options={commonOptions} />
-            </CardContent>
-          </Card>
-          {/* New: Age Distribution */}
-          <Card className="chart-card">
-            <CardContent>
-              <Typography variant="h6">Age Distribution</Typography>
-              <Doughnut data={attendanceAge} options={commonOptions} />
-            </CardContent>
-          </Card>
+          <ChartCard title="Training Attendance by Gender">
+            <Bar data={attendance} options={commonOptions} />
+          </ChartCard>
+
+          <ChartCard title="Overall Unique Attendees">
+            <Doughnut data={attendanceOverall} options={pieOptions} />
+          </ChartCard>
+
+          <ChartCard title="Age Distribution">
+            <Doughnut data={attendanceAge} options={pieOptions} />
+          </ChartCard>
         </Box>
       </TabPanel>
 
       {/* KPIs Tab */}
       <TabPanel value={tab} index={3}>
         <Box className="charts-grid">
-          {/* New: Stat Cards */}
-          <Card className="stat-card">
-            <CardContent>
-              <Typography variant="subtitle2">
-                End-of-Season Cherry Price
-              </Typography>
-              <Typography variant="h5">${kpiStats.price.toFixed(2)}</Typography>
-            </CardContent>
-          </Card>
-          <Card className="stat-card">
-            <CardContent>
-              <Typography variant="subtitle2">Total Sales (USD)</Typography>
-              <Typography variant="h5">
-                ${kpiStats.totalSales.toLocaleString()}
-              </Typography>
-            </CardContent>
-          </Card>
-          {/* New: Cherry Weekly */}
-          <Card className="chart-card full-width">
-            <CardContent>
-              <Typography variant="h6">Cherry Price Weekly</Typography>
-              <Line data={cherryWeekly} options={commonOptions} />
-            </CardContent>
-          </Card>
-          {/* New: Cherry Monthly */}
-          <Card className="chart-card full-width">
-            <CardContent>
-              <Typography variant="h6">Cherry Price Monthly</Typography>
-              <Line data={cherryMonthly} options={commonOptions} />
-            </CardContent>
-          </Card>
-          {/* Existing: Parchment */}
-          <Card className="chart-card">
-            <CardContent>
-              <Typography variant="h6">Parchment Grades</Typography>
-              <Doughnut data={kpiPie} options={commonOptions} />
-            </CardContent>
-          </Card>
-          {/* New: Parchment Distribution */}
-          <Card className="chart-card">
-            <CardContent>
-              <Typography variant="h6">Parchment Distribution</Typography>
-              <Doughnut data={parchment} options={commonOptions} />
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="End-of-Season Cherry Price"
+            data={{ Price: `$${kpiStats.price.toFixed(2)}` }}
+          />
+          <InfoCard
+            title="Total Sales (USD)"
+            data={{ Sales: `$${kpiStats.totalSales.toLocaleString()}` }}
+          />
+
+          <ChartCard title="Cherry Price Weekly">
+            <Line data={cherryWeekly} options={commonOptions} />
+          </ChartCard>
+
+          <ChartCard title="Cherry Price Monthly">
+            <Line data={cherryMonthly} options={commonOptions} />
+          </ChartCard>
+
+          <ChartCard title="Parchment Grades">
+            <Doughnut data={kpiPie} options={commonOptions} />
+          </ChartCard>
+
+          <ChartCard title="Parchment Distribution">
+            <Doughnut data={kpiPie} options={commonOptions} />
+          </ChartCard>
         </Box>
       </TabPanel>
 
       {/* Wastewater Tab */}
       <TabPanel value={tab} index={4}>
         <Box className="charts-grid">
-          {/* Existing: Method Used */}
-          <Card className="chart-card full-width">
-            <CardContent>
-              <Typography variant="h6">Wastewater Management Method</Typography>
-              <Doughnut data={wastewater} options={commonOptions} />
-            </CardContent>
-          </Card>
-          {/* New: Distance to Waterbody */}
-          <Card className="chart-card full-width">
-            <CardContent>
-              <Typography variant="h6">Distance to Waterbody</Typography>
-              <Bar data={wastewaterDistance} options={commonOptions} />
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="Wastewater Management Method"
+            data={{ Method: currentMill.waste_water_management_method || "Lagoon" }}
+          />
+
+          <ChartCard title="Distance to Waterbody">
+            <Bar
+              data={wastewaterDistance}
+              options={{
+                ...commonOptions,
+                scales: {
+                  x: commonOptions.scales.x,
+                  y: {
+                    ...commonOptions.scales.y,
+                    suggestedMax: recommendedDistance * 1.2,
+                  },
+                },
+                plugins: {
+                  ...commonOptions.plugins,
+                  annotation: {
+                    annotations: {
+                      minLine: {
+                        type: "line",
+                        scaleID: "y",
+                        value: recommendedDistance,
+                        borderColor: "#e74c3c",
+                        borderWidth: 2,
+                        borderDash: [6, 6],
+                        label: {
+                          enabled: true,
+                          content: `Min ${recommendedDistance} m`,
+                          position: "end",
+                          backgroundColor: "rgba(231,76,60,0.8)",
+                          color: "#fff",
+                          font: { weight: "bold" },
+                        },
+                      },
+                    },
+                  },
+                },
+              }}
+            />
+          </ChartCard>
         </Box>
       </TabPanel>
     </Box>
