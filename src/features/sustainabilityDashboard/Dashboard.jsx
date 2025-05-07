@@ -25,6 +25,8 @@ import InfraChecklistCard from "./components/InfraChecklistCard";
 import { useWetmillDashboardData } from "./hooks/useWetmillDashboardData";
 
 import "./new.css";
+import { Cancel, CheckCircle } from "@mui/icons-material";
+import SectionedChecklistCard from "../../components/Charts/SectionedChecklistCard";
 
 ChartJS.register(annotationPlugin);
 
@@ -79,6 +81,10 @@ export default function DashboardFeature() {
     infrastructure,     // { items, goodItems, repairItems, loading, error }
     financials,         // { totalProfit, reserves, socialActivities, secondPaymentToFarmers }
     employeeStats,
+    cpqiStats,
+    cpqiChecklist,
+    trainingByTopic,
+    trainingOverall
   } = useWetmillDashboardData(wetmill);
 
   const raw = managerNeeds.raw || [];
@@ -141,14 +147,6 @@ export default function DashboardFeature() {
     ],
   };
 
-  const cpqi = {
-    labels: ["Reception", "Fermentation", "Washing"],
-    datasets: [
-      { label: "Yes", data: [80, 60, 90], backgroundColor: "#087c8f" },
-      { label: "No", data: [20, 40, 10], backgroundColor: "#dddddd" },
-    ],
-  };
-
   const attendance = {
     labels: ["Topic A", "Topic B", "Topic C"],
     datasets: [
@@ -163,18 +161,6 @@ export default function DashboardFeature() {
       {
         data: [35, 30],
         backgroundColor: ["#087c8f", "#005f6b"],
-        cutout: "65%",
-        borderWidth: 4,
-      },
-    ],
-  };
-
-  const attendanceAge = {
-    labels: ["≤30 (Youth)", ">30"],
-    datasets: [
-      {
-        data: [40, 25],
-        backgroundColor: ["#27ae60", "#e67e22"],
         cutout: "65%",
         borderWidth: 4,
       },
@@ -391,31 +377,90 @@ export default function DashboardFeature() {
             />
           </ChartCard>
 
-          <ChartCard title="CPQI Scores">
-            <Bar
-              data={cpqi}
-              options={{
-                ...commonOptions,
-                scales: { x: { stacked: true }, y: { stacked: true } },
-              }}
+          {/* Overall doughnut */}
+          <ChartCard
+            title="CPQI Overall Compliance"
+            loading={cpqiStats.statsLoading}
+            error={cpqiStats.statsError}
+            height={200}
+          >
+            <Doughnut
+              data={cpqiStats.pie.pieData}
+              options={cpqiStats.pie.pieOptions}
             />
           </ChartCard>
+
+          {/* Stacked bar by section */}
+          <ChartCard
+            title="CPQI by Criteria"
+            loading={cpqiStats.statsLoading}
+            error={cpqiStats.statsError}
+            height={300}
+          >
+            <Bar
+              data={cpqiStats.bar.chartData}
+              options={cpqiStats.bar.chartOptions}
+            />
+          </ChartCard>
+
+          {/* CPQI Detailed Checklist */}
+          <SectionedChecklistCard
+            title="CPQI Detailed Checklist"
+            sections={cpqiChecklist.sections}
+            loading={cpqiChecklist.loading}
+            error={cpqiChecklist.error}
+            emptyMessage="No CPQI data available"
+          />
+
         </Box>
       </TabPanel>
 
       {/* Attendance Tab */}
       <TabPanel value={tab} index={2}>
         <Box className="charts-grid">
-          <ChartCard title="Training Attendance by Gender">
-            <Bar data={attendance} options={commonOptions} />
+          <ChartCard
+            title="Training Attendance by Topic"
+            loading={trainingByTopic.loading}
+            error={trainingByTopic.error}
+          >
+            <Bar
+              data={trainingByTopic.chartData}
+              options={{
+                ...commonOptions,
+                scales: {
+                  x: {
+                    grid: { display: false },
+                    ticks: {
+                      maxRotation: 45,
+                      minRotation: 45,
+                      callback: (_, index) => {
+                        const label = trainingByTopic.chartData.labels[index] || "";
+                        return label.length > 15
+                          ? label.slice(0, 15) + "…"
+                          : label;
+                      },
+                    },
+                  },
+                  y: commonOptions.scales.y,
+                },
+              }}
+            />
           </ChartCard>
 
-          <ChartCard title="Overall Unique Attendees">
-            <Doughnut data={attendanceOverall} options={pieOptions} />
-          </ChartCard>
-
-          <ChartCard title="Age Distribution">
-            <Doughnut data={attendanceAge} options={pieOptions} />
+          <ChartCard
+            title="Overall Unique Attendees"
+            loading={trainingOverall.loading}
+            error={trainingOverall.error}
+            height={200}
+          >
+            <Doughnut
+              data={trainingOverall.chartData}
+              options={{
+                ...pieOptions,
+                aspectRatio: 1,              // perfectly square
+                layout: { padding: 20 },
+              }}
+            />
           </ChartCard>
         </Box>
       </TabPanel>

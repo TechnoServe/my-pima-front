@@ -32,7 +32,9 @@
   min-height: 200px;
   display: flex;
   flex-direction: column;
-  border: 1px transparent
+  border: 1px transparent;
+  display: flex;
+  flex-direction: column;
 }
 
 .chart-card.full-width {
@@ -48,9 +50,8 @@
 
 
 .chart-card canvas {
-  flex: 1;
   width: 100% !important;
-  margin-top: 1rem;
+  margin-top: 0;        /* remove extra margin */
 }
 
 /* Card container */

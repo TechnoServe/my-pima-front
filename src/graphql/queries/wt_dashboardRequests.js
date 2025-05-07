@@ -56,3 +56,39 @@ export const GET_EMPLOYEE_STATS = gql`
 `;
 
 
+export const GET_CPQI_STATS = gql`
+  query GetCpqiStats($wetmillId: ID!) {
+    getCpqiStats(wetmillId: $wetmillId) {
+      sections { sectionName yesPct noPct }
+      overallYesPct
+      overallNoPct
+    }
+  }
+`;
+export const GET_CPQI_CHECKLIST = gql`
+  query GetCpqiChecklist($wetmillId: ID!) {
+    getCpqiChecklist(wetmillId: $wetmillId) {
+      sectionName
+      criteria { questionName yes }
+    }
+  }
+`;
+
+export const GET_TRAINING_BY_TOPIC = gql`
+  query GetTrainingByTopic($wetmillId: ID!) {
+    getTrainingAttendanceByTopic(wetmillId: $wetmillId) {
+      topic
+      male
+      female
+    }
+  }
+`;
+
+export const GET_TRAINING_OVERALL = gql`
+  query GetTrainingOverall($wetmillId: ID!) {
+    getTrainingAttendanceOverall(wetmillId: $wetmillId) {
+      male
+      female
+    }
+  }
+`;
