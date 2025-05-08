@@ -84,7 +84,9 @@ export default function DashboardFeature() {
     cpqiStats,
     cpqiChecklist,
     trainingByTopic,
-    trainingOverall
+    trainingOverall,
+    kpiStats,
+    parchmentDist,
   } = useWetmillDashboardData(wetmill);
 
   const raw = managerNeeds.raw || [];
@@ -147,28 +149,6 @@ export default function DashboardFeature() {
     ],
   };
 
-  const attendance = {
-    labels: ["Topic A", "Topic B", "Topic C"],
-    datasets: [
-      { label: "Male", data: [20, 15, 10], backgroundColor: "#087c8f" },
-      { label: "Female", data: [18, 12, 8], backgroundColor: "#005f6b" },
-    ],
-  };
-
-  const attendanceOverall = {
-    labels: ["Male", "Female"],
-    datasets: [
-      {
-        data: [35, 30],
-        backgroundColor: ["#087c8f", "#005f6b"],
-        cutout: "65%",
-        borderWidth: 4,
-      },
-    ],
-  };
-
-  const kpiStats = { price: 0.3, totalSales: 50000 };
-
   const cherryWeekly = {
     labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
     datasets: [
@@ -205,19 +185,6 @@ export default function DashboardFeature() {
         },
         fill: "start",
         tension: 0.4,
-      },
-    ],
-  };
-
-  const kpiPie = {
-    labels: ["A1", "A2", "A3", "Other"],
-    datasets: [
-      {
-        data: [40, 30, 20, 10],
-        borderColor: ["#087c8f", "#005f6b", "#cccccc", "#eeeeee"],
-        borderWidth: 3,
-        hoverOffset: 15,
-        cutout: "65%",
       },
     ],
   };
@@ -471,26 +438,35 @@ export default function DashboardFeature() {
           <InfoCard
             title="End-of-Season Cherry Price"
             data={{ Price: `$${kpiStats.price.toFixed(2)}` }}
+            loading={kpiStats.loading}
+            error={kpiStats.error}
           />
+
           <InfoCard
             title="Total Sales (USD)"
             data={{ Sales: `$${kpiStats.totalSales.toLocaleString()}` }}
+            loading={kpiStats.loading}
+            error={kpiStats.error}
           />
 
-          <ChartCard title="Cherry Price Weekly">
+          {/* <ChartCard title="Cherry Price Weekly">
             <Line data={cherryWeekly} options={commonOptions} />
           </ChartCard>
 
           <ChartCard title="Cherry Price Monthly">
             <Line data={cherryMonthly} options={commonOptions} />
-          </ChartCard>
+          </ChartCard>*/}
 
           <ChartCard title="Parchment Grades">
-            <Doughnut data={kpiPie} options={commonOptions} />
-          </ChartCard>
+            <Doughnut data={parchmentDist.chartData} options={pieOptions} />
+          </ChartCard> 
 
-          <ChartCard title="Parchment Distribution">
-            <Doughnut data={kpiPie} options={commonOptions} />
+          <ChartCard
+            title="Parchment Distribution"
+            loading={parchmentDist.loading}
+            error={parchmentDist.error}
+          >
+            <Doughnut data={parchmentDist.chartData} options={pieOptions} />
           </ChartCard>
         </Box>
       </TabPanel>

@@ -92,3 +92,23 @@ export const GET_TRAINING_OVERALL = gql`
     }
   }
 `;
+
+export const GET_KPI_STATS = gql`
+  query GetKpiStats($wetmillId: ID!) {
+    getKpiStats(wetmillId: $wetmillId) {
+      cherry
+      total
+    }
+  }
+`;
+
+export const GET_PARCHMENT_DISTRIBUTION = gql`
+  query GetParchmentDistribution($wetmillId: ID!) {
+    getParchmentDistribution(wetmillId: $wetmillId) {
+      grade
+      value
+    }
+  }
+`;
+
+

@@ -7,7 +7,8 @@ import { useCpqiStats } from "./useCpqiStats";
 import { useCpqiChecklist } from "./useCpqiChecklist";
 import { useTrainingByTopic } from "./useTrainingByTopic";
 import { useTrainingOverall } from "./useTrainingOverall";
-import { tr } from "date-fns/locale";
+import { useKpiStats } from "./useKpiStats";
+import { useParchmentDistribution } from "./useParchmentDistribution";
 
 export function useWetmillDashboardData(wetmillId) {
     const managerNeeds = useManagerNeeds(wetmillId);
@@ -19,15 +20,20 @@ export function useWetmillDashboardData(wetmillId) {
     const cpqiChecklist = useCpqiChecklist(wetmillId);
     const trainingByTopic = useTrainingByTopic(wetmillId);
     const trainingOverall = useTrainingOverall(wetmillId);
+    const kpiStats = useKpiStats(wetmillId);
+    const parchmentDist = useParchmentDistribution(wetmillId);
+
     return {
         managerNeeds,
         missingDocuments,
         infrastructure,
         financials,
-        employeeStats, 
+        employeeStats,
         cpqiStats,
         cpqiChecklist,
         trainingByTopic,
         trainingOverall,
+        kpiStats,
+        parchmentDist
     };
 }

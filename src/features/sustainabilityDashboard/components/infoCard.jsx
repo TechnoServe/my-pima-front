@@ -3,7 +3,7 @@ import { Card, CardContent, Typography, Box } from "@mui/material";
 
 export default function InfoCard({ title, data = {} }) {
   return (
-    <Card className="chart-card full-width info-card">
+    <Card className="chart-card info-card">
       <CardContent>
         <Typography variant="h6" gutterBottom>{title}</Typography>
         <Box className="info-grid">
