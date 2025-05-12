@@ -36,7 +36,7 @@ const Participants = () => {
   const { fetchMore } = useQuery(GET_ALL_ATTENDANCES, {
     variables: {
       projectId: activeProject,
-      limit: 5000,
+      limit: 35000,
       offset: 0,
     },
     skip: !activeProject,
@@ -51,7 +51,7 @@ const Participants = () => {
         setAttendanceLoading(true);
         setAttendanceError(null);
 
-        const limit = 5000;
+        const limit = 35000;
         let offset = 0;
         let allChunks = [];
 
