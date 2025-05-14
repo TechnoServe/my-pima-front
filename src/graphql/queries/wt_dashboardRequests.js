@@ -51,6 +51,7 @@ export const GET_EMPLOYEE_STATS = gql`
       womenTemporary
       menDaily
       womenDaily
+      data
     }
   }
 `;

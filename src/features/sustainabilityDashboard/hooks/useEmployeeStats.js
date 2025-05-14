@@ -7,6 +7,7 @@ export function useEmployeeStats(wetmillId) {
         {
             variables: { wetmillId },
             skip: !wetmillId,
+            fetchPolicy: 'no-cache'
         }
     );
 
@@ -16,7 +17,7 @@ export function useEmployeeStats(wetmillId) {
         menFarmers: 0, womenFarmers: 0,
         menPermanent: 0, womenPermanent: 0,
         menTemporary: 0, womenTemporary: 0,
-        menDaily: 0, womenDaily: 0,
+        menDaily: 0, womenDaily: 0, data: 0
     };
 
     // shape into Chart.js bar data
@@ -74,5 +75,5 @@ export function useEmployeeStats(wetmillId) {
         },
     };
 
-    return { chartData, chartOptions, loading, error };
+    return { chartData, chartOptions, loading, error, raw: es.data };
 }

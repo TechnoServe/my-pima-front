@@ -27,6 +27,7 @@ import { useWetmillDashboardData } from "./hooks/useWetmillDashboardData";
 import "./new.css";
 import { Cancel, CheckCircle } from "@mui/icons-material";
 import SectionedChecklistCard from "../../components/Charts/SectionedChecklistCard";
+import NoData from "./components/NoData";
 
 ChartJS.register(annotationPlugin);
 
@@ -92,23 +93,24 @@ export default function DashboardFeature() {
   const raw = managerNeeds.raw || [];
 
   // Order: [2nd place, 1st place, 3rd place]
-  const podiumOrder = [2, 1, 3];
+  const podiumOrder = [1, 2, 3];
   const podiumItems = podiumOrder.map((rnk) =>
     raw.find((r) => r.rank === rnk) || {}
   );
 
   const podiumLabels = podiumItems.map((i) => i.issue || "");
-  const podiumRanks = podiumOrder; // [2,1,3]
+  // const podiumRanks = podiumItems.map((i) => i.rank || 0);
+  const podiumRanks = podiumOrder; // [1, 2, 3]
 
   // Heights: 1st place = 3 units tall; 2nd & 3rd = 1 unit
-  const podiumHeights = podiumOrder.map((rnk) => (rnk === 1 ? 2 : 1));
+  const podiumHeights = podiumOrder.map((rnk) => (rnk === 1 ? 3 : rnk === 2 ? 2 : 1));
 
   const podiumData = {
     labels: podiumLabels,
     datasets: [
       {
         data: podiumHeights,
-        backgroundColor: ["#C0C0C0", "#1b2a4e", "#C0C0C0"],
+        backgroundColor: ["#1b2a4e", "#087c8f", "#C0C0C0"],
         borderRadius: { topLeft: 12, topRight: 12 },
         barThickness: 60,
       },
@@ -145,46 +147,6 @@ export default function DashboardFeature() {
         data: [1, 0, 1],
         backgroundColor: ["#1b2a4e", "#e67e22", "#2980b9"],
         borderRadius: 6,
-      },
-    ],
-  };
-
-  const cherryWeekly = {
-    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    datasets: [
-      {
-        label: "Cherry $/kg",
-        data: [0.25, 0.28, 0.3, 0.32],
-        borderColor: "#087c8f",
-        backgroundColor: (ctx) => {
-          const c = ctx.chart.ctx;
-          const grad = c.createLinearGradient(0, 0, 0, 200);
-          grad.addColorStop(0, "rgba(8,124,143,0.5)");
-          grad.addColorStop(1, "rgba(8,124,143,0.1)");
-          return grad;
-        },
-        fill: "start",
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const cherryMonthly = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        label: "Cherry $/kg",
-        data: [0.25, 0.27, 0.3, 0.28, 0.31, 0.33],
-        borderColor: "#005f6b",
-        backgroundColor: (ctx) => {
-          const c = ctx.chart.ctx;
-          const grad = c.createLinearGradient(0, 0, 0, 200);
-          grad.addColorStop(0, "rgba(0,95,107,0.5)");
-          grad.addColorStop(1, "rgba(0,95,107,0.1)");
-          return grad;
-        },
-        fill: "start",
-        tension: 0.4,
       },
     ],
   };
@@ -280,7 +242,10 @@ export default function DashboardFeature() {
             error={managerNeeds.error}
             height={300}  // give it some vertical room
           >
-            <Bar data={podiumData} options={podiumOptions} />
+            {raw.length === 0 ? (
+              <NoData text="No manager needs data available" />
+            ) : <Bar data={podiumData} options={podiumOptions} />}
+
           </ChartCard>
 
           <ChecklistCard
@@ -298,24 +263,28 @@ export default function DashboardFeature() {
             error={financials.error}
             height={250}
           >
-            <Doughnut
+            {financials.raw === 0 ? (
+              <NoData text="No profit usage data available." />
+            ) : <Doughnut
               data={financials.chartData}
               options={financials.chartOptions}
               plugins={financials.plugins}
-            />
+            />}
           </ChartCard>
 
-          {/* Dummy Employees */}
+          {/* Employees */}
           <ChartCard
             title="Employees"
             loading={employeeStats.loading}
             error={employeeStats.error}
             height={900}
           >
-            <Bar
+            {(employeeStats.raw === 0) ? (
+              <NoData text="No employees data available." />
+            ) : <Bar
               data={employeeStats.chartData}
               options={employeeStats.chartOptions}
-            />
+            />}
           </ChartCard>
 
           <InfraChecklistCard
@@ -335,13 +304,16 @@ export default function DashboardFeature() {
       <TabPanel value={tab} index={1}>
         <Box className="charts-grid">
           <ChartCard title="Water & Energy Compliance">
-            <Bar
+
+            {(processingWater) ? (
+              <NoData text="No employees data available." />
+            ) : <Bar
               data={processingWater}
               options={{
                 ...commonOptions,
                 scales: { x: { stacked: true }, y: { stacked: true } },
               }}
-            />
+            />}
           </ChartCard>
 
           {/* Overall doughnut */}
@@ -351,6 +323,7 @@ export default function DashboardFeature() {
             error={cpqiStats.statsError}
             height={200}
           >
+            
             <Doughnut
               data={cpqiStats.pie.pieData}
               options={cpqiStats.pie.pieOptions}
@@ -459,7 +432,7 @@ export default function DashboardFeature() {
 
           <ChartCard title="Parchment Grades">
             <Doughnut data={parchmentDist.chartData} options={pieOptions} />
-          </ChartCard> 
+          </ChartCard>
 
           <ChartCard
             title="Parchment Distribution"

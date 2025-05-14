@@ -61,5 +61,6 @@ export function useFinancialBreakdown(wetmillId) {
     plugins: [centerTextPlugin], // only this plugin needed here
     loading,
     error,
+    raw: fb.totalProfit,
   };
 }

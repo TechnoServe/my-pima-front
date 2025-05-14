@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardContent, Typography, Box, CircularProgress } from "@mui/material";
 import { CheckCircle, Cancel, Construction } from "@mui/icons-material";
+import NoData from "./NoData";
 
 export default function InfraChecklistCard({
   title,
@@ -26,7 +27,7 @@ export default function InfraChecklistCard({
           </Box>
         ) : error ? (
           <Typography color="error">{error.message}</Typography>
-        ) : (
+        ) : list.length === 0 ? <NoData text="No available infrastucture data yet" /> : (
           <Box component="ul" className="checklist">
             {list.map((i) => (
               <li key={i.name}>
