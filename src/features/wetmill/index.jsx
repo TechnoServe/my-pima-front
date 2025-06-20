@@ -6,15 +6,22 @@ import { toast } from "react-hot-toast";
 import { Typography, Button, CircularProgress } from "@mui/material";
 import LoadingScreen from "../../components/LoadingScreen";
 import "./Wetmills.css";
+import { useOutletContext } from "react-router-dom";
 
 const Wetmills = () => {
+  const { program } = useOutletContext();
   const [wetmills, setWetmills] = useState([]);
-  const { data, error, loading } = useQuery(GET_WETMILLS);
+  const { data, error, loading } = useQuery(GET_WETMILLS, {
+    variables: {
+      program
+    }
+  });
 
   // useLazyQuery for export, matching the actual field name
   const [exportExcel, { loading: exportLoading }] = useLazyQuery(
     EXPORT_WETMILLS_EXCEL,
     {
+      variables: { program },
       fetchPolicy: "no-cache",
       onCompleted: ({ exportWetMillsDataExcel }) => {
         // destructure the exact response key

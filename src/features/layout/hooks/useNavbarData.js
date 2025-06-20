@@ -8,7 +8,7 @@ import { useProjectData } from './useProjectData';
 import { useAssignedProjects } from './useAssignedProjects';
 import { GET_WETMILLS } from '../../../graphql/queries/wetmills';
 
-export const useNavbarData = (user, focusArea) => {
+export const useNavbarData = (user, focusArea, program) => {
   // ── filters & local UI state ─────────────────────────────────────────────
   const [filter, setFilter] = useState({
     businessAdvisor: '',
@@ -53,6 +53,7 @@ export const useNavbarData = (user, focusArea) => {
     loading: loadingWetmills,
     error: wetmillsError,
   } = useQuery(GET_WETMILLS, {
+    variables: { program },
     skip: focusArea !== 'sustainability',
     fetchPolicy: 'no-cache',
   });
@@ -65,11 +66,6 @@ export const useNavbarData = (user, focusArea) => {
     focusArea === 'sustainability' && wmData?.getWetmills?.status === 200
       ? wmData.getWetmills.wetmills
       : [];
-
-  // ── program selector UI state ────────────────────────────────────────────
-  const [program, setProgram] = useState(
-    localStorage.getItem('active_program') || 'agronomy'
-  );
 
   // ── combined loading flag ─────────────────────────────────────────────────
   const loading =
@@ -98,8 +94,6 @@ export const useNavbarData = (user, focusArea) => {
     wetmills,
 
     // UI state
-    loading,
-    program,
-    setProgram,
+    loading
   };
 };

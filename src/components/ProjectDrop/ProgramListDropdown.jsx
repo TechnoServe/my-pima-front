@@ -1,10 +1,13 @@
 import React from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const ProgramListDropdown = ({ programs, selectedProgram, setSelectedProgram }) => {
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setSelectedProgram(e.target.value);
-    localStorage.setItem("sustainability_program", e.target.value);
+    localStorage.setItem("active_program", e.target.value);
+    navigate("/in/sustainability/summary");
   };
 
   return (

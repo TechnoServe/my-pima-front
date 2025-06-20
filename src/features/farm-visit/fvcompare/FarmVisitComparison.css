@@ -160,3 +160,87 @@ body {
   font-size: 1rem;
   color: #087c8f;
 }
+
+
+.fv-compare-container-v3 {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.comparison-headers {
+    display: flex;
+    background-color: #f7f7f7;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.header-item {
+    flex: 1;
+    padding: 0.5rem;
+}
+
+.header-item.practice-header {
+    flex: 1.5; /* Give more space to practice name column */
+}
+
+.practice-section {
+    border-bottom: 1px solid #e0e0e0;
+}
+.practice-section:last-child {
+    border-bottom: none;
+}
+
+.practice-header-row {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: #fff;
+}
+
+.practice-header-row:hover {
+    background-color: #f9f9f9;
+}
+
+.practice-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.qa-comparison-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    background-color: #fafafa;
+    padding: 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.question-cell, .answer-cell {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+}
+.qa-comparison-grid > *:nth-last-child(-n+3) {
+    border-bottom: none;
+}
+
+
+.answer-cell.match {
+    background-color: #e6ffed;
+}
+
+.answer-cell.diff {
+    background-color: #ffebee;
+    font-weight: bold;
+}
+
+.answer-cell ul {
+    margin: 0;
+    padding-left: 20px;
+}

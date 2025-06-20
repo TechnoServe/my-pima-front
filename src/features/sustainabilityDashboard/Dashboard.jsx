@@ -158,7 +158,7 @@ export default function DashboardFeature() {
         label: "Distance (m)",
         data: [120],
         backgroundColor: (ctx) =>
-          ctx.parsed.y >= 50 ? "#1b2a4e" : "#e74c3c",
+          ctx.parsed.y >= 30 ? "#1b2a4e" : "#e74c3c",
         borderRadius: 4,
         maxBarThickness: 40,
       },
@@ -431,14 +431,6 @@ export default function DashboardFeature() {
           </ChartCard>*/}
 
           <ChartCard title="Parchment Grades">
-            <Doughnut data={parchmentDist.chartData} options={pieOptions} />
-          </ChartCard>
-
-          <ChartCard
-            title="Parchment Distribution"
-            loading={parchmentDist.loading}
-            error={parchmentDist.error}
-          >
             <Doughnut data={parchmentDist.chartData} options={pieOptions} />
           </ChartCard>
         </Box>

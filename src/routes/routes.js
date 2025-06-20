@@ -3,6 +3,8 @@ import { Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import PublicLayout from '../features/layout/PublicLayout';
 import PrivateLayout from '../features/layout/PrivateLayout';
+import FarmVisitComparisonV2 from '../features/farm-visit/fvcompare/FarmVisitComparisonV2';
+import FVApproveWithCompare from '../features/farm-visit/fvcompare/fvApproveWithCompare';
 
 const Login = lazy(() => import('../pages/Login'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
@@ -59,13 +61,18 @@ export const appRoutes = [
       { path: 'participants/:id', element: <Partdetail /> },
       { path: 'farmvisit', element: <FarmVisit /> },
       { path: 'farmvisit/verification', element: <FarmVisitApp /> },
+      { path: 'farmvisit/compare', element: <FVApproveWithCompare /> },
+      {
+        path: 'farmvisit/compare/:householdId',
+        element: <FarmVisitComparisonV2 />,
+      },
       { path: 'performance/aa', element: <AAPerfomance /> },
       { path: 'performance/ft', element: <FTPerformance /> },
       { path: 'manage', element: <Management /> },
       { path: 'profile', element: <Profile /> },
       { path: 'sustainability/summary', element: <SustainabilityDashboard /> },
       { path: 'sustainability/wetmills', element: <Wetmills /> },
-      { path: 'sustainability/dashboards', element: <DashboardFeature />}
+      { path: 'sustainability/dashboards', element: <DashboardFeature /> }
     ],
   },
   { path: '*', element: <NotFound /> },

@@ -6,8 +6,10 @@ import { useDashboardData } from "./hooks/useDashboardData";
 import DashboardGraphs from "./components/DashboardGraphs";
 import LoadingScreen from "../../components/LoadingScreen";
 import "./dashboard.css";
+import { useOutletContext } from "react-router-dom";
 
 const SustainabilityDashboard = () => {
+
   const {
     loading,
     error,

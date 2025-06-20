@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_WETMILLS = gql`
-  query GetWetmills {
-    getWetmills {
+  query GetWetmills($program: String!) {
+    getWetmills(program: $program) {
       message
       status
       wetmills {
@@ -30,8 +30,8 @@ export const GET_WETMILLS = gql`
 `;
 
 export const EXPORT_WETMILLS_EXCEL = gql`
-  query ExportWetmillsExcel {
-    exportWetMillsDataExcel {
+  query ExportWetmillsExcel($program: String!) {
+    exportWetMillsDataExcel(program: $program) {
       filename
       contentBase64
     }

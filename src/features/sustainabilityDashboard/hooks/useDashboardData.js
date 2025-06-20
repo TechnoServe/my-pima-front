@@ -3,15 +3,41 @@ import { useMemo } from "react";
 import { GET_WETMILLS } from "../../../graphql/queries/wetmills";
 import { GET_WETMILL_VISITS } from "../../../graphql/queries/wetmillVisit";
 import { GET_WETMILL_BAS } from "../../../graphql/queries/usersRequests";
+import { de } from "date-fns/locale";
+import { useOutletContext } from "react-router-dom";
 
-const DEFAULT_SF_PROJECT_ID = "a0EOj000004FvmrMAC";
+let DEFAULT_SF_PROJECT_ID = "a0EOj000004XC1hMAG"; // Default project ID for Ethiopia Regrow USDA
+
+
 
 export const useDashboardData = () => {
+
+  const { program } = useOutletContext();
+
+  console.log("Program in useDashboardData:", program);
+
+  if (program === "Ethiopia Regrow USDA") {
+    DEFAULT_SF_PROJECT_ID = "a0EOj000004XC1hMAG";
+  }
+  else if (program === "Ethiopia CREW GAC") {
+    DEFAULT_SF_PROJECT_ID = "a0EOj000004XC3JMAW";
+
+  }
+  else if (program === "Ethiopia Nespresso") {
+    DEFAULT_SF_PROJECT_ID = "a0EOj000004XC4vMAG";
+
+  }
+  else {
+    DEFAULT_SF_PROJECT_ID = "a0EOj000004FvmrMAC";
+  }
+
   const {
     data: millsData,
     loading: millsLoading,
     error: millsError,
-  } = useQuery(GET_WETMILLS);
+  } = useQuery(GET_WETMILLS, {
+    variables: { program }
+  });
   const {
     data: baData,
     loading: baLoading,
@@ -23,11 +49,13 @@ export const useDashboardData = () => {
     data: visitsData,
     loading: visitsLoading,
     error: visitsError,
-  } = useQuery(GET_WETMILL_VISITS);
+  } = useQuery(GET_WETMILL_VISITS, { variables: { program: program } });
 
   const wetmills = millsData?.getWetmills?.wetmills || [];
   const businessAdvisors = baData?.getWetMillBusinessAdvisors?.advisors || [];
   const visits = visitsData?.getVisits?.visits || [];
+
+  console.log("Visits Data:", visits);
 
   const millsCount = wetmills.length;
   const basCount = businessAdvisors.length;

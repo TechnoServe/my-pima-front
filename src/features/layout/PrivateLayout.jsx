@@ -16,8 +16,9 @@ const PrivateLayout = () => {
   const [focusArea, setFocusArea] = useState(
     localStorage.getItem("active_focus_area") || "agronomy"
   );
-  const [selectedProgram, setSelectedProgram] = useState(
-    localStorage.getItem("sustainability_program") || ""
+
+  const [program, setProgram] = useState(
+    localStorage.getItem("active_program") || "Ethiopia Regrow USDA"
   );
 
   const {
@@ -32,12 +33,10 @@ const PrivateLayout = () => {
     setFilteredSessions,
     filter,
     setFilter,
-    program,
-    setProgram,
     wetmills,
     projectStats,
     loading,
-  } = useNavbarData(auth.user, focusArea);
+  } = useNavbarData(auth.user, focusArea, program);
 
   useEffect(() => {
     localStorage.setItem("active_program", program);
@@ -72,9 +71,10 @@ const PrivateLayout = () => {
             />
           ) : (
             <ProgramListDropdown
-              programs={["USDA BURUNDI", "Nespreso Kenya", "CREW ETHIOPIA"]}
-              selectedProgram={selectedProgram}
-              setSelectedProgram={setSelectedProgram}
+              programs={["Burundi USDA", "Ethiopia Regrow USDA", "Ethiopia Nespresso", "Ethiopia CREW GAC"]}
+              // onChange={setProgram}
+              selectedProgram={program}
+              setSelectedProgram={setProgram}
             />
           )}
         </div>
