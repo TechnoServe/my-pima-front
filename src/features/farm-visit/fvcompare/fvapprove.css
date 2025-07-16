@@ -1,43 +1,105 @@
-/* Add these new styles for the custom table */
+/*
+ * Minimalist, Smooth, and Theme-Aligned CSS for Approval List
+ */
+
+.fv-approve-container {
+  padding: 2rem;
+  background-color: #f7f8fc;
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
+}
+
+.fv-approve-container h2 {
+    color: #212529;
+    font-size: 1.75rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+}
+
 .custom-table-container {
   background-color: #ffffff;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  overflow-x: auto; /* For responsiveness */
+  overflow: hidden;
 }
 
 .custom-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
 }
 
 .custom-table th,
 .custom-table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #eef0f2;
+  font-family: 'Roboto', sans-serif;
+  vertical-align: middle;
+}
+
+.custom-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .custom-table th {
-  background-color: #f4f6f8;
-  font-weight: 600;
-  color: #333;
-  text-transform: uppercase;
-  font-size: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6c757d;
+  background-color: #fff;
+  text-transform: none; /* No uppercase text */
+}
+
+.custom-table tbody tr {
+    transition: background-color 0.15s ease-in-out;
 }
 
 .custom-table tbody tr:hover {
-  background-color: #f9f9f9;
+  background-color: #f8f9fa; /* Subtle hover effect */
 }
 
-.action-buttons {
-  display: flex;
-  gap: 8px;
+/* Button styles - smooth & minimalistic */
+.compare-btn,
+.approve,
+.reject {
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: none; /* No uppercase text */
+    transition: all 0.2s ease;
 }
+
+.compare-btn {
+    background-color: #2a5332; /* Primary theme color */
+    color: #fff;
+}
+.compare-btn:hover {
+    background-color: #1e3a23;
+}
+
+.approve {
+    background-color: #e8f5e9;
+    color: #2a5332;
+    border-color: #a5d6a7;
+}
+.approve:hover {
+    background-color: #dcedde;
+}
+
+.reject {
+    background-color: #ffebee;
+    color: #c62828;
+    border-color: #ef9a9a;
+}
+.reject:hover {
+    background-color: #ffcdd2;
+}
+
 
 .no-data-message {
   text-align: center;
-  padding: 2rem;
-  color: #666;
+  padding: 3rem 1rem;
+  color: #6c757d;
 }

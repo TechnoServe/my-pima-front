@@ -77,9 +77,7 @@ const FVApproveWithCompare = () => {
 
   return (
     <div className="fv-approve-container">
-      <h2>Farm Visit Approval</h2>
-      <p>Review and approve or reject submitted farm visits. For households visited by both an FT and an AA, compare the results before taking action.</p>
-
+      <h2>Farm Visit Comparision</h2>
       <div className="custom-table-container">
         {tableData && tableData.length > 0 ? (
           <table className="custom-table">

@@ -1,246 +1,162 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Raleway:wght@400;600&display=swap');
+/*
+ * Minimalist, Smooth, and Theme-Aligned CSS for Comparison Page
+ */
 
-body {
-  font-family: 'Montserrat', sans-serif;
-  background-color: #f4f7fc;
-  color: #333;
-  line-height: 1.6;
+.farm-visit-comparison-page {
+  padding: 2rem;
+  background-color: #f7f8fc; /* Light, clean background */
+  font-family: 'Roboto', sans-serif;
+  min-height: 100vh;
 }
 
-.farm-visit-app {
-  padding: 20px 10px;
-  max-width: 1200px;
-  margin: 0 auto;
+.comparison-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 
-.full-width {
-    max-width: 100%;
-    width: 100%;
-    padding: 10px 20px;
-  }
-  
-
-.back-nav {
-  margin-bottom: 10px;
+.comparison-header h1 {
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: #212529;
+    margin: 0;
 }
 
-.dashboard-title {
-  text-align: center;
-  font-size: 1.8rem;
-  color: #1b2a4e;
-  margin-bottom: 30px;
+.comparison-header p {
+    color: #6c757d;
+    margin: 0;
 }
 
-.indicator-link {
-  font-size: 1rem;
-  color: #087c8f;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.indicator-link:hover {
-  text-decoration: underline;
-}
-
-.visit-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.household-card {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.household-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  background-color: #f9fbff;
-  cursor: pointer;
-}
-
-.household-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #087c8f;
-  display: flex;
-  flex-direction: column;
-}
-
-.household-meta {
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: 4px;
-}
-
-.visit-date {
-  font-size: 0.9rem;
-  color: #777;
-}
-
-.chevron {
-  font-size: 1.2rem;
-  transition: transform 0.3s ease;
-}
-
-.chevron.rotate {
-  transform: rotate(180deg);
-}
-
-.comparison-content {
-  padding: 0 20px 20px;
-}
-
-.field-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  background-color: #087c8f;
-  color: white;
-  padding: 10px;
-  font-weight: bold;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  font-size: 0.95rem;
-}
-
-.field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  font-size: 0.95rem;
-  align-items: center;
-}
-
-.field-row.highlight {
-  background-color: #fff6e5;
-}
-
-.field-label {
-  font-weight: 600;
-  color: #555;
-}
-
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  margin: 30px 0 50px;
-}
-
-.pagination-controls button {
-  background-color: #087c8f;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
+.back-button {
+  background: none;
   border: none;
-  font-size: 0.9rem;
+  color: #2a5332;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
 }
-
-.pagination-controls button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.back-button:hover {
+    background-color: #e9ecef;
 }
-
-.pagination-controls button:hover:not(:disabled) {
-  background-color: #005f6b;
-}
-
-.current-page {
-  font-weight: bold;
-  font-size: 1rem;
-  color: #087c8f;
-}
-
 
 .fv-compare-container-v3 {
+    background-color: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
 }
 
-.comparison-headers {
-    display: flex;
-    background-color: #f7f7f7;
-    font-weight: bold;
-    padding: 0.75rem 1.5rem;
+.practice-section:not(:last-child) .practice-header-row {
     border-bottom: 1px solid #e0e0e0;
-}
-
-.header-item {
-    flex: 1;
-    padding: 0.5rem;
-}
-
-.header-item.practice-header {
-    flex: 1.5; /* Give more space to practice name column */
-}
-
-.practice-section {
-    border-bottom: 1px solid #e0e0e0;
-}
-.practice-section:last-child {
-    border-bottom: none;
 }
 
 .practice-header-row {
-    padding: 1rem 1.5rem;
-    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    background-color: #fff;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
 }
 
-.practice-header-row:hover {
-    background-color: #f9f9f9;
-}
-
-.practice-name {
+h3.practice-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #2a5332;
     margin: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
 }
 
 .qa-comparison-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
-    background-color: #fafafa;
-    padding: 0;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
     border-top: 1px solid #e0e0e0;
-}
-
-.question-cell, .answer-cell {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
     display: flex;
-    align-items: center;
-}
-.qa-comparison-grid > *:nth-last-child(-n+3) {
-    border-bottom: none;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
+.question-cell {
+    font-weight: 500;
+    color: #212529;
+    margin-bottom: 0.75rem;
+}
 
-.answer-cell.match {
-    background-color: #e6ffed;
+.qa-answers-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.answer-cell {
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.answer-cell strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 500;
 }
 
 .answer-cell.diff {
-    background-color: #ffebee;
-    font-weight: bold;
+    color: #b71c1c;
+    border-color: #ef9a9a;
+}
+
+.answer-cell.match {
+    color: #212529;
 }
 
 .answer-cell ul {
     margin: 0;
-    padding-left: 20px;
+    padding-left: 1.2rem;
+}
+
+.comparison-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.approve-btn, .reject-btn {
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: none;
+    transition: all 0.2s ease;
+}
+
+.approve-btn {
+    background-color: #2a5332;
+    color: #fff;
+}
+.approve-btn:hover {
+    background-color: #1e3a23;
+}
+
+.reject-btn {
+    background-color: #fff;
+    color: #6c757d;
+    border-color: #ced4da;
+}
+.reject-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
 }
