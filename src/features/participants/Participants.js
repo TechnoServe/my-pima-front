@@ -332,7 +332,7 @@ const Participants = () => {
                   <AiOutlineFileText />
                   {run.fileUrl ? (
                     <Link
-                      href={run.fileUrl}
+                      href={`https://api.pima.ink${run.fileUrl}`}
                       target="_blank"
                       rel="noopener"
                       underline="hover"
