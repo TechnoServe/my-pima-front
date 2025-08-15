@@ -21,8 +21,8 @@ import { gql } from "@apollo/client";
 // `;
 
 const GET_ALL_ATTENDANCES = gql`
-  query GetAttendances($projectId: String!, $limit: Int, $offset: Int) {
-    getAttendances(project_id: $projectId, limit: $limit, offset: $offset) {
+  query GetAttendances($projectId: String!) {
+    getAttendances(project_id: $projectId) {
       message
       status
       attendance {

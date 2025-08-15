@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
   Typography,
   Button,
   Box,
   DialogActions,
   Chip,
   Alert,
+  Paper,
+  Stack,
+  Divider,
 } from "@mui/material";
 import { FileUploader } from "react-drag-drop-files";
 import { FaCloudUploadAlt } from "react-icons/fa";
@@ -20,29 +24,15 @@ import {
   UPLOAD_PARTICIPANTS,
 } from "../../graphql/queries/participantsRequests";
 
+const BRAND = { navy: "#1b2a4e", teal: "#087c8f" };
+
 const requiredColumns = [
-  "Project",
-  "first_name",
-  "last_name",
-  "gender",
-  "age",
-  "coffee_tree_numbers",
-  "farmer_sf_id",
-  "tns_id",
-  "hh_number",
-  "sf_household_id",
-  "farmer_number",
-  "ffg_id",
-  "training_group",
-  "status",
+  "Project","first_name","last_name","gender","age","coffee_tree_numbers",
+  "farmer_sf_id","tns_id","hh_number","sf_household_id","farmer_number",
+  "ffg_id","training_group","status",
 ];
 
-const UploadParticipantsModal = ({
-  open,
-  setOpen,
-  navigatedProject,
-  sfProjectId,
-}) => {
+const UploadParticipantsModal = ({ open, setOpen, navigatedProject, sfProjectId }) => {
   const [fileInfo, setFileInfo] = useState(null);
   const [file, setFile] = useState(null);
   const [loadedColumns, setLoadedColumns] = useState([]);
@@ -53,230 +43,190 @@ const UploadParticipantsModal = ({
   const [uploadParticipants] = useMutation(UPLOAD_PARTICIPANTS);
   const participantsPerProject = useQuery(GET_PARTICIPANTS_PER_PROJECT, {
     variables: { projectId: sfProjectId },
+    skip: !sfProjectId,
   });
 
-  const handleChange = (file) => {
-    setFile(file);
+  const handleChange = (f) => {
+    setFile(f);
     setUploadResult(null);
-    parseFile(file);
-  };
-
-  const parseFile = (file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      const loadedData = e.target.result.split(/\r\n|\n/);
-      const modifiedData = loadedData.map((row) =>
-        row.split(",").map((cell) => cell.replace(/^"(.*)"$/, "$1"))
-      );
+      const lines = e.target.result.split(/\r\n|\n/);
+      const rows = lines.map((row) => row.split(",").map((c) => c.replace(/^"(.*)"$/, "$1")));
       setFileInfo({
-        filename: file.name,
-        size: file.size,
-        type: file.type,
-        data: modifiedData.length > 0 ? modifiedData : loadedData,
+        filename: f.name,
+        size: f.size,
+        type: f.type,
+        data: rows.length > 0 ? rows : lines,
       });
-      setLoadedColumns(modifiedData[0]);
+      setLoadedColumns(rows[0] || []);
     };
-    reader.readAsText(file);
+    reader.readAsText(f);
   };
 
   useEffect(() => {
-    if (!fileInfo) return;
-    if (fileInfo.data && fileInfo.data.length < 2) return;
-    extractDistinctProjects(fileInfo);
+    if (!fileInfo?.data || fileInfo.data.length < 2) return;
+    const idx = loadedColumns.indexOf("Project");
+    const values = fileInfo.data.map((r) => r[idx]).filter(Boolean);
+    setDistinctProjects([...new Set(values)]);
   }, [fileInfo, loadedColumns]);
 
-  const extractDistinctProjects = (fileInfo) => {
-    const projectColumn = fileInfo.data
-      .map((row) => row[loadedColumns.indexOf("Project")])
-      .filter((project) => project);
-    setDistinctProjects([...new Set(projectColumn)]);
-  };
-
-  const handleClose = (e, reason) => {
-    if (reason === "backdropClick" || reason === "escapeKeyDown") return;
-    resetState();
-  };
-
-  const resetState = () => {
+  const reset = () => {
     setFileInfo(null);
+    setFile(null);
+    setLoadedColumns([]);
+    setDistinctProjects([]);
+    setUploadResult(null);
+    setIsProcessing(false);
     setOpen(false);
   };
 
+  const validColumnsCount = loadedColumns.filter((c) => requiredColumns.includes(c)).length;
+  const showRequiredColsError = fileInfo && validColumnsCount !== requiredColumns.length;
+  const emptyFile = fileInfo && fileInfo.data && fileInfo.data.length - 2 < 1;
+  const projectMismatch = fileInfo && distinctProjects.length > 0 && !distinctProjects.includes(navigatedProject);
+
+  const recordCountForActiveProject = useMemo(() => {
+    if (!fileInfo || !loadedColumns.length) return 0;
+    const idx = loadedColumns.indexOf("Project");
+    return Math.max(0, fileInfo.data.filter((r) => r[idx] === navigatedProject).length - 1);
+  }, [fileInfo, loadedColumns, navigatedProject]);
+
+  const createProjectSpecificFile = () => {
+    const idx = loadedColumns.indexOf("Project");
+    const rows = fileInfo.data.filter((r) => r[idx] === navigatedProject);
+    const csv = `${loadedColumns.join(",")}\n${rows.map((r) => r.join(",")).join("\n")}`;
+    return new File([csv], fileInfo.filename, { type: "text/csv" });
+    };
+
   const handleUpload = async () => {
-    if (isProcessing) return;
+    if (isProcessing || !fileInfo) return;
     setIsProcessing(true);
     setUploadResult(null);
-    const newFile = createProjectSpecificFile(
-      fileInfo,
-      loadedColumns,
-      navigatedProject
-    );
-    await uploadFile(newFile);
-  };
-
-  const createProjectSpecificFile = (fileInfo, loadedColumns, project) => {
-    const projectIndex = loadedColumns.indexOf("Project");
-    const projectData = fileInfo.data.filter(
-      (row) => row[projectIndex] === project
-    );
-    const projectDataString = `${loadedColumns.join(",")}\n${projectData.join(
-      "\n"
-    )}`;
-    return new File([projectDataString], fileInfo.filename, {
-      type: "text/csv",
-    });
-  };
-
-  const uploadFile = async (file) => {
     try {
-      const res = await uploadParticipants({ variables: { partsFile: file } });
+      const newFile = createProjectSpecificFile();
+      const res = await uploadParticipants({ variables: { partsFile: newFile, projectId: sfProjectId } });
       await participantsPerProject.refetch();
       setUploadResult(res.data.uploadParticipants);
-      if (res.data.uploadParticipants.status === 200) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 5000);
-      }
-    } catch (error) {
-      console.error(error);
-      setUploadResult({
-        status: 500,
-        message: "Something went wrong. Please try again.",
-      });
+    } catch (e) {
+      console.error(e);
+      setUploadResult({ status: 500, message: "Something went wrong. Please try again." });
     } finally {
       setIsProcessing(false);
     }
   };
 
   const handleDownloadErrors = () => {
-    const { file, message } = uploadResult;
-    if (file) {
-      const byteCharacters = atob(file);
-      const byteNumbers = new Array(byteCharacters.length).fill().map((_, i) => byteCharacters.charCodeAt(i));
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-      saveAs(blob, "error_file.xlsx");
-    } else {
-      console.error("No file found in the upload result.");
-    }
+    if (!uploadResult?.file) return;
+    const bin = atob(uploadResult.file);
+    const bytes = new Uint8Array([...bin].map((c) => c.charCodeAt(0)));
+    const blob = new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    saveAs(blob, "errors.xlsx");
   };
 
-  const renderFileDetails = () => (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Typography variant="body2">
-        <strong>Name:</strong> {fileInfo.filename}
-      </Typography>
-      <Typography variant="body2">
-        <strong>Size:</strong> {formatFileSize(fileInfo.size)}
-      </Typography>
-      <Typography variant="body2">
-        <strong>Type:</strong> {fileInfo.type}
-      </Typography>
-      <Typography variant="body2">
-        <strong>Total Records:</strong> {formatNumberWithCommas(fileInfo.data.length - 2)}
-      </Typography>
-      {distinctProjects.length > 1 && (
-        <Typography variant="body4" sx={{ marginBottom: "10px" }}>
-          Only records for <strong>{navigatedProject} ({fileInfo.data.filter((row) => row[loadedColumns.indexOf("Project")] === navigatedProject).length} records)</strong> will be processed from this file.
-        </Typography>
-      )}
-    </Box>
-  );
-
-  const formatFileSize = (size) => (
-    size > 1000000 ? `${(size / 1000000).toFixed(2)} MB` : `${(size / 1000).toFixed(2)} KB`
-  );
-
-  const formatNumberWithCommas = (number) => (
-    number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  );
-
-  const renderRequiredColumnsAlert = () => (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Typography variant="body1">
-        <BiErrorAlt style={{ fontSize: "2rem", color: "#B90101" }} /> File must contain all required columns:
-      </Typography>
-      <Typography variant="body2" sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
-        {requiredColumns.filter((column) => !loadedColumns.includes(column)).map((column, index) => (
-          <Chip key={index} label={column} sx={{ margin: "5px 0.5rem" }} color="primary" variant="outlined" />
-        ))}
-      </Typography>
-      <div className="upload_actions">
-        <AiOutlineCloseCircle onClick={() => setFileInfo(null)} className="back__icon" title="Back to Upload New File" />
-      </div>
-    </Box>
-  );
-
-  const renderEmptyFileAlert = () => (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Typography variant="body1" sx={{ fontStyle: "italic" }}>
-        <BiErrorAlt style={{ fontSize: "1.5rem", color: "#B90101" }} /> There are no records in the file. Please upload a file with data.
-      </Typography>
-      <div className="upload_actions">
-        <AiOutlineCloseCircle onClick={() => setFileInfo(null)} className="back__icon" title="Back to Upload New File" />
-      </div>
-    </Box>
-  );
-
-  const renderProjectMismatchAlert = () => (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Typography variant="body1" sx={{ fontStyle: "italic" }}>
-        <BiErrorAlt style={{ fontSize: "3rem", color: "#B90101" }} /> The project(s) in the file does not match the project you are currently navigating. Please upload a file with the correct project.
-      </Typography>
-      <div className="upload_actions">
-        <AiOutlineCloseCircle onClick={() => setFileInfo(null)} className="back__icon" title="Back to Upload New File" />
-      </div>
-    </Box>
-  );
-
-  const renderProcessingState = () => (
-    <Typography variant="body2" sx={{ marginBottom: "10px", width: "100%", textAlign: "center" }}>
-      <em style={{ fontWeight: "bold", color: "#6C757D" }}>Data are being processed, wait...</em>
-    </Typography>
-  );
-
-  const renderUploadResult = () => (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }} className="file-info">
-      <Typography variant="body2">
-        <Alert severity={uploadResult.status === 200 ? "success" : "error"}>{uploadResult.message}</Alert>
-      </Typography>
-      {uploadResult.status !== 200 && uploadResult.file && (
-        <Button onClick={handleDownloadErrors} variant="contained" color="primary">
-          Download Error File
-        </Button>
-      )}
-    </Box>
-  );
-
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogContent>
+    <Dialog open={open} onClose={(_, r) => (r === "backdropClick" || r === "escapeKeyDown" ? null : reset())} fullWidth maxWidth="sm">
+      <DialogTitle sx={{ pb: 1, color: BRAND.navy }}>Upload Participants</DialogTitle>
+      <DialogContent sx={{ pt: 0 }}>
         {!fileInfo ? (
-          <FileUploader label={"Drag and drop or browse a file to upload. File must be: "} handleChange={handleChange} name="file" types={["csv"]} />
+          <Paper elevation={0} sx={{ p: 2, border: "1px dashed #cfd8dc", borderRadius: 2, bgcolor: "#fff" }}>
+            <FileUploader
+              label="Drag & drop or browse a CSV"
+              handleChange={handleChange}
+              name="file"
+              types={["csv"]}
+            />
+            <Typography variant="caption" color="text.secondary">Accepted format: .csv</Typography>
+          </Paper>
         ) : uploadResult ? (
-          renderUploadResult()
-        ) : loadedColumns.filter((column) => requiredColumns.includes(column)).length !== requiredColumns.length ? (
-          renderRequiredColumnsAlert()
-        ) : fileInfo.data.length - 2 < 1 ? (
-          renderEmptyFileAlert()
-        ) : !distinctProjects.includes(navigatedProject) ? (
-          renderProjectMismatchAlert()
+          <Paper elevation={0} sx={{ p: 2 }}>
+            <Alert severity={uploadResult.status === 200 ? "success" : "error"} sx={{ mb: 2 }}>
+              {uploadResult.message}
+            </Alert>
+            {uploadResult.status !== 200 && uploadResult.file && (
+              <Button onClick={handleDownloadErrors} variant="contained" sx={{ bgcolor: BRAND.teal, "&:hover": { bgcolor: "#066d79" } }}>
+                Download Error File
+              </Button>
+            )}
+          </Paper>
+        ) : showRequiredColsError ? (
+          <Paper elevation={0} sx={{ p: 2 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+              <BiErrorAlt size={22} color="#B90101" />
+              <Typography variant="body1" sx={{ fontWeight: 600, color: BRAND.navy }}>
+                Missing required columns
+              </Typography>
+            </Stack>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              File must contain all of the following columns:
+            </Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 2 }}>
+              {requiredColumns
+                .filter((c) => !loadedColumns.includes(c))
+                .map((c) => (
+                  <Chip key={c} label={c} size="small" variant="outlined" />
+                ))}
+            </Box>
+            <Button startIcon={<AiOutlineCloseCircle />} onClick={() => setFileInfo(null)}>Choose another file</Button>
+          </Paper>
+        ) : emptyFile ? (
+          <Paper elevation={0} sx={{ p: 2 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+              <BiErrorAlt size={22} color="#B90101" />
+              <Typography variant="body1" sx={{ fontWeight: 600, color: BRAND.navy }}>
+                No records found in the file
+              </Typography>
+            </Stack>
+            <Button startIcon={<AiOutlineCloseCircle />} onClick={() => setFileInfo(null)}>Choose another file</Button>
+          </Paper>
+        ) : projectMismatch ? (
+          <Paper elevation={0} sx={{ p: 2 }}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+              <BiErrorAlt size={22} color="#B90101" />
+              <Typography variant="body1" sx={{ fontWeight: 600, color: BRAND.navy }}>
+                Project mismatch
+              </Typography>
+            </Stack>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              Uploaded file contains projects that don’t match: <b>{navigatedProject}</b>.
+            </Typography>
+            <Button startIcon={<AiOutlineCloseCircle />} onClick={() => setFileInfo(null)}>Choose another file</Button>
+          </Paper>
         ) : (
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }} className="file-info">
-            {renderFileDetails()}
-            <div className="upload_actions">
-              {isProcessing ? renderProcessingState() : (
-                <>
-                  <AiOutlineCloseCircle onClick={() => setFileInfo(null)} className="back__icon" title="Back to Upload New File" />
-                  <FaCloudUploadAlt title="Proceed Records Processing" className="upload__icon" onClick={handleUpload} />
-                </>
-              )}
-            </div>
-          </Box>
+          <Paper elevation={0} sx={{ p: 2 }}>
+            <Stack spacing={1} sx={{ mb: 1 }}>
+              <Typography variant="body2"><b>Name:</b> {fileInfo.filename}</Typography>
+              <Typography variant="body2">
+                <b>Size:</b> {fileInfo.size > 1_000_000 ? `${(fileInfo.size / 1_000_000).toFixed(2)} MB` : `${(fileInfo.size / 1_000).toFixed(2)} KB`}
+              </Typography>
+              <Typography variant="body2"><b>Records for {navigatedProject}:</b> {recordCountForActiveProject}</Typography>
+            </Stack>
+            <Divider sx={{ my: 1 }} />
+            <Stack direction="row" spacing={1.5} sx={{ mt: 1 }}>
+              <Button
+                variant="outlined"
+                startIcon={<AiOutlineCloseCircle />}
+                onClick={() => setFileInfo(null)}
+                disabled={isProcessing}
+                sx={{ color: BRAND.navy, borderColor: BRAND.navy }}
+              >
+                Choose another file
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<FaCloudUploadAlt />}
+                onClick={handleUpload}
+                disabled={isProcessing}
+                sx={{ bgcolor: BRAND.teal, "&:hover": { bgcolor: "#066d79" } }}
+              >
+                {isProcessing ? "Processing..." : "Process & Upload"}
+              </Button>
+            </Stack>
+          </Paper>
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} disabled={isProcessing}>Cancel</Button>
+        <Button onClick={reset} disabled={isProcessing}>Close</Button>
       </DialogActions>
     </Dialog>
   );

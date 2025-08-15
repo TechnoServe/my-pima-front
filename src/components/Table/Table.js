@@ -299,11 +299,6 @@ const Table = ({
 
     // Step 3: Trigger CSV file download
     download(config)(csvContent);
-    console.log("Download successful");
-
-    console.log("Config:", config);
-    console.log("Data:", data);
-    console.log("CSV Content:", csvContent);
   };
 
   const handleExcelExport = () => {

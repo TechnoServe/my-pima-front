@@ -149,8 +149,8 @@ const GET_ATTENDANCE_PER_PARTICIPANT = gql`
 `;
 
 const UPLOAD_PARTICIPANTS = gql`
-  mutation UploadParticipants($partsFile: Upload!) {
-    uploadParticipants(parts_file: $partsFile) {
+  mutation UploadParticipants($partsFile: Upload!, $projectId: String!) {
+    uploadParticipants(parts_file: $partsFile, project_id: $projectId) {
       message
       status
       file
