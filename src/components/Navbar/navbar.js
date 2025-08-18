@@ -14,6 +14,7 @@ import {
 } from "../../graphql/queries/projectsRequests";
 import { GET_TRAINING_SESSIONS_PER_PROJECT } from "../../graphql/queries/trainingSessionsRequests";
 import { GET_TRAINING_GROUPS_PER_PROJECT } from "../../graphql/queries/trainingGroupsRequests";
+import HouseholdVisits from "../../features/farm-visit/fvhouseholds/HouseholdVisits";
 
 // Lazy loaded components
 const Dashboard = React.lazy(() => import("../../pages/Dashboard"));
@@ -345,6 +346,15 @@ const Navbar = () => {
                         element={
                           <FarmVisitApp
                             selectedProject={selectedProject}
+                            userId={auth.user.id}
+                          />
+                        }
+                      />
+                      <Route
+                        path="/farmvisit/households"
+                        element={
+                          <HouseholdVisits
+                            activeProject={selectedProject}
                             userId={auth.user.id}
                           />
                         }

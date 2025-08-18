@@ -5,6 +5,7 @@ import PublicLayout from '../features/layout/PublicLayout';
 import PrivateLayout from '../features/layout/PrivateLayout';
 import FarmVisitComparisonV2 from '../features/farm-visit/fvcompare/FarmVisitComparisonV2';
 import FVApproveWithCompare from '../features/farm-visit/fvcompare/fvApproveWithCompare';
+import HouseholdVisits from '../features/farm-visit/fvhouseholds/HouseholdVisits';
 
 const Login = lazy(() => import('../pages/Login'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
@@ -66,6 +67,7 @@ export const appRoutes = [
         path: 'farmvisit/compare/:householdId',
         element: <FarmVisitComparisonV2 />,
       },
+      { path: 'farmvisit/households', element: <HouseholdVisits /> },
       { path: 'performance/aa', element: <AAPerfomance /> },
       { path: 'performance/ft', element: <FTPerformance /> },
       { path: 'manage', element: <Management /> },

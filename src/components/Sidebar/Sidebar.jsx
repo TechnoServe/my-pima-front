@@ -22,39 +22,78 @@ const Sidebar = ({ children }) => {
   const userDetails = JSON.parse(localStorage.getItem("myPimaUserData")) || {};
 
   const menuItems = [
-    { path: "/in/dashboard", name: "Dashboard", icon: <MdOutlineDashboardCustomize /> },
-    { path: "/in/traingroup", name: "Focal Farmer Groups", icon: <MdOutlineGroups /> },
+    {
+      path: "/in/dashboard",
+      name: "Dashboard",
+      icon: <MdOutlineDashboardCustomize />,
+    },
+    {
+      path: "/in/traingroup",
+      name: "Focal Farmer Groups",
+      icon: <MdOutlineGroups />,
+    },
     {
       name: "Training Sessions",
       icon: <MdOutlineCalendarToday />,
       subMenu: [
-        { path: "/in/trainsession", name: "All Sessions", icon: <MdOutlineCalendarToday /> },
-        { path: "/in/trainsession/verification", name: "Image Approvals", icon: <MdOutlineCalendarToday /> },
+        {
+          path: "/in/trainsession",
+          name: "All Sessions",
+          icon: <MdOutlineCalendarToday />,
+        },
+        {
+          path: "/in/trainsession/verification",
+          name: "Image Approvals",
+          icon: <MdOutlineCalendarToday />,
+        },
       ],
     },
-    { path: "/in/participants", name: "Registered Farmers", icon: <MdOutlinePersonSearch /> },
+    {
+      path: "/in/participants",
+      name: "Registered Farmers",
+      icon: <MdOutlinePersonSearch />,
+    },
     {
       name: "Farm Visits",
       icon: <HiOutlineTruck />,
       subMenu: [
         { path: "/in/farmvisit", name: "All Visits", icon: <HiOutlineTruck /> },
-        { path: "/in/farmvisit/verification", name: "Visit Verification", icon: <HiOutlineTruck /> },
-        { path: "/in/farmvisit/compare", name: "AA Vs FT Comparison", icon: <HiOutlineTruck /> },
+        {
+          path: "/in/farmvisit/households",
+          name: "Household Visits",
+          icon: <HiOutlineTruck />,
+        },
+        {
+          path: "/in/farmvisit/verification",
+          name: "Visit Verification",
+          icon: <HiOutlineTruck />,
+        },
+        // { path: "/in/farmvisit/compare", name: "AA Vs FT Comparison", icon: <HiOutlineTruck /> },
       ],
     },
     {
       name: "Field Team Performance",
       icon: <MdAddChart />,
       subMenu: [
-        { path: "/in/performance/aa", name: "Agronomy Advisors", icon: <MdPerson /> },
-        { path: "/in/performance/ft", name: "Farmer Trainers", icon: <MdPerson /> },
+        {
+          path: "/in/performance/aa",
+          name: "Agronomy Advisors",
+          icon: <MdPerson />,
+        },
+        {
+          path: "/in/performance/ft",
+          name: "Farmer Trainers",
+          icon: <MdPerson />,
+        },
       ],
     },
     {
       path: "/in/manage",
       name: "Management",
       icon: <MdManageAccounts />,
-      isPrivate: userDetails.role === "super_admin" || userDetails.role === "ci_leadership",
+      isPrivate:
+        userDetails.role === "super_admin" ||
+        userDetails.role === "ci_leadership",
     },
   ];
 
@@ -89,7 +128,9 @@ const Sidebar = ({ children }) => {
                     onClick={() => toggleSubMenu(index)}
                   >
                     <div className="icon">{item.icon}</div>
-                    <span className={`menu-text ${!isOpen && "hide"}`}>{item.name}</span>
+                    <span className={`menu-text ${!isOpen && "hide"}`}>
+                      {item.name}
+                    </span>
                   </div>
                   {activeSubMenu === index && isOpen && (
                     <div className="submenu">
@@ -109,7 +150,9 @@ const Sidebar = ({ children }) => {
               ) : (
                 <NavLink to={item.path} className="menu-link">
                   <div className="icon">{item.icon}</div>
-                  <span className={`menu-text ${!isOpen && "hide"}`}>{item.name}</span>
+                  <span className={`menu-text ${!isOpen && "hide"}`}>
+                    {item.name}
+                  </span>
                 </NavLink>
               )}
             </div>
@@ -119,8 +162,12 @@ const Sidebar = ({ children }) => {
         <div className="sidebar-footer">
           {isOpen && (
             <div className="profile-section">
-              <span className="profile-name">{userDetails.username || "N/A"}</span>
-              <span className="profile-email">{userDetails.email || "N/A"}</span>
+              <span className="profile-name">
+                {userDetails.username || "N/A"}
+              </span>
+              <span className="profile-email">
+                {userDetails.email || "N/A"}
+              </span>
             </div>
           )}
           <button className="logout-button" onClick={handleLogout}>
@@ -129,7 +176,9 @@ const Sidebar = ({ children }) => {
           </button>
         </div>
       </div>
-      <main className={`main-content ${isOpen ? "open" : "closed"}`}>{children}</main>
+      <main className={`main-content ${isOpen ? "open" : "closed"}`}>
+        {children}
+      </main>
     </div>
   );
 };
