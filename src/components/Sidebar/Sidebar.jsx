@@ -46,6 +46,11 @@ const Sidebar = ({ children }) => {
           name: "Image Approvals",
           icon: <MdOutlineCalendarToday />,
         },
+        {
+          path: "/in/trainsession/crosscheck",
+          name: "Attendance Crosscheck",
+          icon: <MdOutlineCalendarToday />,
+        }
       ],
     },
     {

@@ -299,9 +299,6 @@ export default function HouseholdVisits() {
       <Box sx={{ mb: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1.5 }}>
         <Box>
           <Typography variant="h5" className="module__heading">Household Visits</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Dense, fast list • inline participants • export to Excel
-          </Typography>
         </Box>
         <Tooltip title="Export Excel">
           <IconButton onClick={exportExcel} aria-label="export" size="large">

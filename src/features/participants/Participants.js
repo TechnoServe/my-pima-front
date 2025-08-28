@@ -46,6 +46,13 @@ const Participants = () => {
   const { isSyncing, overallPercent, phaseList, totals, run, failedRows } =
     useOutboxProgress(activeProject);
 
+  // Refetch participants after a successful sync
+  useEffect(() => {
+    if (!isSyncing) {
+      refetchParticipants();
+    }
+  }, [isSyncing]);
+
   const {
     data: participantData,
     loading: participantsLoading,

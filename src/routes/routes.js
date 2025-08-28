@@ -6,6 +6,7 @@ import PrivateLayout from '../features/layout/PrivateLayout';
 import FarmVisitComparisonV2 from '../features/farm-visit/fvcompare/FarmVisitComparisonV2';
 import FVApproveWithCompare from '../features/farm-visit/fvcompare/fvApproveWithCompare';
 import HouseholdVisits from '../features/farm-visit/fvhouseholds/HouseholdVisits';
+import AttendanceCrosscheck from '../features/training-session/ts-crosscheck/AttendanceCrosscheck';
 
 const Login = lazy(() => import('../pages/Login'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
@@ -58,6 +59,7 @@ export const appRoutes = [
       { path: 'trainsession', element: <TrainingSession /> },
       { path: 'trainsession/:id', element: <Tsdetail /> },
       { path: 'trainsession/verification', element: <TSApprove /> },
+      { path: 'trainsession/crosscheck', element: <AttendanceCrosscheck /> },
       { path: 'participants', element: <Participants /> },
       { path: 'participants/:id', element: <Partdetail /> },
       { path: 'farmvisit', element: <FarmVisit /> },
