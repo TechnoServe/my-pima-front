@@ -7,9 +7,6 @@ import {
   Button,
   IconButton,
   TextField,
-  Chip,
-  Divider,
-  Tooltip,
   MenuItem,
   Select,
   FormControl,
@@ -23,6 +20,7 @@ import {
   TableHead,
   TableRow,
   TablePagination,
+  Chip,
 } from "@mui/material";
 import { useQuery, gql } from "@apollo/client";
 import {
@@ -34,23 +32,13 @@ import {
 import { CheckCircle, XCircle } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 
-// --- Brand tokens (align with existing UI) ---
+// --- Brand tokens ---
 const BRAND = { navy: "#1b2a4e", teal: "#087c8f" };
 
-// --- GraphQL (shape used by this page) ---
+// --- GraphQL (no onlyMismatches anymore) ---
 export const GET_ATTENDANCE_CHECK_COMPARISON = gql`
-  query CompareAttendanceVsCheck(
-    $projectId: ID!
-    $search: String
-    $tgIds: [ID!]
-    $onlyMismatches: Boolean
-  ) {
-    getAttendanceCheckComparison(
-      projectId: $projectId
-      search: $search
-      tgIds: $tgIds
-      onlyMismatches: $onlyMismatches
-    ) {
+  query CompareAttendanceVsCheck($projectId: ID!, $search: String, $tgIds: [ID!]) {
+    getAttendanceCheckComparison(projectId: $projectId, search: $search, tgIds: $tgIds) {
       status
       totals {
         total
@@ -68,6 +56,8 @@ export const GET_ATTENDANCE_CHECK_COMPARISON = gql`
           numberOfTrainingsAttended
           attendedAnyTrainings
           attendedLastMonthsTraining
+          farmVisit
+          observation
         }
         attendance {
           countAttended
@@ -134,14 +124,24 @@ function ValuePill({ children, muted }) {
   );
 }
 
+// Rule-aware match
+function rowIsMatchByMode(r, mode) {
+  if (mode === "farm_visit") {
+    // compare Any + Prev
+    return r.m_any === true && r.m_prev === true;
+  }
+  // observation mode → compare Prev only
+  return r.m_prev === true;
+}
+
 // --- Main Component ---
 export default function AttendanceCrosscheck() {
   const { activeProject, trainingGroups, projects } = useOutletContext();
 
   // Filters
   const [search, setSearch] = useState("");
-  const [onlyMismatches, setOnlyMismatches] = useState(false);
   const [selectedTg, setSelectedTg] = useState("all");
+  const [verifyMode, setVerifyMode] = useState("farm_visit"); // 'farm_visit' | 'observation'
   const [openRows, setOpenRows] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -158,7 +158,6 @@ export default function AttendanceCrosscheck() {
         projectId: activeProject,
         search: search || undefined,
         tgIds,
-        onlyMismatches: onlyMismatches || undefined,
       },
       skip: !activeProject,
       fetchPolicy: "cache-and-network",
@@ -166,13 +165,6 @@ export default function AttendanceCrosscheck() {
   );
 
   const items = data?.getAttendanceCheckComparison?.items ?? [];
-  const totals =
-    data?.getAttendanceCheckComparison?.totals ?? {
-      total: 0,
-      matches: 0,
-      mismatches: 0,
-    };
-
   const projectName = useMemo(
     () =>
       projects?.find((p) => p.sf_project_id === activeProject)?.project_name ??
@@ -180,7 +172,7 @@ export default function AttendanceCrosscheck() {
     [projects, activeProject]
   );
 
-  // Rows
+  // Normalize rows
   const rows = useMemo(
     () =>
       items.map((it, idx) => ({
@@ -189,33 +181,55 @@ export default function AttendanceCrosscheck() {
         tnsId: it.tnsId || "—",
         tg: it.trainingGroupName || "—",
         // Check values
-        check_count: it.check?.numberOfTrainingsAttended,
-        check_any: it.check?.attendedAnyTrainings,
-        check_prev: it.check?.attendedLastMonthsTraining,
+        check_count: it.check?.numberOfTrainingsAttended ?? null,
+        check_any: it.check?.attendedAnyTrainings ?? null,
+        check_prev: it.check?.attendedLastMonthsTraining ?? null,
+        has_fv: it.check?.farmVisit === true,
+        has_obs: it.check?.observation === true,
         // Attendance computed
-        att_count: it.attendance?.countAttended,
-        att_any: it.attendance?.anyAttended,
-        att_prev: it.attendance?.attendedPreviousModule,
-        // Matches
-        m_count: it.matches?.countEqual,
-        m_any: it.matches?.anyEqual,
-        m_prev: it.matches?.previousModuleEqual,
+        att_count: it.attendance?.countAttended ?? null,
+        att_any: it.attendance?.anyAttended ?? null,
+        att_prev: it.attendance?.attendedPreviousModule ?? null,
+        // Matches (may be null if not applicable)
+        m_count: it.matches?.countEqual ?? null,
+        m_any: it.matches?.anyEqual ?? null,
+        m_prev: it.matches?.previousModuleEqual ?? null,
         evidence: it.attendance?.evidence ?? [],
         checkId: it.check?.recordId,
       })),
     [items]
   );
 
+  // Filter by mode (FV vs Observation)
+  const filteredRows = useMemo(() => {
+    if (verifyMode === "farm_visit") return rows.filter((x) => x.has_fv);
+    return rows.filter((x) => x.has_obs);
+  }, [rows, verifyMode]);
+
+  // Decorate with match flag based on mode
+  const displayRows = useMemo(
+    () => filteredRows.map((r) => ({ ...r, _isMatch: rowIsMatchByMode(r, verifyMode) })),
+    [filteredRows, verifyMode]
+  );
+
+  // Summary for visible rows (based on mode)
+  const visibleSummary = useMemo(() => {
+    const total = displayRows.length;
+    const matches = displayRows.filter((r) => r._isMatch).length;
+    const mismatches = total - matches;
+    return { total, matches, mismatches };
+  }, [displayRows]);
+
   // paginate
   const pagedRows = useMemo(() => {
     const start = page * rowsPerPage;
-    return rows.slice(start, start + rowsPerPage);
-  }, [rows, page, rowsPerPage]);
+    return displayRows.slice(start, start + rowsPerPage);
+  }, [displayRows, page, rowsPerPage]);
 
   // reset page when filters/data change
   useEffect(() => {
     setPage(0);
-  }, [items, onlyMismatches, search, selectedTg]);
+  }, [items, search, selectedTg, verifyMode]);
 
   const toggleRow = (id) =>
     setOpenRows((s) => ({
@@ -223,25 +237,32 @@ export default function AttendanceCrosscheck() {
       [id]: !s[id],
     }));
 
-  // CSV Export (mismatches only by default)
+  // CSV Export (two buttons: mismatches-only vs all, using current mode rules)
   const exportCsv = (onlyErrors = true) => {
-    const src = onlyErrors
-      ? rows.filter((r) => !(r.m_count && r.m_any && r.m_prev))
-      : rows;
-    const header = [
-      "Participant",
-      "TNS ID",
-      "TG",
-      "Check Count",
-      "Att Count",
-      "Check Any",
-      "Att Any",
-      "Check Prev",
-      "Att Prev",
-      "Match Count",
-      "Match Any",
-      "Match Prev",
-    ];
+    const src = onlyErrors ? displayRows.filter((r) => !r._isMatch) : displayRows;
+    const header =
+      verifyMode === "farm_visit"
+        ? [
+            "Participant",
+            "TNS ID",
+            "TG",
+            "Farm Visit",
+            "Check Any",
+            "Att Any",
+            "Check Prev",
+            "Att Prev",
+            "Match Any",
+            "Match Prev",
+          ]
+        : [
+            "Participant",
+            "TNS ID",
+            "TG",
+            "Observation",
+            "Check Prev",
+            "Att Prev",
+            "Match Prev",
+          ];
     const cell = (v) => {
       if (v === null || v === undefined) return "";
       const s = String(v);
@@ -250,24 +271,35 @@ export default function AttendanceCrosscheck() {
     };
     const lines = [
       header.map(cell).join(","),
-      ...src.map((r) =>
-        [
+      ...src.map((r) => {
+        if (verifyMode === "farm_visit") {
+          return [
+            r.name,
+            r.tnsId,
+            r.tg,
+            boolLabel(r.has_fv),
+            boolLabel(r.check_any),
+            boolLabel(r.att_any),
+            boolLabel(r.check_prev),
+            boolLabel(r.att_prev),
+            r.m_any == null ? "N/A" : r.m_any ? "Match" : "Mismatch",
+            r.m_prev == null ? "N/A" : r.m_prev ? "Match" : "Mismatch",
+          ]
+            .map(cell)
+            .join(",");
+        }
+        return [
           r.name,
           r.tnsId,
           r.tg,
-          r.check_count ?? "",
-          r.att_count ?? "",
-          boolLabel(r.check_any),
-          boolLabel(r.att_any),
+          boolLabel(r.has_obs),
           boolLabel(r.check_prev),
           boolLabel(r.att_prev),
-          r.m_count ? "Match" : "Mismatch",
-          r.m_any ? "Match" : "Mismatch",
-          r.m_prev ? "Match" : "Mismatch",
+          r.m_prev == null ? "N/A" : r.m_prev ? "Match" : "Mismatch",
         ]
           .map(cell)
-          .join(",")
-      ),
+          .join(",");
+      }),
     ];
     const csv = lines.join("\r\n");
     const blob = new Blob(["\uFEFF" + csv], {
@@ -276,7 +308,9 @@ export default function AttendanceCrosscheck() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `attendance_crosscheck_${onlyErrors ? "mismatches" : "all"}.csv`;
+    a.download = `attendance_crosscheck_${verifyMode}_${
+      onlyErrors ? "mismatches" : "all"
+    }.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -306,28 +340,43 @@ export default function AttendanceCrosscheck() {
             <Typography variant="h5" sx={{ fontWeight: 800, lineHeight: 1 }}>
               Attendance Verification
             </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.9 }}>
+              {
+                projects?.find((p) => p.sf_project_id === activeProject)
+                  ?.project_name ?? "—"
+              }
+            </Typography>
           </Box>
           <Stack direction="row" spacing={1.5} alignItems="center">
-            <Tooltip title="Export mismatches">
-              <Button
-                onClick={() => exportCsv(true)}
-                startIcon={<AiOutlineExport />}
-                sx={{
-                  color: "#fff",
-                  borderColor: "#fff",
-                  borderWidth: 1,
-                  borderStyle: "solid",
-                  "&:hover": { bgcolor: "rgba(255,255,255,0.12)" },
-                }}
-              >
-                Export
-              </Button>
-            </Tooltip>
-            <Tooltip title="Refresh">
-              <IconButton onClick={() => refetch()} sx={{ color: "#fff" }}>
-                <AiOutlineReload />
-              </IconButton>
-            </Tooltip>
+            <Button
+              onClick={() => exportCsv(true)}
+              startIcon={<AiOutlineExport />}
+              sx={{
+                color: "#fff",
+                borderColor: "#fff",
+                borderWidth: 1,
+                borderStyle: "solid",
+                "&:hover": { bgcolor: "rgba(255,255,255,0.12)" },
+              }}
+            >
+              Export mismatches
+            </Button>
+            <Button
+              onClick={() => exportCsv(false)}
+              startIcon={<AiOutlineExport />}
+              sx={{
+                color: "#fff",
+                borderColor: "#fff",
+                borderWidth: 1,
+                borderStyle: "solid",
+                "&:hover": { bgcolor: "rgba(255,255,255,0.12)" },
+              }}
+            >
+              Export all
+            </Button>
+            <IconButton onClick={() => refetch()} sx={{ color: "#fff" }}>
+              <AiOutlineReload />
+            </IconButton>
           </Stack>
         </Box>
       </Paper>
@@ -340,6 +389,7 @@ export default function AttendanceCrosscheck() {
           justifyContent="space-between"
           alignItems={{ xs: "stretch", md: "center" }}
         >
+          {/* Summary (for currently visible rows + rule) */}
           <Stack direction="row" spacing={2}>
             <Box
               sx={{
@@ -351,10 +401,10 @@ export default function AttendanceCrosscheck() {
               }}
             >
               <Typography variant="caption" color="text.secondary">
-                Total
+                Total (visible)
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: 800 }}>
-                {totals.total ?? 0}
+                {visibleSummary.total}
               </Typography>
             </Box>
             <Box
@@ -367,13 +417,13 @@ export default function AttendanceCrosscheck() {
               }}
             >
               <Typography variant="caption" color="text.secondary">
-                All Matched
+                Matched (rule)
               </Typography>
               <Typography
                 variant="h6"
                 sx={{ fontWeight: 800, color: "#1b5e20" }}
               >
-                {totals.matches ?? 0}
+                {visibleSummary.matches}
               </Typography>
             </Box>
             <Box
@@ -382,21 +432,22 @@ export default function AttendanceCrosscheck() {
                 bgcolor: "#fff",
                 border: "1px solid #e5e7eb",
                 borderRadius: 2,
-                minWidth: 140,
+                minWidth: 160,
               }}
             >
               <Typography variant="caption" color="text.secondary">
-                Has Mismatch
+                Mismatches (rule)
               </Typography>
               <Typography
                 variant="h6"
                 sx={{ fontWeight: 800, color: "#b71c1c" }}
               >
-                {totals.mismatches ?? 0}
+                {visibleSummary.mismatches}
               </Typography>
             </Box>
           </Stack>
 
+          {/* Filters */}
           <Stack
             direction={{ xs: "column", md: "row" }}
             spacing={2}
@@ -423,17 +474,19 @@ export default function AttendanceCrosscheck() {
                 ))}
               </Select>
             </FormControl>
-            <Button
-              variant={onlyMismatches ? "contained" : "outlined"}
-              onClick={() => setOnlyMismatches((v) => !v)}
-              sx={{
-                bgcolor: onlyMismatches ? BRAND.teal : "transparent",
-                color: onlyMismatches ? "#fff" : BRAND.navy,
-                borderColor: BRAND.navy,
-              }}
-            >
-              {onlyMismatches ? "Showing mismatches" : "Show mismatches"}
-            </Button>
+
+            {/* NEW: Verification Source dropdown */}
+            <FormControl size="small" sx={{ minWidth: 220 }}>
+              <InputLabel>Verification Source</InputLabel>
+              <Select
+                label="Verification Source"
+                value={verifyMode}
+                onChange={(e) => setVerifyMode(e.target.value)}
+              >
+                <MenuItem value="farm_visit">Farm Visit</MenuItem>
+                <MenuItem value="observation">Observation</MenuItem>
+              </Select>
+            </FormControl>
           </Stack>
         </Stack>
       </Paper>
@@ -453,7 +506,7 @@ export default function AttendanceCrosscheck() {
         {!loading && !error && (
           <>
             <TableContainer>
-              <Table size="small" sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 1040 }}>
                 <TableHead>
                   <TableRow>
                     <TableCell sx={{ fontWeight: 700 }}>Participant</TableCell>
@@ -470,11 +523,7 @@ export default function AttendanceCrosscheck() {
                     <React.Fragment key={r.id}>
                       <TableRow
                         hover
-                        className={
-                          r.m_count && r.m_any && r.m_prev
-                            ? "match-row"
-                            : "mismatch-row"
-                        }
+                        className={r._isMatch ? "match-row" : "mismatch-row"}
                       >
                         <TableCell width={260}>
                           <Stack spacing={0.25}>
@@ -490,15 +539,21 @@ export default function AttendanceCrosscheck() {
                           </Stack>
                         </TableCell>
 
-                        <TableCell width={320}>
-                          <Stack direction="row" spacing={1}>
+                        <TableCell width={420}>
+                          <Stack direction="row" spacing={1} flexWrap="wrap">
                             <ValuePill>Count: {r.check_count ?? "—"}</ValuePill>
                             <ValuePill>Any: {boolLabel(r.check_any)}</ValuePill>
                             <ValuePill>Prev: {boolLabel(r.check_prev)}</ValuePill>
+                            <ValuePill muted>
+                              Farm Visit: {boolLabel(r.has_fv)}
+                            </ValuePill>
+                            <ValuePill muted>
+                              Observation: {boolLabel(r.has_obs)}
+                            </ValuePill>
                           </Stack>
                         </TableCell>
 
-                        <TableCell width={340}>
+                        <TableCell width={380}>
                           <Stack direction="row" spacing={1}>
                             <ValuePill muted>
                               Count: {r.att_count ?? "—"}
@@ -512,11 +567,18 @@ export default function AttendanceCrosscheck() {
                           </Stack>
                         </TableCell>
 
+                        {/* Compare — show only the chips relevant to current mode */}
                         <TableCell width={260}>
                           <Stack direction="row" spacing={1}>
-                            <MatchChip ok={r.m_count} label="Count" />
-                            <MatchChip ok={r.m_any} label="Any" />
-                            <MatchChip ok={r.m_prev} label="Prev" />
+                            {verifyMode === "farm_visit" && (
+                              <>
+                                <MatchChip ok={r.m_any} label="Any" />
+                                <MatchChip ok={r.m_prev} label="Prev" />
+                              </>
+                            )}
+                            {verifyMode === "observation" && (
+                              <MatchChip ok={r.m_prev} label="Prev" />
+                            )}
                           </Stack>
                         </TableCell>
 
@@ -620,7 +682,7 @@ export default function AttendanceCrosscheck() {
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <TablePagination
                 component="div"
-                count={rows.length}
+                count={displayRows.length}
                 page={page}
                 onPageChange={(_, p) => setPage(p)}
                 rowsPerPage={rowsPerPage}

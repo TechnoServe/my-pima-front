@@ -71,7 +71,7 @@ const PrivateLayout = () => {
             />
           ) : (
             <ProgramListDropdown
-              programs={["Burundi USDA", "Ethiopia Regrow USDA", "Ethiopia Nespresso", "Ethiopia CREW GAC"]}
+              programs={["Burundi USDA", "Ethiopia Regrow USDA", "Ethiopia Nespresso", "Ethiopia CREW GAC", "Kenya Nespresso"]}
               // onChange={setProgram}
               selectedProgram={program}
               setSelectedProgram={setProgram}
